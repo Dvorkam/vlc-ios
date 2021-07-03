@@ -74,6 +74,17 @@
             <point key="canvasLocation" x="323.1884057971015" y="166.07142857142856"/>
         </collectionViewCell>
     </objects>
+    <designables>
+        <designable name="QWi-hB-3MK">
+            <size key="intrinsicContentSize" width="44.5" height="20.5"/>
+        </designable>
+        <designable name="hhD-6J-y0I">
+            <size key="intrinsicContentSize" width="156" height="17"/>
+        </designable>
+        <designable name="rg0-QQ-Pjc">
+            <size key="intrinsicContentSize" width="35.5" height="17"/>
+        </designable>
+    </designables>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
