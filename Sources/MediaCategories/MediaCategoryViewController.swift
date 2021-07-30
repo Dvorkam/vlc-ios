@@ -887,7 +887,8 @@ extension MediaCategoryViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mediaCell = collectionView.dequeueReusableCell(withReuseIdentifier:model.cellType.defaultReuseIdentifier, for: indexPath) as? BaseCollectionViewCell else {
+        let cellType = indexPath.section == 0 ? "continueWatching" : model.cellType.defaultReuseIdentifier
+        guard let mediaCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType, for: indexPath) as? BaseCollectionViewCell else {
             assertionFailure("you forgot to register the cell or the cell is not a subclass of BaseCollectionViewCell")
             return UICollectionViewCell()
         }
