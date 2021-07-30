@@ -18,6 +18,7 @@ class MediaContinueWatchingCollectionViewCell: BaseCollectionViewCell {
 		didSet {
 			if let movie = media as? VLCMLMedia {
 				titleLabel.text = movie.title()
+				timeLeftLabel.text = "\(movie.progress)"
 				accessibilityLabel = movie.accessibilityText(editing: false)
 				thumbnailView.layer.cornerRadius = 3
 				thumbnailView.image = movie.thumbnailImage()
