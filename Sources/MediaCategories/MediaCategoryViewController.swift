@@ -40,11 +40,38 @@ fileprivate func verticalHorizontalFlow() -> UICollectionViewLayout {
             // Library View
             let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
             item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(70))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 1)
+            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(70))
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 0, trailing: 12)
             return section
+        }
+    }
+    return layout
+}
+@available(iOS 13.0, *)
+fileprivate func verticalFlow() -> UICollectionViewLayout {
+    let layout = UICollectionViewCompositionalLayout { (section: Int, environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+        if section == 0 {
+            // Continue Watching
+            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(0.1))
+            let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
+
+            item.contentInsets = NSDirectionalEdgeInsets(top: 0.0, leading: 12.0, bottom: 0.0, trailing: 12.0)
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitem: item, count: 1)
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+            return section
+        } else {
+            // Library View
+        let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(70))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
+        let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 0, trailing: 12)
+        return section
         }
     }
     return layout
@@ -1071,7 +1098,18 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
         userDefaults.set(onSwitchIsOnChange, forKey: "\(prefix)\(suffix)")
         setupCollectionView()
         cachedCellSize = .zero
+
+        if #available(iOS 13.0, *) {
+            if onSwitchIsOnChange {
+                collectionView.setCollectionViewLayout(verticalHorizontalFlow(), animated: true)
+            } else {
+                collectionView.setCollectionViewLayout(verticalFlow(), animated: true)
+            }
+        } else {
+            collectionView.setCollectionViewLayout(UICollectionViewLayout(), animated: true)
+        }
         collectionView?.collectionViewLayout.invalidateLayout()
+        collectionView.reloadData()
         reloadData()
     }
 }
@@ -1117,6 +1155,7 @@ private extension MediaCategoryViewController {
             //GridCells are made programmatically so we register the cell class directly.
             collectionView?.register(MediaGridCollectionCell.self,
                                      forCellWithReuseIdentifier: model.cellType.defaultReuseIdentifier)
+            collectionView.register(UINib(nibName: "MediaContinueWatchingCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "continueWatching")
         } else {
             //MediaCollectionCells are created via xibs so we register the cell via UINib.
             let cellNib = UINib(nibName: model.cellType.nibName, bundle: nil)
