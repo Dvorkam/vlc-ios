@@ -218,10 +218,15 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         self.searchDataSource = LibrarySearchDataSource(model: model)
 
         if #available(iOS 13.0, *) {
-            super.init(collectionViewLayout: verticalHorizontalFlow())
+            if model.cellType.nibName == mediaGridCellNibIdentifier {
+                super.init(collectionViewLayout: verticalHorizontalFlow())
+            } else {
+                super.init(collectionViewLayout: verticalFlow())
+            }
         } else {
-            super.init(collectionViewLayout: UICollectionViewFlowLayout())
+            super.init(collectionViewLayout: UICollectionViewLayout())
         }
+
         let marqueeTitle = VLCMarqueeLabel()
         if let collection = model as? CollectionModel {
             title = collection.mediaCollection.title()
@@ -1108,8 +1113,7 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
         } else {
             collectionView.setCollectionViewLayout(UICollectionViewLayout(), animated: true)
         }
-        collectionView?.collectionViewLayout.invalidateLayout()
-        collectionView.reloadData()
+        collectionView.reloadSections([0, 1])
         reloadData()
     }
 }
