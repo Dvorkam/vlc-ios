@@ -17,12 +17,17 @@ class MediaContinueWatchingCollectionViewCell: BaseCollectionViewCell {
 	override var media: VLCMLObject? {
 		didSet {
 			if let movie = media as? VLCMLMedia {
-				titleLabel.text = movie.title()
-				timeLeftLabel.text = "\(movie.progress)"
-				accessibilityLabel = movie.accessibilityText(editing: false)
-				thumbnailView.layer.cornerRadius = 3
-				thumbnailView.image = movie.thumbnailImage()
-			}
+                update(movie: movie)
+			}else if let mediaGroup = media as? VLCMLMediaGroup {
+                if mediaGroup.nbMedia() == 1 && !mediaGroup.userInteracted() {
+                    guard let movie = mediaGroup.media(of: .video)?.first else {
+                        assertionFailure("EditActions: rename: Failed to retrieve media.")
+                        return
+                    }
+                    update(movie: movie)
+                    return
+                }
+            }
 		}
 	}
 
@@ -39,5 +44,13 @@ class MediaContinueWatchingCollectionViewCell: BaseCollectionViewCell {
 		titleLabel.labelize = enableMarquee
 		titleLabel?.textColor = PresentationTheme.current.colors.cellTextColor
 	}
+
+    func update(movie: VLCMLMedia){
+        titleLabel.text = movie.title()
+        timeLeftLabel.text = "\(movie.progress)"
+        accessibilityLabel = movie.accessibilityText(editing: false)
+        thumbnailView.layer.cornerRadius = 3
+        thumbnailView.image = movie.thumbnailImage()
+    }
 
 }
