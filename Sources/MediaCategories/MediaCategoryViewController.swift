@@ -21,11 +21,12 @@ import Foundation
 }
 
 @available(iOS 13.0, *)
-fileprivate func verticalHorizontalFlow() -> UICollectionViewLayout {
+fileprivate func verticalHorizontalFlow(_ isGrid: Bool) -> UICollectionViewLayout {
     let layout = UICollectionViewCompositionalLayout { (section: Int, environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
         if section == 0 {
             // Continue Watching
-            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(280))
+            let height: NSCollectionLayoutDimension = isGrid ? .absolute(280) : .absolute(0.1)
+            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: height)
             let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
 
             item.contentInsets = NSDirectionalEdgeInsets(top: 0.0, leading: 12.0, bottom: 0.0, trailing: 12.0)
@@ -39,9 +40,10 @@ fileprivate func verticalHorizontalFlow() -> UICollectionViewLayout {
         else {
             // Library View
             let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
-            item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(70))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
+            item.contentInsets = isGrid ? NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10) : NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+            let size = itemSize(isGrid, for: environment.container.contentSize.width)
+            let count = !isGrid ? 1 : itemCount(with: environment.container.contentSize.width)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: Int(count))
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 0, trailing: 12)
             return section
@@ -49,32 +51,26 @@ fileprivate func verticalHorizontalFlow() -> UICollectionViewLayout {
     }
     return layout
 }
-@available(iOS 13.0, *)
-fileprivate func verticalFlow() -> UICollectionViewLayout {
-    let layout = UICollectionViewCompositionalLayout { (section: Int, environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
-        if section == 0 {
-            // Continue Watching
-            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: .absolute(0.1))
-            let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
 
-            item.contentInsets = NSDirectionalEdgeInsets(top: 0.0, leading: 12.0, bottom: 0.0, trailing: 12.0)
-            let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitem: item, count: 1)
-
-            let section = NSCollectionLayoutSection(group: group)
-            section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-            return section
-        } else {
-            // Library View
-        let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
-        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(70))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: 1)
-        let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 0, trailing: 12)
-        return section
-        }
+fileprivate func itemCount(with width: CGFloat) -> CGFloat {
+    if width <= DeviceWidth.iPhonePortrait.rawValue {
+        return 2
+    } else if width <= DeviceWidth.iPhoneLandscape.rawValue {
+        return 3
+    } else if width <= DeviceWidth.iPadLandscape.rawValue {
+        return 4
+    } else {
+        return 5
     }
-    return layout
+}
+
+@available(iOS 13.0, *)
+fileprivate func itemSize(_ isGrid: Bool, for width: CGFloat) -> NSCollectionLayoutSize {
+    let numberOfCells: CGFloat = itemCount(with: width)
+    let cellWidth = width - (2 * 15)
+    let cellHeight = cellWidth / numberOfCells
+
+    return !isGrid ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(70)) : NSCollectionLayoutSize(widthDimension: .estimated(cellWidth), heightDimension: .estimated(cellHeight))
 }
 
 class MediaCategoryViewController: UICollectionViewController, UISearchBarDelegate, IndicatorInfoProvider {
@@ -218,11 +214,8 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         self.searchDataSource = LibrarySearchDataSource(model: model)
 
         if #available(iOS 13.0, *) {
-            if model.cellType.nibName == mediaGridCellNibIdentifier {
-                super.init(collectionViewLayout: verticalHorizontalFlow())
-            } else {
-                super.init(collectionViewLayout: verticalFlow())
-            }
+            let isGrid = model.cellType.nibName == mediaGridCellNibIdentifier
+            super.init(collectionViewLayout: verticalHorizontalFlow(isGrid))
         } else {
             super.init(collectionViewLayout: UICollectionViewLayout())
         }
@@ -1105,11 +1098,7 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
         cachedCellSize = .zero
 
         if #available(iOS 13.0, *) {
-            if onSwitchIsOnChange {
-                collectionView.setCollectionViewLayout(verticalHorizontalFlow(), animated: true)
-            } else {
-                collectionView.setCollectionViewLayout(verticalFlow(), animated: true)
-            }
+            collectionView.setCollectionViewLayout(verticalHorizontalFlow(onSwitchIsOnChange), animated: true)
         } else {
             collectionView.setCollectionViewLayout(UICollectionViewLayout(), animated: true)
         }
