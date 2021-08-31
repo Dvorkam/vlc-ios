@@ -46,6 +46,20 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="QWi-hB-3MK" firstAttribute="top" secondItem="hhD-6J-y0I" secondAttribute="bottom" constant="2.5" id="1Iv-cl-nti"/>
+                                    <constraint firstItem="hhD-6J-y0I" firstAttribute="top" secondItem="rzZ-Fm-CKo" secondAttribute="bottom" constant="2.5" id="O3s-VZ-zcG"/>
+                                    <constraint firstAttribute="trailing" secondItem="rzZ-Fm-CKo" secondAttribute="trailing" id="UIl-u5-9Lv"/>
+                                    <constraint firstItem="hhD-6J-y0I" firstAttribute="top" secondItem="rzZ-Fm-CKo" secondAttribute="bottom" constant="2.5" id="YFC-i3-CBM"/>
+                                    <constraint firstItem="rg0-QQ-Pjc" firstAttribute="leading" secondItem="kDI-wf-Z8Y" secondAttribute="leading" id="Ygu-Kp-UD4"/>
+                                    <constraint firstItem="QWi-hB-3MK" firstAttribute="leading" secondItem="kDI-wf-Z8Y" secondAttribute="leading" id="g2o-J2-OMj"/>
+                                    <constraint firstItem="rg0-QQ-Pjc" firstAttribute="top" secondItem="QWi-hB-3MK" secondAttribute="bottom" constant="2.5" id="g3E-CF-Ts2"/>
+                                    <constraint firstItem="rzZ-Fm-CKo" firstAttribute="trailing" secondItem="kDI-wf-Z8Y" secondAttribute="trailingMargin" id="hQs-a1-kF5"/>
+                                    <constraint firstItem="rzZ-Fm-CKo" firstAttribute="top" secondItem="kDI-wf-Z8Y" secondAttribute="top" id="jPz-gW-gjK"/>
+                                    <constraint firstItem="hhD-6J-y0I" firstAttribute="leading" secondItem="kDI-wf-Z8Y" secondAttribute="leading" id="oDc-h6-dkn"/>
+                                    <constraint firstItem="rzZ-Fm-CKo" firstAttribute="leading" secondItem="kDI-wf-Z8Y" secondAttribute="leading" id="sGL-x4-6Gb"/>
+                                    <constraint firstItem="hhD-6J-y0I" firstAttribute="top" secondItem="rzZ-Fm-CKo" secondAttribute="bottom" constant="2.5" id="vb0-hB-2eT"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
