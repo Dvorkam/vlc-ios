@@ -45,9 +45,9 @@ class MediaContinueWatchingCollectionViewCell: BaseCollectionViewCell {
 		titleLabel?.textColor = PresentationTheme.current.colors.cellTextColor
 	}
 
-    func update(movie: VLCMLMedia){
+    func update(movie: VLCMLMedia) {
         titleLabel.text = movie.title()
-        timeLeftLabel.text = "\(movie.progress)"
+        timeLeftLabel.text = "\(Int(round(movie.progress*100)))%"
         accessibilityLabel = movie.accessibilityText(editing: false)
         thumbnailView.layer.cornerRadius = 3
         thumbnailView.image = movie.thumbnailImage()
