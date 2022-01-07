@@ -20,6 +20,59 @@ import Foundation
     func setEditingStateChanged(for viewController: MediaCategoryViewController, editing: Bool)
 }
 
+@available(iOS 13.0, *)
+fileprivate func verticalHorizontalFlow(_ isGrid: Bool) -> UICollectionViewLayout {
+    let layout = UICollectionViewCompositionalLayout { (section: Int, environment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection? in
+        if section == 0 {
+            // Continue Watching
+            let height: NSCollectionLayoutDimension = isGrid ? .absolute(280) : .absolute(0.1)
+            let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.9), heightDimension: height)
+            let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
+
+            item.contentInsets = NSDirectionalEdgeInsets(top: 0.0, leading: 12.0, bottom: 0.0, trailing: 12.0)
+            let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitem: item, count: 1)
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 16.0, leading: 0.0, bottom: 16.0, trailing: 0.0)
+            section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+            return section
+        }
+        else {
+            // Library View
+            let item = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0)))
+            item.contentInsets = isGrid ? NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10) : NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+            let size = itemSize(isGrid, for: environment.container.contentSize.width)
+            let count = !isGrid ? 1 : itemCount(with: environment.container.contentSize.width)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: size, subitem: item, count: Int(count))
+            let section = NSCollectionLayoutSection(group: group)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 12, bottom: 0, trailing: 12)
+            return section
+        }
+    }
+    return layout
+}
+
+fileprivate func itemCount(with width: CGFloat) -> CGFloat {
+    if width <= DeviceWidth.iPhonePortrait.rawValue {
+        return 2
+    } else if width <= DeviceWidth.iPhoneLandscape.rawValue {
+        return 3
+    } else if width <= DeviceWidth.iPadLandscape.rawValue {
+        return 4
+    } else {
+        return 5
+    }
+}
+
+@available(iOS 13.0, *)
+fileprivate func itemSize(_ isGrid: Bool, for width: CGFloat) -> NSCollectionLayoutSize {
+    let numberOfCells: CGFloat = itemCount(with: width)
+    let cellWidth = width - (2 * 15)
+    let cellHeight = cellWidth / numberOfCells
+
+    return !isGrid ? NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(70)) : NSCollectionLayoutSize(widthDimension: .estimated(cellWidth), heightDimension: .estimated(cellHeight))
+}
+
 class MediaCategoryViewController: UICollectionViewController, UISearchBarDelegate, IndicatorInfoProvider {
     // MARK: - Properties
     var model: MediaLibraryBaseModel
@@ -58,20 +111,17 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
 
     @objc private lazy var sortActionSheet: ActionSheet = {
         var header: ActionSheetSortSectionHeader
-        var isVideoModel: Bool = false
+        var displayGroupLayout: Bool = false
         var collectionModelName: String = ""
         var secondSortModel: SortModel? = nil
 
         if let model = model as? CollectionModel {
-            if model.mediaCollection is VLCMLMediaGroup || model.mediaCollection is VideoModel {
-                isVideoModel = true
-            }
             collectionModelName = String(describing: type(of: model.mediaCollection)) + model.name
         } else if let model = model as? MediaGroupViewModel {
-            isVideoModel = true
+            displayGroupLayout = true
             collectionModelName = model.name
         } else if let model = model as? VideoModel {
-            isVideoModel = true
+            displayGroupLayout = true
             collectionModelName = secondModel.name
             secondSortModel = model.sortModel
         } else {
@@ -80,7 +130,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
 
         header = ActionSheetSortSectionHeader(model: model.sortModel,
                                               secondModel: secondSortModel,
-                                              isVideoModel: isVideoModel,
+                                              isVideoModel: displayGroupLayout,
                                               currentModelType: collectionModelName)
 
         let actionSheet = ActionSheet(header: header)
@@ -163,10 +213,11 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         self.rendererButton = services.rendererDiscovererManager.setupRendererButton()
         self.searchDataSource = LibrarySearchDataSource(model: model)
 
-        super.init(collectionViewLayout: UICollectionViewFlowLayout())
-
-        if PlaybackService.sharedInstance().renderer != nil {
-            rendererButton.isSelected = true
+        if #available(iOS 13.0, *) {
+            let isGrid = model.cellType.nibName == mediaGridCellNibIdentifier
+            super.init(collectionViewLayout: verticalHorizontalFlow(isGrid))
+        } else {
+            super.init(collectionViewLayout: UICollectionViewLayout())
         }
 
         let marqueeTitle = VLCMarqueeLabel()
@@ -175,7 +226,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         }
         marqueeTitle.text = title
         marqueeTitle.textColor = PresentationTheme.current.colors.navigationbarTextColor
-        marqueeTitle.font = UIFont.preferredCustomFont(forTextStyle: .headline)
         self.navigationItem.titleView = marqueeTitle
         NotificationCenter.default.addObserver(self, selector: #selector(themeDidChange),
                                                name: .VLCThemeDidChangeNotification, object: nil)
@@ -254,7 +304,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         // If we are a MediaGroupViewModel, check if there are no empty groups from ungrouping.
         if let mediaGroupModel = model as? MediaGroupViewModel {
             mediaGroupModel.files = mediaGroupModel.files.filter() {
-                return $0.nbTotalMedia() != 0
+                return $0.nbPresentMedia() != 0
             }
         }
 
@@ -305,10 +355,10 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             }
         }
     }
-
+    
     func isEmptyCollectionView() -> Bool {
-        return collectionView?.numberOfItems(inSection: 0) == 0
-    }
+       return collectionView?.numberOfItems(inSection: 0) == 0
+   }
 
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
@@ -342,7 +392,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         reloadData()
         showGuideOnLaunch()
         setNavbarAppearance()
-        loadSort()
     }
 
     func loadSort() {
@@ -354,6 +403,12 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         }
         let desc = UserDefaults.standard.bool(forKey: "\(kVLCSortDescendingDefault)\(model.name)")
         self.model.sort(by: sortingCriteria, desc: desc)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        loadSort()
     }
 
     private func setNavbarAppearance() {
@@ -458,10 +513,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     }
 
     func indicatorInfo(for pagerTabStripController: PagerTabStripViewController) -> IndicatorInfo {
-        var uiTestAccessibilityIdentifier = model is TrackModel ? VLCAccessibilityIdentifier.songs : nil
-        if model is ArtistModel {
-            uiTestAccessibilityIdentifier = VLCAccessibilityIdentifier.artists
-        }
+        let uiTestAccessibilityIdentifier = model is TrackModel ? VLCAccessibilityIdentifier.songs : nil
         return IndicatorInfo(title: model.indicatorName, accessibilityIdentifier: uiTestAccessibilityIdentifier)
     }
 }
@@ -490,7 +542,6 @@ private extension MediaCategoryViewController {
         }
         searchBar.isHidden = isEmpty || isEditing
         collectionView?.backgroundView = isEmpty ? emptyView : nil
-        updateRightbarButtonItems()
     }
 
     private func objects(from modelContent: VLCMLObject) -> [VLCMLObject] {
@@ -630,10 +681,6 @@ extension MediaCategoryViewController: VLCRendererDiscovererManagerDelegate {
     private func updateRightbarButtonItems() {
         if !isEditing {
             navigationItem.rightBarButtonItems = rightBarButtonItems()
-        }
-
-        if isEmptyCollectionView() {
-            navigationItem.rightBarButtonItem = nil
         }
     }
 
@@ -813,9 +860,9 @@ extension MediaCategoryViewController {
         let modelContent = mediaObjectArray.objectAtIndex(index: indexPath.row)
 
         if let mediaGroup = modelContent as? VLCMLMediaGroup,
-            mediaGroup.nbTotalMedia() == 1 && !mediaGroup.userInteracted() {
+            mediaGroup.nbPresentMedia() == 1 && !mediaGroup.userInteracted() {
             // We handle only mediagroups of video
-            guard let media = mediaGroup.media(of: .unknown)?.first else {
+            guard let media = mediaGroup.media(of: .video)?.first else {
                 assertionFailure("MediaCategoryViewController: Failed to fetch mediagroup video.")
                 return
             }
@@ -837,6 +884,10 @@ extension MediaCategoryViewController {
         }
     }
 
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return isSearching ? 1 : 2
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedItem(at: indexPath)
     }
@@ -883,11 +934,20 @@ extension MediaCategoryViewController {
 
 extension MediaCategoryViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return isSearching ? searchDataSource.searchData.count : model.anyfiles.count
+
+        if isSearching {
+            return searchDataSource.searchData.count
+        } else if section == 0 {
+            //TODO: Dummy value for continue watching
+            return model.anyfiles.count
+        } else {
+            return model.anyfiles.count
+        }
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let mediaCell = collectionView.dequeueReusableCell(withReuseIdentifier:model.cellType.defaultReuseIdentifier, for: indexPath) as? BaseCollectionViewCell else {
+        let cellType = indexPath.section == 0 ? "continueWatching" : model.cellType.defaultReuseIdentifier
+        guard let mediaCell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType, for: indexPath) as? BaseCollectionViewCell else {
             assertionFailure("you forgot to register the cell or the cell is not a subclass of BaseCollectionViewCell")
             return UICollectionViewCell()
         }
@@ -901,13 +961,13 @@ extension MediaCategoryViewController {
         }
 
         if let mediaGroup = mediaObject as? VLCMLMediaGroup {
-            guard let media = mediaGroup.media(of: .unknown)?.first else {
+            guard let media = mediaGroup.media(of: .video)?.first else {
                 assertionFailure("MediaCategoryViewController: Failed to retrieve media")
                 return mediaCell
             }
             services.medialibraryService.requestThumbnail(for: media)
         } else if let media = mediaObject as? VLCMLMedia {
-            if media.type() == .unknown || media.type() == .video {
+            if media.type() == .video {
                 services.medialibraryService.requestThumbnail(for: media)
                 assert(media.mainFile() != nil, "The mainfile is nil")
             }
@@ -1024,24 +1084,24 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
             suffix = model is VideoModel ? secondModel.name : model.name
         } else if type == .layoutChange {
             var collectionModelName: String = ""
-            var isVideoModel = false
             if let model = model as? CollectionModel {
-                if model.mediaCollection is VLCMLMediaGroup || model.mediaCollection is VideoModel {
-                    isVideoModel = true
-                }
                 collectionModelName = getTypeName(of: model.mediaCollection)
-            } else if model is VideoModel || model is MediaGroupViewModel {
-                isVideoModel = true
             }
 
-            prefix = isVideoModel ? kVLCVideoLibraryGridLayout : kVLCAudioLibraryGridLayout
-            suffix = collectionModelName + model.name
+            prefix = kVLCAudioLibraryGridLayout
+            suffix = model is VideoModel ? secondModel.name : collectionModelName + model.name
         }
 
         userDefaults.set(onSwitchIsOnChange, forKey: "\(prefix)\(suffix)")
         setupCollectionView()
         cachedCellSize = .zero
-        collectionView?.collectionViewLayout.invalidateLayout()
+
+        if #available(iOS 13.0, *) {
+            collectionView.setCollectionViewLayout(verticalHorizontalFlow(onSwitchIsOnChange), animated: true)
+        } else {
+            collectionView.setCollectionViewLayout(UICollectionViewLayout(), animated: true)
+        }
+        collectionView.reloadSections([0, 1])
         reloadData()
     }
 }
@@ -1067,7 +1127,7 @@ extension MediaCategoryViewController: EditControllerDelegate {
 
     func editControllerDidDeSelectMultipleItem(editContrller: EditController) {
         if let editToolbar = tabBarController?.editToolBar() {
-            editToolbar.enableEditActions(false)
+            editToolbar.enableEditActions(true)
         }
     }
 
@@ -1087,11 +1147,13 @@ private extension MediaCategoryViewController {
             //GridCells are made programmatically so we register the cell class directly.
             collectionView?.register(MediaGridCollectionCell.self,
                                      forCellWithReuseIdentifier: model.cellType.defaultReuseIdentifier)
+            collectionView.register(UINib(nibName: "MediaContinueWatchingCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "continueWatching")
         } else {
             //MediaCollectionCells are created via xibs so we register the cell via UINib.
             let cellNib = UINib(nibName: model.cellType.nibName, bundle: nil)
             collectionView?.register(cellNib,
                                      forCellWithReuseIdentifier: model.cellType.defaultReuseIdentifier)
+            collectionView.register(UINib(nibName: "MediaContinueWatchingCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "continueWatching")
         }
         collectionView.allowsMultipleSelection = true
         collectionView?.backgroundColor = PresentationTheme.current.colors.background
@@ -1161,10 +1223,10 @@ extension MediaCategoryViewController {
             var singleGroup = [VLCMLMediaGroup]()
             // Filter single groups
             singleGroup = mediaGroupModel.files.filter() {
-                return $0.nbTotalMedia() == 1 && !$0.userInteracted()
+                return $0.nbPresentMedia() == 1 && !$0.userInteracted()
             }
             singleGroup.forEach() {
-                guard let media = $0.media(of: .unknown)?.first else {
+                guard let media = $0.media(of: .video)?.first else {
                     assertionFailure("MediaCategoryViewController: play: Failed to fetch media.")
                     return
                 }
