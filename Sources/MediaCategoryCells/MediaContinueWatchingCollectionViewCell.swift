@@ -19,7 +19,7 @@ class MediaContinueWatchingCollectionViewCell: BaseCollectionViewCell {
 			if let movie = media as? VLCMLMedia {
                 update(movie: movie)
 			}else if let mediaGroup = media as? VLCMLMediaGroup {
-                if mediaGroup.nbMedia() == 1 && !mediaGroup.userInteracted() {
+                if mediaGroup.nbPresentMedia() == 1 && !mediaGroup.userInteracted() {
                     guard let movie = mediaGroup.media(of: .video)?.first else {
                         assertionFailure("EditActions: rename: Failed to retrieve media.")
                         return

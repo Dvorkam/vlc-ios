@@ -130,7 +130,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
 
         header = ActionSheetSortSectionHeader(model: model.sortModel,
                                               secondModel: secondSortModel,
-                                              displayGroupsLayout: displayGroupLayout,
+                                              isVideoModel: displayGroupLayout,
                                               currentModelType: collectionModelName)
 
         let actionSheet = ActionSheet(header: header)
@@ -304,7 +304,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         // If we are a MediaGroupViewModel, check if there are no empty groups from ungrouping.
         if let mediaGroupModel = model as? MediaGroupViewModel {
             mediaGroupModel.files = mediaGroupModel.files.filter() {
-                return $0.nbMedia() != 0
+                return $0.nbPresentMedia() != 0
             }
         }
 
@@ -355,6 +355,10 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             }
         }
     }
+    
+    func isEmptyCollectionView() -> Bool {
+       return collectionView?.numberOfItems(inSection: 0) == 0
+   }
 
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
@@ -365,7 +369,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         super.viewDidLoad()
         setupCollectionView()
         setupSearchBar()
-        (MLMediaLibrary.sharedMediaLibrary() as! MLMediaLibrary).libraryDidAppear()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -526,10 +529,6 @@ private extension MediaCategoryViewController {
                 navigationController?.popViewController(animated: true)
             }
         }
-    }
-
-    private func isEmptyCollectionView() -> Bool {
-        return collectionView?.numberOfItems(inSection: 0) == 0
     }
 
     private func updateUIForContent() {
@@ -861,7 +860,7 @@ extension MediaCategoryViewController {
         let modelContent = mediaObjectArray.objectAtIndex(index: indexPath.row)
 
         if let mediaGroup = modelContent as? VLCMLMediaGroup,
-            mediaGroup.nbMedia() == 1 && !mediaGroup.userInteracted() {
+            mediaGroup.nbPresentMedia() == 1 && !mediaGroup.userInteracted() {
             // We handle only mediagroups of video
             guard let media = mediaGroup.media(of: .video)?.first else {
                 assertionFailure("MediaCategoryViewController: Failed to fetch mediagroup video.")
@@ -1122,13 +1121,13 @@ extension MediaCategoryViewController: EditControllerDelegate {
 
     func editControllerDidSelectMultipleItem(editContrller: EditController) {
         if let editToolbar = tabBarController?.editToolBar() {
-            editToolbar.enableMediaGroupButton(true)
+            editToolbar.enableEditActions(true)
         }
     }
 
     func editControllerDidDeSelectMultipleItem(editContrller: EditController) {
         if let editToolbar = tabBarController?.editToolBar() {
-            editToolbar.enableMediaGroupButton(false)
+            editToolbar.enableEditActions(true)
         }
     }
 
@@ -1224,7 +1223,7 @@ extension MediaCategoryViewController {
             var singleGroup = [VLCMLMediaGroup]()
             // Filter single groups
             singleGroup = mediaGroupModel.files.filter() {
-                return $0.nbMedia() == 1 && !$0.userInteracted()
+                return $0.nbPresentMedia() == 1 && !$0.userInteracted()
             }
             singleGroup.forEach() {
                 guard let media = $0.media(of: .video)?.first else {
