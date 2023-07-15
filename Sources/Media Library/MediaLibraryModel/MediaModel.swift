@@ -11,7 +11,7 @@
 
 import CoreSpotlight
 
-protocol MediaModel: MLBaseModel where MLType == VLCMLMedia { }
+protocol MediaModel: NSObject, MLBaseModel where MLType == VLCMLMedia { }
 
 extension MediaModel {
     func append(_ item: VLCMLMedia) {
@@ -32,12 +32,12 @@ extension MediaModel {
 // MARK: - ViewModel
 
 extension VLCMLMedia {
-    func deleteMainFile() {
+    @objc func deleteMainFile() {
         if let mainFile = mainFile() {
             mainFile.delete()
         }
     }
-
+    
     @objc func mediaDuration() -> String {
         return String(format: "%@", VLCTime(number: NSNumber.init(value: duration())))
     }
@@ -57,6 +57,7 @@ extension VLCMLMedia {
 
     @objc func thumbnailImage() -> UIImage? {
         var image = VLCThumbnailsCache.thumbnail(for: thumbnail())
+        #if os(iOS)
         if image == nil
             || (!UserDefaults.standard.bool(forKey: kVLCSettingShowThumbnails) && subtype() != .albumTrack)
             || (!UserDefaults.standard.bool(forKey: kVLCSettingShowArtworks) && subtype() == .albumTrack) {
@@ -67,9 +68,10 @@ extension VLCMLMedia {
                 image = isDarktheme ? UIImage(named: "movie-placeholder-dark") : UIImage(named: "movie-placeholder-white")
             }
         }
+        #endif
         return image
     }
-
+    #if os(iOS)
     func accessibilityText(editing: Bool) -> String? {
         if editing {
             return title + " " + mediaDuration() + " " + formatSize()
@@ -85,10 +87,11 @@ extension VLCMLMedia {
         }
         return title
     }
+    #endif
 }
 
 // MARK: - CoreSpotlight
-
+#if os(iOS)
 extension VLCMLMedia {
     func coreSpotlightAttributeSet() -> CSSearchableItemAttributeSet {
         let attributeSet = CSSearchableItemAttributeSet(itemContentType: "public.audiovisual-content")
@@ -178,10 +181,10 @@ extension VLCMLMedia {
         }
     }
 }
-
+#endif
 // MARK: - Search
 extension VLCMLMedia: SearchableMLModel {
-    func contains(_ searchString: String) -> Bool {
+    @objc func contains(_ searchString: String) -> Bool {
         var matches = false
 
         matches = matches || search(searchString, in: title)
@@ -192,6 +195,14 @@ extension VLCMLMedia: SearchableMLModel {
             matches = matches || search(searchString, in: album?.title ?? "")
         }
 
+        #if os(iOS)
+        if subtype() == .albumTrack {
+            matches = matches || artist?.contains(searchString) ?? false
+            matches = matches || genre?.contains(searchString) ?? false
+            matches = matches || album?.contains(searchString) ?? false
+        }
+        #endif
+        matches = matches || search(searchString, in: title)
         return matches
     }
 }
@@ -204,3 +215,4 @@ extension VLCMLMedia {
         return artist.name
     }
 }
+

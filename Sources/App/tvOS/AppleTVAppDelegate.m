@@ -10,7 +10,6 @@
  *****************************************************************************/
 
 #import "VLC-Swift.h"
-
 #import "AppleTVAppDelegate.h"
 #import "VLCServerListTVViewController.h"
 #import "VLCOpenNetworkStreamTVViewController.h"
@@ -18,20 +17,24 @@
 #import "VLCSettingsViewController.h"
 #import "VLCHTTPUploaderController.h"
 #import "VLCRemotePlaybackViewController.h"
-#import "VLCMicroMediaLibraryService.h"
 #import "VLCAppCoordinator.h"
+#import "VLCRemoteControlService.h"
+#import "VLC-Swift.h"
+#import "NSString+SupportedMedia.h"
+
 
 @interface AppleTVAppDelegate ()
 {
     UITabBarController *_mainViewController;
-
+    // ViewControllers
     VLCServerListTVViewController *_localNetworkVC;
     VLCRemotePlaybackViewController *_remotePlaybackVC;
     VLCOpenNetworkStreamTVViewController *_openNetworkVC;
     VLCOpenManagedServersViewController *_openManagedServersVC;
     VLCSettingsViewController *_settingsVC;
+    PlaylistViewController *_playlistVC;
+    VLCRemoteControlService *_remoteControlService;
 }
-
 @end
 
 @implementation AppleTVAppDelegate
@@ -77,6 +80,7 @@
     _openNetworkVC = [[VLCOpenNetworkStreamTVViewController alloc] initWithNibName:nil bundle:nil];
     _openManagedServersVC = [[VLCOpenManagedServersViewController alloc] initWithNibName:nil bundle:nil];
     _settingsVC = [[VLCSettingsViewController alloc] initWithNibName:nil bundle:nil];
+    _playlistVC = [[PlaylistViewController alloc] init];
     _mainViewController = [[UITabBarController alloc] init];
     _mainViewController.tabBar.barTintColor = [UIColor VLCOrangeTintColor];
     
@@ -84,22 +88,22 @@
     [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_localNetworkVC]];
     [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_remotePlaybackVC]];
     [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_openNetworkVC]];
+    [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_playlistVC]];
     
     if(_openManagedServersVC.hasManagedServers) {
         [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_openManagedServersVC]];
     }
     
     [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_settingsVC]];
-    
     [_mainViewController setViewControllers:viewControllers];
-
     self.window.rootViewController = _mainViewController;
 
     // Init the HTTP Server and the micro media library
     [VLCAppCoordinator sharedInstance];
-    [[VLCMicroMediaLibraryService sharedInstance] updateMediaList];;
+    _remoteControlService = [[VLCRemoteControlService alloc] init];
 
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
@@ -122,3 +126,4 @@
 }
 
 @end
+

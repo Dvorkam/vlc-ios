@@ -13,6 +13,7 @@
 #import "VLCAppCoordinator.h"
 #import <CoreSpotlight/CoreSpotlight.h>
 #import "VLCRemoteControlService.h"
+#import "VLCHTTPUploaderController.h"
 #import "VLCFavoriteService.h"
 #import "VLCStripeController.h"
 #import "VLC-Swift.h"
@@ -20,15 +21,18 @@
 @interface VLCAppCoordinator()
 {
     MediaLibraryService *_mediaLibraryService;
-    VLCRendererDiscovererManager *_rendererDiscovererManager;
     VLCFavoriteService *_favoriteService;
     VLCHTTPUploaderController *_httpUploaderController;
+    VLCRemoteControlService *_remoteControlService;
+    
+    #if TARGET_OS_IOS
+    VLCRendererDiscovererManager *_rendererDiscovererManager;
     UITabBarController *_tabBarController;
     TabBarCoordinator *_tabCoordinator;
     VLCPlayerDisplayController *_playerDisplayController;
-    VLCRemoteControlService *_remoteControlService;
     UIWindow *_externalWindow;
     VLCStripeController *_stripeController;
+    #endif
 }
 
 @end
@@ -42,6 +46,9 @@
 
     dispatch_once(&pred, ^{
         sharedInstance = [VLCAppCoordinator new];
+        if (sharedInstance) {
+            sharedInstance->_mediaLibraryService = [[MediaLibraryService alloc] init];
+        }
     });
 
     return sharedInstance;
@@ -51,6 +58,9 @@
 {
     self = [super init];
     if (self) {
+    
+        // Init the HTTP Server and clean its cache
+        // FIXME: VLCHTTPUploaderController should perhaps be a service?
         dispatch_async(dispatch_get_main_queue(), ^{
             [VLCLibrary setSharedEventsConfiguration:[VLCEventsLegacyConfiguration new]];
             [self initializeServices];
@@ -59,16 +69,6 @@
     return self;
 }
 
-- (void)initializeServices
-{
-    // Init the HTTP Server and clean its cache
-    _httpUploaderController = [[VLCHTTPUploaderController alloc] init];
-    [_httpUploaderController cleanCache];
-    _httpUploaderController.medialibrary = self.mediaLibraryService;
-
-    // start the remote control service
-    _remoteControlService = [[VLCRemoteControlService alloc] init];
-}
 
 - (MediaLibraryService *)mediaLibraryService
 {
@@ -77,6 +77,7 @@
     }
     return _mediaLibraryService;
 }
+
 
 - (VLCFavoriteService *)favoriteService
 {
@@ -87,13 +88,17 @@
     return _favoriteService;
 }
 
-- (VLCRendererDiscovererManager *)rendererDiscovererManager
+- (void)initializeServices
 {
-    if (!_rendererDiscovererManager) {
-        _rendererDiscovererManager = [[VLCRendererDiscovererManager alloc] initWithPresentingViewController:nil];
-    }
+    // Init the HTTP Server and clean its cache if on iOS
+    _httpUploaderController = [[VLCHTTPUploaderController alloc] init];
+    #if TARGET_OS_IOS
+    [_httpUploaderController cleanCache];
+    #endif
+    _httpUploaderController.medialibrary = self.mediaLibraryService;
 
-    return _rendererDiscovererManager;
+    // start the remote control service
+    _remoteControlService = [[VLCRemoteControlService alloc] init];
 }
 
 - (VLCHTTPUploaderController *)httpUploaderController
@@ -102,6 +107,16 @@
         [self initializeServices];
     }
     return _httpUploaderController;
+}
+
+#if TARGET_OS_IOS
+- (VLCRendererDiscovererManager *)rendererDiscovererManager
+{
+    if (!_rendererDiscovererManager) {
+        _rendererDiscovererManager = [[VLCRendererDiscovererManager alloc] initWithPresentingViewController:nil];
+    }
+
+    return _rendererDiscovererManager;
 }
 
 - (void)setExternalWindow:(UIWindow *)externalWindow
@@ -169,6 +184,7 @@
     return nil;
 }
 
+
 - (VLCStripeController *)stripeController
 {
     if (!_stripeController) {
@@ -176,5 +192,6 @@
     }
     return _stripeController;
 }
+#endif
 
 @end

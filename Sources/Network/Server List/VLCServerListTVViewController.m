@@ -139,7 +139,8 @@
     browsingCell.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption2];
     browsingCell.subtitle = service.serviceName;
     browsingCell.subtitleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-
+   [browsingCell setProgressViewHidden:YES];
+    
     NSURL *thumbnailURL;
     if ([service respondsToSelector:@selector(iconURL)]) {
         thumbnailURL = service.iconURL;

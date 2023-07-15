@@ -25,11 +25,12 @@
 #import "VLCPlayerDisplayController.h"
 #import <stdatomic.h>
 
+
 #if TARGET_OS_IOS
 #import "VLCMLMedia+Podcast.h"
 #import "VLCMLMedia+isWatched.h"
 #endif
-
+#import "VLCAppCoordinator.h"
 #import "VLC-Swift.h"
 
 NSString *const VLCPlaybackServicePlaybackDidStart = @"VLCPlaybackServicePlaybackDidStart";
@@ -67,6 +68,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     UIView *_actualVideoOutputView;
     UIView *_preBackgroundWrapperView;
 
+    BOOL _mediaWasJustStarted;
     int _majorPositionChangeInProgress;
     BOOL _externalAudioPlaybackDeviceConnected;
 
@@ -338,6 +340,8 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         equalizer.preAmplification = preampValue;
     }
 
+    _mediaWasJustStarted = YES;
+    
     _mediaPlayer.equalizer = equalizer;
     [_mediaPlayer addObserver:self forKeyPath:@"time" options:0 context:nil];
 
@@ -410,9 +414,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
         if (_mediaPlayer.media) {
             [_mediaPlayer pause];
-#if TARGET_OS_IOS
             [self savePlaybackState];
-#endif
             [_mediaPlayer stop];
         }
 
@@ -458,7 +460,6 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     }
 }
 
-#if TARGET_OS_IOS
 - (void)restoreAudioAndSubtitleTrack
 {
     VLCMLMedia *media = [VLCMLMedia mediaForPlayingMedia:_mediaPlayer.media];
@@ -505,10 +506,25 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 #endif
     }
 }
-#endif
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    
+    if (_mediaWasJustStarted) {
+        _mediaWasJustStarted = NO;
+        if (self.mediaList) {
+            [self _recoverLastPlaybackState];
+        }
+      #if TARGET_OS_TV
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        BOOL bValue = [defaults boolForKey:kVLCSettingUseSPDIF];
+
+        if (bValue) {
+           _mediaPlayer.audio.passthrough = bValue;
+        }
+      #endif
+    }
+
     if ([self.delegate respondsToSelector:@selector(playbackPositionUpdated:)])
         [self.delegate playbackPositionUpdated:self];
 
@@ -932,6 +948,9 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 - (void)pause
 {
     [_listPlayer pause];
+    [self savePlaybackState];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackDidPause object:self];
 }
 
 - (void)playItemAtIndex:(NSUInteger)index
@@ -1055,9 +1074,9 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
     if (nextIndex < 0) {
         if (self.repeatMode == VLCRepeatAllItems) {
-#if TARGET_OS_IOS
+
             [self savePlaybackState];
-#endif
+
             [_listPlayer next];
             [[NSNotificationCenter defaultCenter]
              postNotificationName:VLCPlaybackServicePlaybackMetadataDidChange object:self];
@@ -1066,9 +1085,8 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         }
         return NO;
     }
-#if TARGET_OS_IOS
+
     [self savePlaybackState];
-#endif
 
     [_listPlayer playItemAtNumber:@(nextIndex)];
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackMetadataDidChange object:self];
@@ -1082,9 +1100,9 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         if (playedTime.value.longLongValue / 2000 >= 1) {
             self.playbackPosition = .0;
         } else {
-#if TARGET_OS_IOS
+
             [self savePlaybackState];
-#endif
+            
             if (!_currentIndex) {
                 VLCMediaList *currentMediaList = _shuffleMode ? _shuffledList : _mediaList;
                 _currentIndex = [currentMediaList indexOfMedia:self.currentlyPlayingMedia];
@@ -1489,9 +1507,9 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     if (_externalAudioPlaybackDeviceConnected && !externalAudioPlaybackDeviceConnected && [_mediaPlayer isPlaying]) {
         APLog(@"Pausing playback as previously connected external audio playback device was removed");
         [_mediaPlayer pause];
-#if TARGET_OS_IOS
-       [self savePlaybackState];
-#endif
+
+        [self savePlaybackState];
+
         [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackDidPause object:self];
     }
     _externalAudioPlaybackDeviceConnected = externalAudioPlaybackDeviceConnected;
@@ -1534,7 +1552,6 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     [self recoverDisplayedMetadata];
 }
 
-#if TARGET_OS_IOS
 - (void)_recoverLastPlaybackState
 {
     VLCMedia *media = _mediaPlayer.media;
@@ -1559,37 +1576,44 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         }
 
         if (libraryMedia.type == VLCMLMediaTypeAudio) {
-            if (!libraryMedia.isPodcast) {
-                return;
+            #if TARGET_OS_IOS
+                if (!libraryMedia.isPodcast) {
+                    return;
+                }
+            #endif
+                continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioPlayback] integerValue];
+            } else {
+                #if TARGET_OS_TV
+                // KVLCContinuePlaybackWhereLeftOff
+                continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:KVLCContinuePlaybackWhereLeftOff] integerValue];
+                #else
+                continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinuePlayback] integerValue];
+                #endif
             }
-            continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioPlayback] integerValue];
-        } else {
-            continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinuePlayback] integerValue];
+            if (continuePlayback == 1) {
+                if (lastPosition * mediaDuration > 120000. || lastPosition < 0.95) {
+                    [self setPlaybackPosition:lastPosition];
+                }
+            } else if (continuePlayback == 0) {
+              #if TARGET_OS_IOS
+                NSArray<VLCAlertButton *> *buttonsAction = @[
+                    [[VLCAlertButton alloc] initWithTitle:NSLocalizedString(@"BUTTON_CANCEL", nil)
+                                                     style:UIAlertActionStyleCancel
+                                                    action:nil],
+                    [[VLCAlertButton alloc] initWithTitle:NSLocalizedString(@"BUTTON_CONTINUE", nil)
+                                                    action:^(UIAlertAction *action) {
+                                                        [self setPlaybackPosition:lastPosition];
+                                                    }]
+                ];
+                UIViewController *presentingVC = [UIApplication sharedApplication].delegate.window.rootViewController;
+                presentingVC = presentingVC.presentedViewController ?: presentingVC;
+                [VLCAlertViewController alertViewManagerWithTitle:NSLocalizedString(@"CONTINUE_PLAYBACK", nil)
+                                                     errorMessage:[NSString stringWithFormat:NSLocalizedString(@"CONTINUE_PLAYBACK_LONG", nil), libraryMedia.title]
+                                                   viewController:presentingVC
+                                                    buttonsAction:buttonsAction];
+              #endif
+            }
         }
-
-        if (continuePlayback == 1) {
-            [self setPlaybackPosition:lastPosition];
-        } else if (continuePlayback == 0) {
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"CONTINUE_PLAYBACK", nil) message:[NSString stringWithFormat:NSLocalizedString(@"CONTINUE_PLAYBACK_LONG", nil), libraryMedia.title] preferredStyle:UIAlertControllerStyleAlert];
-
-            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackDidStart object:self];
-            }];
-            UIAlertAction *continueAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_CONTINUE", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self setPlaybackPosition:lastPosition];
-                [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackDidStart object:self];
-            }];
-
-            [alertController addAction:cancelAction];
-            [alertController addAction:continueAction];
-
-            UIViewController *presentingVC = [UIApplication sharedApplication].delegate.window.rootViewController;
-            presentingVC = presentingVC.presentedViewController ?: presentingVC;
-            [presentingVC presentViewController:alertController
-                                       animated:YES
-                                     completion:nil];
-        }
-    }
 }
 
 - (void)_findCachedSubtitlesForMedia:(VLCMedia *)media
@@ -1631,7 +1655,6 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         }
     }
 }
-#endif
 
 - (void)recoverDisplayedMetadata
 {
@@ -1680,9 +1703,8 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
 - (void)applicationWillResignActive:(NSNotification *)aNotification
 {
-#if TARGET_OS_IOS
     [self savePlaybackState];
-#endif
+    
     if (![self isPlayingOnExternalScreen]
         && ![[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioInBackgroundKey] boolValue]) {
         if ([_mediaPlayer isPlaying]) {
@@ -1748,12 +1770,11 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     };
 }
 
-#if TARGET_OS_IOS
 - (void)savePlaybackState
 {
     BOOL activePlaybackSession = self.isPlaying || _playerIsSetup;
     if (activePlaybackSession)
-        [[VLCAppCoordinator sharedInstance].mediaLibraryService savePlaybackStateFrom:self];
+         [[VLCAppCoordinator sharedInstance].mediaLibraryService saveMetaDataOf: nil from:self];
 }
 
 - (BOOL)mediaListContains:(NSURL *)url
@@ -1782,7 +1803,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         [self next];
     }
 }
-#endif
+
 
 #pragma mark - Renderer
 

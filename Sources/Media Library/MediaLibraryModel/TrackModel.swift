@@ -9,39 +9,47 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-class TrackModel: MediaModel {
+class TrackModel: NSObject, MediaModel {
     typealias MLType = VLCMLMedia
-
-    var sortModel = SortModel([.alpha, .album, .duration, .fileSize, .insertionDate, .lastPlaybackDate, .playCount])
 
     var observable = Observable<MediaLibraryBaseModelObserver>()
 
-    var files = [VLCMLMedia]()
+    @objc var files = [VLCMLMedia]()
     var fileArrayLock = NSRecursiveLock()
-
+    
+    #if os(iOS)
     var cellType: BaseCollectionViewCell.Type {
         return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(name)") ? MediaGridCollectionCell.self : MediaCollectionViewCell.self
     }
-
+    #endif
+    @objc var sortModel = SortModel([.alpha, .album, .duration, .fileSize, .insertionDate, .lastPlaybackDate, .playCount])
+    
+    
     var medialibrary: MediaLibraryService
 
     var name: String = "SONGS"
 
     var indicatorName: String = NSLocalizedString("SONGS", comment: "")
 
-    required init(medialibrary: MediaLibraryService) {
+    @objc required init(medialibrary: MediaLibraryService) {
         defer {
             fileArrayLock.unlock()
         }
         self.medialibrary = medialibrary
+        super.init()
         medialibrary.observable.addObserver(self)
         fileArrayLock.lock()
         files = medialibrary.media(ofType: .audio)
     }
+    
+    @objc func getmedia(at index: Int) -> VLCMLMedia {
+        let media = files[index]
+        return media
+    }
 }
 
 // MARK: - Sort
-
+//#if os(iOS)
 extension TrackModel {
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
         // FIXME: Currently if sorted by name, the files are sorted by filename but displaying title
@@ -59,7 +67,7 @@ extension TrackModel {
         }
     }
 }
-
+//#endif
 // MARK: - MediaLibraryObserver
 
 extension TrackModel: MediaLibraryObserver {

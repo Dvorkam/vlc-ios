@@ -9,21 +9,23 @@
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
-
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-#if TARGET_OS_IOS
 @class MediaLibraryService;
 @class VLCRendererDiscovererManager;
+@class VLCFavoriteService;
 @class VLCMLMedia;
+
+#if TARGET_OS_IOS
 @class VLCStripeController;
 #endif
-@class VLCFavoriteService;
-
 
 @class VLCHTTPUploaderController;
+@class VideoModel;
+@class TrackModel;
+
 
 @interface VLCAppCoordinator : NSObject
 
@@ -31,20 +33,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) VLCHTTPUploaderController *httpUploaderController;
 @property (readonly) VLCFavoriteService *favoriteService;
-
-#if TARGET_OS_IOS
 @property (readonly) MediaLibraryService *mediaLibraryService;
 @property (readonly) VLCRendererDiscovererManager *rendererDiscovererManager;
-@property (readonly) VLCStripeController *stripeController;
-
-@property (nullable) UIWindow *externalWindow;
 @property (retain) UITabBarController *tabBarController;
+@property (nullable) UIWindow *externalWindow;
 
+#if TARGET_OS_IOS
+@property (readonly) VLCStripeController *stripeController;
+#endif
+
+#if TARGET_OS_TV
+@property (readonly) VideoModel *videoModel;
+@property (readonly) TrackModel *trackModel;
+#endif
+
+
+#if TARGET_OS_IOS
 - (void)handleShortcutItem:(UIApplicationShortcutItem *)shortcutItem;
-
-- (nullable VLCMLMedia *)mediaForUserActivity:(NSUserActivity *)userActivity;
+- (void)setTabBarController:(UITabBarController *)tabBarController;
+- (VLCMLMedia *)mediaForUserActivity:(NSUserActivity *)userActivity;
 #endif
 
 @end
 
 NS_ASSUME_NONNULL_END
+
+

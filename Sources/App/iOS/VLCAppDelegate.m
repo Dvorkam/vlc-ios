@@ -251,7 +251,7 @@
     VLCPlaybackService *vps = [VLCPlaybackService sharedInstance];
     if (vps.isPlaying || vps.playerIsSetup) {
         VLCAppCoordinator *appCoordinator = [VLCAppCoordinator sharedInstance];
-        [appCoordinator.mediaLibraryService savePlaybackStateFrom:vps];
+        [appCoordinator.mediaLibraryService saveMetaDataOf:nil from:vps];
     }
 
     VLCFavoriteService *fs = [[VLCAppCoordinator sharedInstance] favoriteService];

@@ -9,19 +9,21 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-class VideoModel: MediaModel {
+class VideoModel: NSObject , MediaModel {
     typealias MLType = VLCMLMedia
 
-    var sortModel = SortModel([.alpha, .duration, .insertionDate, .releaseDate, .fileSize, .lastPlaybackDate, .playCount])
-
-    var observable = Observable<MediaLibraryBaseModelObserver>()
-
-    var fileArrayLock = NSRecursiveLock()
-    var files = [VLCMLMedia]()
-
+    @objc var sortModel = SortModel([.alpha, .duration, .insertionDate, .releaseDate, .fileSize, .lastPlaybackDate, .playCount])
+    #if os(iOS)
     var cellType: BaseCollectionViewCell.Type {
         return UserDefaults.standard.bool(forKey: "\(kVLCVideoLibraryGridLayout)\(name)") ? MovieCollectionViewCell.self : MediaCollectionViewCell.self
     }
+    #endif
+    
+    var observable = Observable<MediaLibraryBaseModelObserver>()
+
+    var fileArrayLock = NSRecursiveLock()
+    
+    @objc var files = [VLCMLMedia]()
 
     var medialibrary: MediaLibraryService
 
@@ -31,14 +33,20 @@ class VideoModel: MediaModel {
 
     var indicatorName: String = NSLocalizedString("ALL_VIDEOS", comment: "")
 
-    required init(medialibrary: MediaLibraryService) {
+    @objc required init(medialibrary: MediaLibraryService) {
         defer {
             fileArrayLock.unlock()
         }
         self.medialibrary = medialibrary
+        super.init()
         medialibrary.observable.addObserver(self)
         fileArrayLock.lock()
         files = medialibrary.media(ofType: .video)
+    }
+    
+    @objc func getmedia(at index: Int) -> VLCMLMedia {
+        let media = files[index]
+        return media
     }
 }
 
@@ -105,7 +113,7 @@ extension VideoModel: MediaLibraryObserver {
     }
 
     // MARK: - Thumbnail
-
+    
     func medialibrary(_ medialibrary: MediaLibraryService,
                       thumbnailReady media: VLCMLMedia,
                       type: VLCMLThumbnailSizeType, success: Bool) {

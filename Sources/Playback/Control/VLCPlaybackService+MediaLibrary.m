@@ -42,6 +42,7 @@
     [self playMedia:media];
 }
 
+#if TARGET_OS_IOS
 - (void)playMedia:(VLCMLMedia *)media withMode:(EditButtonType)mode
 {
     if ([self.mediaList count] > 0) {
@@ -114,7 +115,9 @@
     [VLCPlaybackService.sharedInstance.playerDisplayController hintPlayqueueWithDelay:0.5];
 }
 
-- (VLCMediaList *)configureMediaListWithMLMedia:(NSArray<VLCMLMedia *> *)mlMedia indexToPlay:(int)index {
+#endif
+
+- (void)configureMediaListWithMLMedia:(NSArray<VLCMLMedia *> *)mlMedia indexToPlay:(int)index {
     VLCMediaList *list = [[VLCMediaList alloc] init];
 
     VLCMedia *media;

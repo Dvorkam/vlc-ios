@@ -18,6 +18,7 @@
 @property (nonatomic) NSIndexPath *currentlyFocusedIndexPath;
 @property (nonatomic) NSTimer *hintTimer;
 
+
 @end
 
 @implementation VLCDeletionCapableViewController
@@ -25,7 +26,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(startEditMode)];
     recognizer.allowedPressTypes = @[@(UIPressTypeSelect)];
     recognizer.minimumPressDuration = 1.0;
@@ -54,8 +54,9 @@
     if (fileToDelete == nil)
         return;
     NSIndexPath *indexPathToDelete = self.indexPathToDelete;
-
+    
     NSString *title = fileToDelete.lastPathComponent;
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
                                                                              message:nil
                                                                       preferredStyle:UIAlertControllerStyleAlert];
@@ -64,11 +65,17 @@
                                                          handler:^(UIAlertAction * _Nonnull action) {
                                                              [self deleteFileAtIndex:indexPathToDelete];
                                                          }];
+    UIAlertAction *renameAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_RENAME", nil)
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction * _Nonnull action) {
+    [self renameFileAtIndex:indexPathToDelete];
+                                                         }];
+    
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_CANCEL", nil)
                                                            style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
                                                                self.editing = NO;
                                                            }];
-
+    [alertController addAction:renameAction];
     [alertController addAction:deleteAction];
     [alertController addAction:cancelAction];
     [self presentViewController:alertController animated:YES completion:nil];
@@ -77,8 +84,14 @@
 - (void)deleteFileAtIndex:(NSIndexPath *)indexPathToDelete
 {
     [self.hintTimer invalidate];
-    self.hintTimer = nil;
+     self.hintTimer = nil;
     [self animateDeletHintToVisibility:NO];
+}
+
+- (void)renameFileAtIndex:(NSIndexPath *)indexPathToRename
+{
+    [self.hintTimer invalidate];
+     self.hintTimer = nil;
 }
 
 - (void)animateDeletHintToVisibility:(BOOL)visible
