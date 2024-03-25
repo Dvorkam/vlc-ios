@@ -121,18 +121,28 @@ class ActionSheet: UIViewController {
         return collectionViewHeightConstraint
     }()
 
+    private lazy var layoutGuide: UILayoutGuide = {
+        var layoutGuide = view.layoutMarginsGuide
+
+        if #available(iOS 11.0, *) {
+            layoutGuide = view.safeAreaLayoutGuide
+        }
+
+        return layoutGuide
+    }()
+
     let collectionViewEdgeInsets = UIEdgeInsets(top: 5, left: 0, bottom: 0, right: 0)
 
     var collectionViewHeight: CGFloat {
         let rowsCount: CGFloat = CGFloat(dataSource?.numberOfRows() ?? 0)
-        let collectionViewHeight = rowsCount * (cellHeight + collectionViewEdgeInsets.top)
+        let collectionViewHeight = rowsCount * ((cellHeight + collectionViewEdgeInsets.top) / numberOfColums)
         return collectionViewHeight
     }
 
     var maxCollectionViewHeight: CGFloat {
         let maxMargin: CGFloat = 75
         let minCollectionViewHeight: CGFloat = cellHeight * 1.5 + collectionViewEdgeInsets.top * 2
-        let maxCollectionViewHeight = max(view.bounds.height - headerView.bounds.height - maxMargin, minCollectionViewHeight)
+        let maxCollectionViewHeight = max(layoutGuide.layoutFrame.height - headerView.bounds.height - maxMargin, minCollectionViewHeight)
         return maxCollectionViewHeight
     }
 
@@ -141,6 +151,14 @@ class ActionSheet: UIViewController {
         let w = collectionView.frame.size.width
         let h = collectionView.frame.size.height
         return CGRect(x: w, y: y, width: w, height: h)
+    }
+
+    var numberOfColums: CGFloat = 1 {
+        didSet {
+            if numberOfColums == 0 {
+                numberOfColums = 1
+            }
+        }
     }
 
     private var mainStackViewTranslation = CGPoint(x: 0, y: 0)
@@ -421,7 +439,7 @@ extension ActionSheet: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: cellHeight)
+        return CGSize(width: collectionView.frame.width / numberOfColums, height: cellHeight)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

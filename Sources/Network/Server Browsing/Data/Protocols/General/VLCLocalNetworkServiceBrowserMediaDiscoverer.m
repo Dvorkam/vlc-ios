@@ -14,6 +14,7 @@
 #import "VLCLocalNetworkServiceBrowserMediaDiscoverer.h"
 #import "VLCLocalNetworkServiceVLCMedia.h"
 #import "VLCLocalNetworkServiceBrowserUPnP.h"
+#import "VLCAppCoordinator.h"
 #import "VLCHTTPUploaderController.h"
 
 @interface VLCLocalNetworkServiceBrowserMediaDiscoverer () <VLCMediaListDelegate>
@@ -48,7 +49,7 @@
                 [libVLCOptions addObject:[NSString stringWithFormat:@"--%@=%@", kVLCSettingNetworkSatIPChannelListUrl, satipURLstring]];
                 [libVLCOptions addObject:[NSString stringWithFormat:@"--%@=%@", kVLCSettingNetworkSatIPChannelList, kVLCSettingNetworkSatIPChannelListCustom]];
             }
-            NSString *multicastInterfaceName = [[VLCHTTPUploaderController sharedInstance] nameOfUsedNetworkInterface];
+            NSString *multicastInterfaceName = [[[VLCAppCoordinator sharedInstance] httpUploaderController] nameOfUsedNetworkInterface];
             if (multicastInterfaceName.length > 0) {
                 [libVLCOptions addObject:[NSString stringWithFormat:@"--miface=%@", multicastInterfaceName]];
             }
@@ -90,7 +91,7 @@
 - (void)stopDiscovery
 {
     /* the UPnP module is special and may not be terminated */
-    if ([self.serviceName isEqualToString:VLCNetworkServerProtocolIdentifierUPnP]) {
+    if ([self.serviceName isEqualToString:@"upnp"]) {
         return;
     }
     VLCMediaDiscoverer *discoverer = self.mediaDiscoverer;

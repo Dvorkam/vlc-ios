@@ -77,6 +77,7 @@
                                   kVLCSettingPlaybackBackwardSkipLengthSwipe : kVLCSettingPlaybackBackwardSkipLengthSwipeDefaultValue,
                                   kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
                                   kVLCAutomaticallyPlayNextItem : @(YES),
+                                  kVLCPlaylistPlayNextItem: @(YES),
                                   kVLCSettingEnableMediaCellTextScrolling : @(NO),
                                   kVLCSettingShowThumbnails : kVLCSettingShowThumbnailsDefaultValue,
                                   kVLCSettingShowArtworks : kVLCSettingShowArtworksDefaultValue,
@@ -94,7 +95,8 @@
                                   kVLCPlayerIsShuffleEnabled: kVLCPlayerIsShuffleEnabledDefaultValue,
                                   kVLCPlayerIsRepeatEnabled: kVLCPlayerIsRepeatEnabledDefaultValue,
                                   kVLCSettingPlaybackSpeedDefaultValue: @(1.0),
-                                  kVLCPlayerShowPlaybackSpeedShortcut: @(NO)
+                                  kVLCPlayerShowPlaybackSpeedShortcut: @(NO),
+                                  kVLCSettingAlwaysPlayURLs: @(NO)
     };
     [defaults registerDefaults:appDefaults];
 }
@@ -151,6 +153,9 @@
     self.orientationLock = UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
 
     [self configureShortCutItemsWithApplication:application];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:([defaults integerForKey:kVLCNumberOfLaunches] + 1) forKey:kVLCNumberOfLaunches];
 
     return YES;
 }
@@ -243,6 +248,9 @@
         VLCAppCoordinator *appCoordinator = [VLCAppCoordinator sharedInstance];
         [appCoordinator.mediaLibraryService savePlaybackStateFrom:vps];
     }
+
+    VLCFavoriteService *fs = [[VLCAppCoordinator sharedInstance] favoriteService];
+    [fs storeContentSynchronously];
 }
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler

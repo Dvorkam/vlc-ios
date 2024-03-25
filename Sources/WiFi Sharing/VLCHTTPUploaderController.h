@@ -19,8 +19,6 @@
 
 @interface VLCHTTPUploaderController : NSObject
 
-+ (nonnull instancetype)sharedInstance;
-
 @property (readonly, nullable) NSString *nameOfUsedNetworkInterface;
 @property (nonatomic, readonly) BOOL isReachable;
 @property (nonatomic, readwrite, nullable) MediaLibraryService *medialibrary;
@@ -34,8 +32,9 @@
 - (nonnull NSString *)hostnamePort;
 
 - (void)moveFileFrom:(nonnull NSString *)filepath;
-- (void)cleanCache;
+
 #if TARGET_OS_IOS
+- (void)cleanCache;
 - (void)resetIdleTimer;
 #endif
 

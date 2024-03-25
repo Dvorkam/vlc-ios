@@ -16,6 +16,7 @@ protocol AudioPlayerViewControllerDelegate: AnyObject {
     func audioPlayerViewControllerDidMinimize(_ audioPlayerViewController: AudioPlayerViewController)
     func audioPlayerViewControllerDidClose(_ audioPlayerViewController: AudioPlayerViewController)
     func audioPlayerViewControllerShouldBeDisplayed(_ audioPlayerViewController: AudioPlayerViewController) -> Bool
+    func audioPlayerViewControllerShouldSwitchPlayer(_ audioPlayerViewController: AudioPlayerViewController)
 }
 
 @objc (VLCAudioPlayerViewController)
@@ -71,9 +72,9 @@ class AudioPlayerViewController: PlayerViewController {
         mediaScrubProgressBar.updateBackgroundAlpha(with: 0.0)
         audioPlayerView.setupProgressView(with: mediaScrubProgressBar)
         audioPlayerView.setupExternalOutputView(with: externalOutputView)
-        audioPlayerView.setupSliders()
         setupAudioPlayerViewConstraints()
         setupOptionsNavigationBar()
+        setupSliders()
         setupStatusLabel()
     }
 
@@ -89,6 +90,7 @@ class AudioPlayerViewController: PlayerViewController {
         audioPlayerView.updateThumbnailImageView()
         audioPlayerView.setupBackgroundColor()
         audioPlayerView.setupPlaybackSpeed()
+        mediaScrubProgressBar.updateInterfacePosition()
         setupGestures()
         playModeUpdated()
 
@@ -231,6 +233,15 @@ class AudioPlayerViewController: PlayerViewController {
         NSLayoutConstraint.activate([
             optionsNavigationBar.topAnchor.constraint(equalTo: audioPlayerView.navigationBarView.bottomAnchor, constant: padding),
             optionsNavigationBar.trailingAnchor.constraint(equalTo: audioPlayerView.layoutGuide.trailingAnchor, constant: -padding)
+        ])
+    }
+
+    private func setupSliders() {
+        audioPlayerView.setupSliders(with: brightnessControlView, and: volumeControlView)
+
+        NSLayoutConstraint.activate([
+            brightnessControlView.topAnchor.constraint(greaterThanOrEqualTo: optionsNavigationBar.bottomAnchor),
+            volumeControlView.topAnchor.constraint(greaterThanOrEqualTo: optionsNavigationBar.bottomAnchor)
         ])
     }
 
@@ -415,6 +426,12 @@ extension AudioPlayerViewController {
         let accessibilityHint: String = isPlaying ? NSLocalizedString("MINIMIZE_HINT", comment: "") : NSLocalizedString("CLOSE_HINT", comment: "")
         mediaNavigationBar.updateCloseButton(with: image, accessibility: (accessibilityLabel, accessibilityHint))
 
+        if currentState == .opening && playbackService.numberOfVideoTracks > 0 {
+            // This media contains video tracks and can be played with the Video Player.
+            delegate?.audioPlayerViewControllerShouldSwitchPlayer(self)
+            return
+        }
+
         if let queueCollectionView = queueViewController?.queueCollectionView {
             queueCollectionView.reloadData()
         }
@@ -426,6 +443,10 @@ extension AudioPlayerViewController {
 
         if currentState == .buffering {
             mediaDuration = playbackService.mediaDuration
+        }
+
+        if currentState == .opening || currentState == .stopped {
+            resetABRepeat()
         }
 
         moreOptionsActionSheet.currentMediaHasChapters = currentMediaHasChapters
@@ -463,10 +484,6 @@ extension AudioPlayerViewController: PlayerControllerDelegate {
 
     func playerControllerApplicationBecameActive(_ playerController: PlayerController) {
         // TODO
-    }
-
-    func playerControllerPlaybackDidStop(_ playerController: PlayerController) {
-        delegate?.audioPlayerViewControllerDidMinimize(self)
     }
 }
 
@@ -549,6 +566,22 @@ extension AudioPlayerViewController {
 
     func mediaMoreOptionsActionSheetShowPlaybackSpeedShortcut(_ displayView: Bool) {
         audioPlayerView.shouldDisplaySecondaryStackView(displayView)
+    }
+
+    override func mediaMoreOptionsActionSheetPresentABRepeatView(with abView: ABRepeatView) {
+        super.mediaMoreOptionsActionSheetPresentABRepeatView(with: abView)
+
+        guard let abRepeatView = abRepeatView else {
+            return
+        }
+
+        audioPlayerView.addSubview(abRepeatView)
+        audioPlayerView.bringSubviewToFront(abRepeatView)
+        abRepeatView.isUserInteractionEnabled = true
+        NSLayoutConstraint.activate([
+            abRepeatView.centerXAnchor.constraint(equalTo: audioPlayerView.layoutGuide.centerXAnchor),
+            abRepeatView.bottomAnchor.constraint(equalTo: mediaScrubProgressBar.topAnchor, constant: -10.0),
+        ])
     }
 }
 

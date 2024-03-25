@@ -158,11 +158,14 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
 
     if (self.playbackController.fullscreenSessionRequested && enforceFullscreen) {
         [self setDisplayMode:VLCPlayerDisplayControllerDisplayModeFullscreen];
+    } else if ([media type] == VLCMLMediaTypeAudio && _playbackController.numberOfVideoTracks > 0) {
+        [self setDisplayMode:VLCPlayerDisplayControllerDisplayModeFullscreen];
     }
 
     switch (self.displayMode) {
         case VLCPlayerDisplayControllerDisplayModeFullscreen:
-            if (media.type == VLCMLMediaTypeAudio) {
+            if ((media.type == VLCMLMediaTypeAudio || _playbackController.playAsAudio) &&
+                _playbackController.numberOfVideoTracks == 0) {
                 [self _presentAudioPlayerViewIfNeeded];
             } else {
                 [self _presentFullscreenPlaybackViewIfNeeded];
@@ -372,6 +375,7 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
 
     void (^completionBlock)(BOOL) = nil;
     if (needsShow) {
+        // Init the mini player view if needed
         if (!miniPlaybackView) {
             UIViewController *rootViewController = UIApplication.sharedApplication.keyWindow.rootViewController;
 
@@ -409,6 +413,15 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
             [((VLCAudioMiniPlayer*)_miniPlaybackView) setupQueueViewControllerWith:_queueViewController];
             [self.view layoutIfNeeded];
         }
+
+        // Properly set the shuffle and repeat mode
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        if ([userDefaults boolForKey:kVLCPlayerShouldRememberState]) {
+            _playbackController.shuffleMode = [userDefaults boolForKey:kVLCPlayerIsShuffleEnabled];
+            NSInteger repeatMode = [userDefaults integerForKey:kVLCPlayerIsRepeatEnabled];
+            _playbackController.repeatMode = repeatMode;
+        }
+
         [self addPlayqueueToMiniPlayer];
         miniPlaybackView.visible = YES;
         [[NSNotificationCenter defaultCenter]
@@ -535,7 +548,6 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
 - (void)videoPlayerViewControllerDidMinimize:(VLCVideoPlayerViewController *)videoPlayerViewController
 {
     [self closeFullscreenPlayback];
-    [self addPlayqueueToMiniPlayer];
 }
 
 - (BOOL)videoPlayerViewControllerShouldBeDisplayed:(VLCVideoPlayerViewController *)videoPlayerViewController
@@ -543,12 +555,19 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
     return self.displayMode == VLCPlayerDisplayControllerDisplayModeFullscreen;
 }
 
+- (void)videoPlayerViewControllerShouldSwitchPlayer:(VLCVideoPlayerViewController *)videoPlayerViewController
+{
+    [_movieViewController dismissViewControllerAnimated:[self shouldAnimate] completion:^{
+        [self setDisplayMode:VLCPlayerDisplayControllerDisplayModeFullscreen];
+        [self _presentFullscreenPlaybackViewIfNeeded];
+    }];
+}
+
 #pragma mark - AudioPlayerViewControllerDelegate
 
 - (void)audioPlayerViewControllerDidMinimize:(VLCAudioPlayerViewController *)audioPlayerViewController
 {
     [self closeAudioPlayer];
-    [self addPlayqueueToMiniPlayer];
 }
 
 - (void)audioPlayerViewControllerDidClose:(VLCAudioPlayerViewController *)audioPlayerViewController
@@ -561,6 +580,14 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
 - (BOOL)audioPlayerViewControllerShouldBeDisplayed:(VLCAudioPlayerViewController *)audioPlayerViewController
 {
     return self.displayMode == VLCPlayerDisplayControllerDisplayModeFullscreen;
+}
+
+- (void)audioPlayerViewControllerShouldSwitchPlayer:(VLCAudioPlayerViewController *)audioPlayerViewController
+{
+    [_audioPlayerViewController dismissViewControllerAnimated:[self shouldAnimate] completion:^{
+        [self setDisplayMode:VLCPlayerDisplayControllerDisplayModeFullscreen];
+        [self _presentFullscreenPlaybackViewIfNeeded];
+    }];
 }
 
 #pragma mark - KeyCommands

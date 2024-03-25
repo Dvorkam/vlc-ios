@@ -8,6 +8,7 @@
  * Authors: Felix Paul Kühne <fkuehne # videolan.org>
  *          Pierre SAGASPE <pierre.sagaspe # me.com>
  *          Tobias Conradi <videolan # tobias-conradi.de>
+ *          Diogo Simao Marques <dogo@videolabs.io>
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
@@ -17,6 +18,7 @@
 #import "VLCActivityManager.h"
 #import "VLCStatusLabel.h"
 #import "VLCPlaybackService.h"
+#import "VLCFavoriteService.h"
 
 #import "VLCNetworkServerBrowser-Protocol.h"
 #import "VLCServerBrowsingController.h"
@@ -27,11 +29,11 @@
 {
     UIRefreshControl *_refreshControl;
     MediaLibraryService *_medialibraryService;
+    VLCFavoriteService *_favoriteService;
 }
 @property (nonatomic) id<VLCNetworkServerBrowser> serverBrowser;
 @property (nonatomic) VLCServerBrowsingController *browsingController;
 @property (nonatomic) NSArray<id<VLCNetworkServerBrowserItem>> *searchArray;
-@property (nonatomic) NSMutableArray *favoriteArray;
 @end
 
 @implementation VLCNetworkServerBrowserViewController
@@ -49,7 +51,7 @@
                                initWithViewController:self
                                serverBrowser:browser
                                medialibraryService:_medialibraryService];
-        _favoriteArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:kVLCRecentFavoriteURL]];
+        _favoriteService = [[VLCAppCoordinator sharedInstance] favoriteService];
     }
     return self;
 }
@@ -152,27 +154,28 @@
     if (item.isContainer) {
         VLCNetworkServerBrowserViewController *targetViewController = [[VLCNetworkServerBrowserViewController alloc]
                                                                        initWithServerBrowser:item.containerBrowser medialibraryService:_medialibraryService];
-        
-//        [self.favoriteDelegate addFolderToFavorites:item];
-        
-        NSLog(@"%@", item);
+
         [self.navigationController pushViewController:targetViewController animated:YES];
     } else {
         if (singlePlayback) {
             [self.browsingController streamFileForItem:item];
         } else {
-            VLCMediaList *mediaList = self.serverBrowser.mediaList;
-            VLCMediaList *mediaListToPlay = [[VLCMediaList alloc] init];
-            for (NSInteger i = 0; i < [mediaList count]; ++i) {
-                VLCMedia *media = [mediaList mediaAtIndex:i];
+            NSArray<id<VLCNetworkServerBrowserItem>> *items = (self.searchController.isActive) ? _searchArray : _serverBrowser.items;
+            NSMutableArray<VLCMedia *> *mediaArray = [[NSMutableArray alloc] init];
+            VLCMedia *mediaSelected = items[index].media;
+
+            for (NSInteger i = 0, size = items.count; i < size; i++) {
+                VLCMedia *media = items[i].media;
                 if (media.mediaType != VLCMediaTypeDirectory) {
-                    [mediaListToPlay addMedia:media];
+                    [mediaArray addObject:media];
                 }
             }
-            [self.browsingController configureSubtitlesInMediaList:mediaListToPlay];
 
-            NSUInteger indexToPlay = [mediaListToPlay indexOfMedia:[mediaList mediaAtIndex:index]];
-            [self.browsingController streamMediaList:mediaListToPlay startingAtIndex:indexToPlay];
+            VLCMediaList *mediaListToPlay = [[VLCMediaList alloc] initWithArray:mediaArray];
+            [_browsingController configureSubtitlesInMediaList:mediaListToPlay];
+
+            NSUInteger indexToPlay = [mediaListToPlay indexOfMedia:mediaSelected];
+            [_browsingController streamMediaList:mediaListToPlay startingAtIndex:indexToPlay];
         }
     }
 }
@@ -220,11 +223,8 @@
     
     [self.browsingController configureCell:cell withItem:item];
     cell.delegate = self;
-    
-    NSUInteger isFavorited = [_favoriteArray indexOfObject:item.URL.absoluteString];
-    if (isFavorited != NSNotFound)
-        cell.isFavorite = YES;
-    
+    cell.isFavorite = [_favoriteService isFavoriteURL:item.URL];
+
     return cell;
 }
 
@@ -248,7 +248,6 @@
     if (self.searchController.isActive) {
         if (row < _searchArray.count) {
             item = _searchArray[row];
-            singlePlayback = YES;
         }
     } else {
         NSArray *items = self.serverBrowser.items;
@@ -262,6 +261,33 @@
     }
 
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+- (UIContextMenuConfiguration *)tableView:(UITableView *)tableView contextMenuConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath point:(CGPoint)point
+API_AVAILABLE(ios(13.0)) {
+    VLCNetworkListCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+
+    if (!cell || !cell.isFavorable) {
+        return nil;
+    }
+
+    UIContextMenuConfiguration *menuConfiguration = [UIContextMenuConfiguration configurationWithIdentifier:nil
+                                                                                            previewProvider:nil
+                                                                                             actionProvider:^UIMenu * _Nullable(NSArray<UIMenuElement *> * _Nonnull suggestedActions) {
+        NSMutableArray* actions = [[NSMutableArray alloc] init];
+
+        NSString *optionTitle = cell.isFavorite ? NSLocalizedString(@"REMOVE_FAVORITE", "") : NSLocalizedString(@"ADD_FAVORITE", "");
+        UIImage *image = cell.isFavorite ? [UIImage imageNamed:@"heart"] : [UIImage imageNamed:@"heart.fill"];
+
+        [actions addObject:[UIAction actionWithTitle:optionTitle image:image identifier:nil handler:^(__kindof UIAction * _Nonnull action) {
+            [self triggerFavoriteForCell:cell];
+        }]];
+
+        UIMenu* menu = [UIMenu menuWithTitle:@"" children:actions];
+        return menu;
+    }];
+
+    return menuConfiguration;
 }
 
 #pragma mark - VLCNetworkListCell delegation
@@ -282,19 +308,23 @@
 - (void)triggerFavoriteForCell:(VLCNetworkListCell *)cell
 {
     id<VLCNetworkServerBrowserItem> item;
-    item = self.serverBrowser.items[[self.tableView indexPathForCell:cell].row];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    item = self.serverBrowser.items[indexPath.row];
+
+    VLCFavorite *favorite = [[VLCFavorite alloc] init];
+    favorite.url = item.URL;
+
     if (!cell.isFavorite) {
         cell.isFavorite = YES;
-        [_favoriteArray addObject:item.URL.absoluteString];
+        favorite.userVisibleName = item.name;
+        [_favoriteService addFavorite:favorite];
     }
     else {
         cell.isFavorite = NO;
-        [_favoriteArray removeObject:item.URL.absoluteString];
+        [_favoriteService removeFavorite:favorite];
     }
-    
-    NSDictionary* userInfo = @{@"Folder":item};
-    [[NSNotificationCenter defaultCenter] postNotificationName:kVLCNetworkServerFavoritesUpdated object:self userInfo:userInfo];
-    [self.tableView reloadData];
+
+    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 #pragma mark - Search Research Updater

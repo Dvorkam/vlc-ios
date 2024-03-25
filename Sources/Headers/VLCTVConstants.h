@@ -2,7 +2,7 @@
  * VLCTVConstants.h
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2013-2022 VideoLAN. All rights reserved.
+ * Copyright (c) 2013-2023 VideoLAN. All rights reserved.
  * $Id$
  *
  * Authors: Felix Paul Kühne <fkuehne # videolan.org>
@@ -67,10 +67,17 @@
 #define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
+#define kVLCPlayerUIShouldHide @"PlayerUIShouldHide"
 #define kVLCSettingDownloadArtwork @"download-artwork"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"
 #define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
 #define kVLCSettingBackupMediaLibraryDefaultValue @NO
+
+#define kVLCPlayerShouldRememberState @"PlayerShouldRememberState"
+#define kVLCPlayerIsShuffleEnabled @"PlayerIsShuffleEnabled"
+#define kVLCPlayerIsShuffleEnabledDefaultValue @NO
+#define kVLCPlayerIsRepeatEnabled @"PlayerIsRepeatEnabled"
+#define kVLCPlayerIsRepeatEnabledDefaultValue @(0)
 
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
@@ -86,3 +93,5 @@
 #define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
 
 #define kVLCForceSMBV1 @"smb-force-v1"
+
+#define kVLCSettingReset @"kVLCSettingReset"

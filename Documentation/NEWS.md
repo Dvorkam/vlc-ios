@@ -1,7 +1,58 @@
 # Changelog
 
+## iOS [3.5.7]
+· Fix runtime exceptions on iOS 9
+· Improve the donation process
+· Update the play queue according to the shuffle state
+· Fix the favorites authentication
+
+## tvOS [3.5.7]
+· Fix the favorites authentication and saving location
+· Improve the favorites navigation
+
+## iOS [3.5.6]
+· Fix UPnP browsing
+· Improve the favorites layout
+
+## tvOS [3.5.6]
+· Fix UPnP browsing
+· Relocate favorites button
+· Improve the favorites layout
+
+## iOS [3.5.5]
+· Minor improvements
+
+## iOS [3.5.4]
+· Fix login to network shares, especially with complex addresses
+· Add option to always play media opened through third-party apps
+
+## tvOS [3.5.4]
+· Fix login to network shares, especially with complex addresses
+· Hide UI promptly when playback continues
+· Fix cleaning of cached media when the app relaunches
+
+## iOS [3.5.3]
+· Fix browsing UPnP and SMB shares
+
+## tvOS [3.5.3]
+· Fix browsing UPnP and SMB shares
+
+## iOS [3.5.2]
+· Fix aspect ratio issue leading to incomplete fullscreen image display
+· Stability improvements
+
+## tvOS [3.5.2]
+· Allow folders on remote shares to be marked as favorites
+· Add feature to reset the settings to their default values
+· Stability improvements
+
+## iOS [3.5.1]
+· Fix copy/paste/select for the server login screen
+· Minor improvements for the Donation screen
+
 ## iOS [3.5.0]
 · Add new playback history feature
+· Add A to B loop support
 · Remember playback position and state for media on network servers and external devices
 · Cache generated artwork for external media
 · Add Siri integration to control playback in VLC and access locally stored media
@@ -12,9 +63,26 @@
 · Show playlist durations in list view
 · Add options for more flexible gesture controls during playback
 · Add missing mka support declaration
+· Add feature to reset the settings to their default values
+· Split the automatically play next item settings for playlists and other collections
+· Gather the appearance settings
+· Add long press gesture to the aspect ratio button to display the ratios' list
+· Add option to remember the last playback speed
+· Improve CarPlay support for artists and playlists
+· Improve playback continuation for very long media
+· Fix opening certain LAN servers discovered by Bonjour
+· Improve accessibility of the playmode buttons
+· Add new Donation screen
+· Add link to newly created Documentation to the Settings screen
+· Update on-boarding screen
+· Fix playback continuation in loop mode for the first item
+· Fix playback of mp3+cdg combinations for karaoke
 
 ## tvOS [3.5.0]
-· Fix the display of media's artworks for audio playback.
+· Fix the display of media's artworks for audio playback
+· Add option to hide playback UI on loop
+· Add support for custom subtitles and audio delay during playback
+· Fix opening certain LAN servers discovered by Bonjour
 
 ## iOS [3.4.9]
 · Noticable stability improvements

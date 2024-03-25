@@ -24,6 +24,7 @@
 #define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
 #define kVLCSettingAbout @"about"
 #define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
+#define kVLCPlaylistPlayNextItem @"PlaylistPlayNextItem"
 #define kVLCSettingEnableMediaCellTextScrolling @"EnableMediaCellTextScrolling"
 #define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
 #define kVLCSettingStretchAudio @"audio-time-stretch"
@@ -93,12 +94,12 @@
 #define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
 #define kVLCSettingBackupMediaLibraryDefaultValue @NO
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
+#define kVLCResetSettings @"kVLCResetSettings"
+#define kVLCSettingAlwaysPlayURLs @"kVLCSettingAlwaysPlayURLs"
+#define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 
 #define kVLCForceSMBV1 @"smb-force-v1"
 
-#define kVLCRecentFavoriteURL @"recent-favorite-url"
-#define kVLCFavoriteGroupAlias @"favorite-group-alias"
-#define kVLCNetworkServerFavoritesUpdated @"add-to-favorite"
 #define kVLCShowRemainingTime @"show-remaining-time"
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"
@@ -156,12 +157,17 @@
 #define kVLCSortDefault @"SortDefault"
 #define kVLCSortDescendingDefault @"SortDescendingDefault"
 #define kVLCHasLaunchedBefore @"hasLaunchedBefore"
+#define kVLCHasNaggedThisMonth @"kVLCHasNaggedThisMonth"
+#define kVLCNumberOfLaunches @"kVLCNumberOfLaunches"
+#define kVLCHasActiveSubscription @"kVLCHasActiveSubscription"
 
 #define kVLCTabBarIndex @"TabBarIndex"
 
 #define kVLCGroupLayout @"kVLCGroupLayout"
 
 #define kVLCEqualizerSnapBands @"EqualizerSnapBands"
+
+#define kVLCDonationAnonymousCustomerID @"kVLCDonationAnonymousCustomerID"
 
 /* LEGACY KEYS, DO NOT USE IN NEW CODE */
 #define kVLCFTPServer @"ftp-server"

@@ -439,12 +439,12 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         cachedCellSize = .zero
         collectionView.collectionViewLayout.invalidateLayout()
         setupCollectionView() //Fixes crash that is caused due to layout change
-        showGuideOnLaunch()
         setNavbarAppearance()
         loadSort()
     }
 
     override func viewDidAppear(_ animated: Bool) {
+        showGuideOnLaunch()
         updateCollectionViewForAlbum()
     }
 
@@ -483,6 +483,29 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             navigationController.modalPresentationStyle = .formSheet
             self.present(navigationController, animated: true)
             userDefaults.set(true, forKey: kVLCHasLaunchedBefore)
+        } else {
+            if userDefaults.bool(forKey: kVLCHasActiveSubscription) {
+                return
+            }
+
+            var lastNagMonth = userDefaults.integer(forKey: kVLCHasNaggedThisMonth)
+            let numberOfLaunches = userDefaults.integer(forKey: kVLCNumberOfLaunches)
+            let currentMonth = NSCalendar.current.component(.month, from: Date())
+
+            if lastNagMonth == 12 && currentMonth < 12 {
+                lastNagMonth = 0
+            }
+
+            if lastNagMonth < currentMonth && numberOfLaunches >= 5 {
+                userDefaults.setValue(currentMonth, forKey: kVLCHasNaggedThisMonth)
+                userDefaults.setValue(0, forKey: kVLCNumberOfLaunches)
+                let donationVC = VLCDonationNagScreenViewController(nibName: "VLCDonationNagScreenViewController", bundle: nil)
+                let donationNC = UINavigationController(rootViewController: donationVC)
+                donationNC.navigationBar.isHidden = true
+                donationNC.modalTransitionStyle = .crossDissolve
+                donationNC.modalPresentationStyle = .overFullScreen
+                self.present(donationNC, animated: true)
+            }
         }
     }
 
@@ -900,7 +923,7 @@ private extension MediaCategoryViewController {
                 case .appendToQueue:
                     playbackController.appendMediaToQueue(media)
                 case .playAsAudio:
-                    playbackController.setPlayAsAudio(true)
+                    playbackController.playAsAudio = true
                     playbackController.play(media)
                 default:
                     assertionFailure("generatePlayAction: cannot be used with other actions")
@@ -923,7 +946,7 @@ private extension MediaCategoryViewController {
                 case .appendToQueue:
                     playbackController.appendCollectionToQueue(files)
                 case .playAsAudio:
-                    playbackController.setPlayAsAudio(true)
+                    playbackController.playAsAudio = true
                     playbackController.playCollection(files)
                 default:
                     assertionFailure("generatePlayAction: cannot be used with other actions")
@@ -1044,7 +1067,7 @@ extension MediaCategoryViewController {
 
         // Reset the play as audio variable
         let playbackService = PlaybackService.sharedInstance()
-        playbackService.setPlayAsAudio(false)
+        playbackService.playAsAudio = false
 
         if let mediaGroup = modelContent as? VLCMLMediaGroup,
             mediaGroup.nbTotalMedia() == 1 && !mediaGroup.userInteracted() {
@@ -1548,14 +1571,13 @@ extension MediaCategoryViewController: MediaLibraryBaseModelObserver {
 extension MediaCategoryViewController {
     func play(media: VLCMLMedia, at indexPath: IndexPath) {
         let playbackController = PlaybackService.sharedInstance()
-        var autoPlayNextItem = UserDefaults.standard.bool(forKey: kVLCAutomaticallyPlayNextItem)
+        var autoPlayNextItem: Bool = userDefaults.bool(forKey: kVLCAutomaticallyPlayNextItem)
 
         playbackController.fullscreenSessionRequested = media.type() != .audio
 
         if let model = model as? CollectionModel,
-           model.mediaCollection is VLCMLPlaylist,
-           !autoPlayNextItem {
-            autoPlayNextItem = true
+           model.mediaCollection is VLCMLPlaylist {
+            autoPlayNextItem = userDefaults.bool(forKey: kVLCPlaylistPlayNextItem)
         }
 
         if !autoPlayNextItem {
@@ -1569,10 +1591,19 @@ extension MediaCategoryViewController {
         if let mediaGroupModel = model as? MediaGroupViewModel {
             mediaGroupModel.fileArrayQueue.sync {
                 var singleGroup = [VLCMLMediaGroup]()
+
+                if searchDataSource.isSearching,
+                   let dataSet = currentDataSet as? [VLCMLMediaGroup] {
+                    singleGroup = dataSet
+                } else {
+                    singleGroup = mediaGroupModel.files
+                }
+
                 // Filter single groups
-                singleGroup = mediaGroupModel.files.filter() {
+                singleGroup = singleGroup.filter() {
                     return $0.nbTotalMedia() == 1 && !$0.userInteracted()
                 }
+
                 singleGroup.forEach() {
                     guard let media = $0.media(of: .unknown)?.first else {
                         assertionFailure("MediaCategoryViewController: play: Failed to fetch media.")

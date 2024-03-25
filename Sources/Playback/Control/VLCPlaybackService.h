@@ -13,14 +13,6 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-typedef NS_ENUM(NSUInteger, VLCAspectRatio) {
-    VLCAspectRatioDefault = 0,
-    VLCAspectRatioFillToScreen,
-    VLCAspectRatioFourToThree,
-    VLCAspectRatioSixteenToNine,
-    VLCAspectRatioSixteenToTen,
-};
-
 NS_ASSUME_NONNULL_BEGIN
 extern NSString *const VLCPlaybackServicePlaybackDidStart;
 extern NSString *const VLCPlaybackServicePlaybackDidPause;
@@ -30,6 +22,7 @@ extern NSString *const VLCPlaybackServicePlaybackDidFail;
 extern NSString *const VLCPlaybackServicePlaybackMetadataDidChange;
 extern NSString *const VLCPlaybackServicePlaybackPositionUpdated;
 extern NSString *const VLCPlaybackServicePlaybackModeUpdated;
+extern NSString *const VLCPlaybackServiceShuffleModeUpdated;
 extern NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem;
 
 @class VLCPlaybackService;
@@ -50,7 +43,7 @@ currentMediaHasTrackToChooseFrom:(BOOL)currentMediaHasTrackToChooseFrom
 - (void)showStatusMessage:(NSString *)statusMessage;
 - (void)displayMetadataForPlaybackService:(VLCPlaybackService *)playbackService
                                  metadata:(VLCMetaData *)metadata;
-- (void)playbackServiceDidSwitchAspectRatio:(VLCAspectRatio)aspectRatio;
+- (void)playbackServiceDidSwitchAspectRatio:(NSInteger)aspectRatio;
 - (void)playbackService:(VLCPlaybackService *)playbackService
               nextMedia:(VLCMedia *)media;
 - (void)playModeUpdated;
@@ -62,6 +55,7 @@ NS_SWIFT_NAME(PlaybackService)
 @property (nonatomic, strong, nullable) UIView *videoOutputView;
 
 @property (nonatomic, retain) VLCMediaList *mediaList;
+@property (nonatomic, retain) VLCMediaList *shuffledList;
 
 /* returns nil if currently playing item is not available,*/
 
@@ -75,7 +69,7 @@ NS_SWIFT_NAME(PlaybackService)
 @property (nonatomic, readonly) NSInteger mediaDuration;
 @property (nonatomic, readonly) BOOL isPlaying;
 @property (nonatomic, readonly) BOOL playerIsSetup;
-@property (nonatomic, readonly) BOOL playAsAudio;
+@property (nonatomic, readwrite) BOOL playAsAudio;
 @property (nonatomic, readwrite) VLCRepeatMode repeatMode;
 @property (nonatomic, assign, getter=isShuffleMode) BOOL shuffleMode;
 @property (nonatomic, readwrite) float playbackRate; // default = 1.0
@@ -92,6 +86,7 @@ NS_SWIFT_NAME(PlaybackService)
 @property (readonly) NSInteger indexOfCurrentSubtitleTrack;
 @property (readonly) NSInteger indexOfCurrentTitle;
 @property (readonly) NSInteger indexOfCurrentChapter;
+@property (readonly) NSInteger numberOfVideoTracks;
 @property (readonly) NSInteger numberOfAudioTracks;
 @property (readonly) NSInteger numberOfVideoSubtitlesIndexes;
 @property (readonly) NSInteger numberOfTitles;
@@ -109,7 +104,7 @@ NS_SWIFT_NAME(PlaybackService)
 @property (nonatomic, nullable) VLCRendererItem *renderer;
 #endif
 
-@property (nonatomic, readonly) VLCAspectRatio currentAspectRatio;
+@property (nonatomic, readonly) NSInteger currentAspectRatio;
 
 @property (nonatomic, readonly) VLCPlayerDisplayController *playerDisplayController;
 
@@ -140,7 +135,7 @@ NS_SWIFT_NAME(PlaybackService)
 - (void)selectChapterAtIndex:(NSInteger)index;
 - (void)setAudioPassthrough:(BOOL)shouldPass;
 - (void)switchAspectRatio:(BOOL)toggleFullScreen;
-- (NSString *)stringForAspectRatio:(VLCAspectRatio)ratio;
+- (void)setCurrentAspectRatio:(NSInteger)currentAspectRatio;
 
 - (void)playItemAtIndex:(NSUInteger)index;
 
@@ -164,10 +159,9 @@ NS_SWIFT_NAME(PlaybackService)
 - (void)addAudioToCurrentPlaybackFromURL:(NSURL *)audioURL;
 - (void)addSubtitlesToCurrentPlaybackFromURL:(NSURL *)subtitleURL;
 
-- (void)setPlayAsAudio:(BOOL)playAsAudio;
-
 #if TARGET_OS_IOS
 - (void)savePlaybackState;
+- (void)restoreAudioAndSubtitleTrack;
 #endif
 
 NS_ASSUME_NONNULL_END

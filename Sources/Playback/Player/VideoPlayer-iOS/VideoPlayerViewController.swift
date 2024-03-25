@@ -19,6 +19,7 @@ import MediaPlayer
 protocol VideoPlayerViewControllerDelegate: AnyObject {
     func videoPlayerViewControllerDidMinimize(_ videoPlayerViewController: VideoPlayerViewController)
     func videoPlayerViewControllerShouldBeDisplayed(_ videoPlayerViewController: VideoPlayerViewController) -> Bool
+    func videoPlayerViewControllerShouldSwitchPlayer(_ videoPlayerViewController: VideoPlayerViewController)
 }
 
 enum VideoPlayerSeekState {
@@ -214,6 +215,7 @@ class VideoPlayerViewController: UIViewController {
                                                            options: nil)?.first as! VideoPlayerControls
         videoPlayerControls.translatesAutoresizingMaskIntoConstraints = false
         videoPlayerControls.setupAccessibility()
+        videoPlayerControls.setupLongPressGestureRecognizer()
         videoPlayerControls.delegate = self
         let isIPad = UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad
         if isIPad {
@@ -238,10 +240,33 @@ class VideoPlayerViewController: UIViewController {
         return scrubProgressBar
     }()
 
+    private var abRepeatView: ABRepeatView?
+
+    private lazy var aMark: ABRepeatMarkView = {
+        let aMark = ABRepeatMarkView(icon: UIImage(named: "abRepeatMarkerFill"))
+        aMark.translatesAutoresizingMaskIntoConstraints = false
+        return aMark
+    }()
+
+    private lazy var bMark: ABRepeatMarkView = {
+        let bMark = ABRepeatMarkView(icon: UIImage(named: "abRepeatMarkerFill"))
+        bMark.translatesAutoresizingMaskIntoConstraints = false
+        return bMark
+    }()
+
     private(set) lazy var moreOptionsActionSheet: MediaMoreOptionsActionSheet = {
         var moreOptionsActionSheet = MediaMoreOptionsActionSheet()
         moreOptionsActionSheet.moreOptionsDelegate = self
         return moreOptionsActionSheet
+    }()
+
+    private(set) lazy var aspectRatioActionSheet: MediaPlayerActionSheet = {
+        var aspectRatioActionSheet = MediaPlayerActionSheet()
+        aspectRatioActionSheet.dataSource = self
+        aspectRatioActionSheet.delegate = self
+        aspectRatioActionSheet.modalPresentationStyle = .custom
+        aspectRatioActionSheet.numberOfColums = 2
+        return aspectRatioActionSheet
     }()
 
     private var queueViewController: QueueViewController?
@@ -576,6 +601,7 @@ class VideoPlayerViewController: UIViewController {
         playbackService.recoverPlaybackState()
         playerController.lockedOrientation = .portrait
         navigationController?.navigationBar.isHidden = true
+        scrubProgressBar.updateInterfacePosition()
 
         setControlsHidden(false, animated: false)
 
@@ -610,11 +636,12 @@ class VideoPlayerViewController: UIViewController {
         setIconVisibility(optionsNavigationBar.videoFiltersButton)
 
         view.transform = .identity
+
+        playbackService.restoreAudioAndSubtitleTrack()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // _viewAppeared = YES;
         
         let defaults = UserDefaults.standard
         if defaults.bool(forKey: kVLCPlayerShouldRememberBrightness) {
@@ -624,7 +651,6 @@ class VideoPlayerViewController: UIViewController {
         }
         
         playbackService.recoverDisplayedMetadata()
-        // [self resetVideoFiltersSliders];
 
         // The video output view is not initialized when the play as audio option was chosen
         playbackService.videoOutputView = playbackService.playAsAudio ? nil : videoOutputView
@@ -637,10 +663,12 @@ class VideoPlayerViewController: UIViewController {
         moreOptionsActionSheet.resetOptionsIfNecessary()
     }
 
-//    override func viewDidLayoutSubviews() {
-//        FIXME: - equalizer
-//        self.scrubViewTopConstraint.constant = CGRectGetMaxY(self.navigationController.navigationBar.frame);
-//    }
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+        // Adjust the position of the AB Repeat marks if needed based on the device's orientation.
+        scrubProgressBar.adjustABRepeatMarks(aMark: aMark, bMark: bMark)
+    }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -654,10 +682,7 @@ class VideoPlayerViewController: UIViewController {
         if playbackService.videoOutputView == videoOutputView && !playbackService.isPlayingOnExternalScreen() {
             playbackService.videoOutputView = nil
         }
-        // FIXME: -
-        // _viewAppeared = NO;
 
-        // FIXME: - interface
         if idleTimer != nil {
             idleTimer?.invalidate()
             idleTimer = nil
@@ -732,7 +757,7 @@ private extension VideoPlayerViewController {
         }
 
         // 30.0 represents the exact size of the notch
-        let constant: CGFloat = playbackService.currentAspectRatio != .fillToScreen ? 30.0 : 0.0
+        let constant: CGFloat = playbackService.currentAspectRatio != AspectRatio.fillToScreen.rawValue ? 30.0 : 0.0
         let interfaceOrientation = UIApplication.shared.statusBarOrientation
 
         if interfaceOrientation == .landscapeLeft
@@ -1060,8 +1085,9 @@ extension VideoPlayerViewController {
         // Limit the gesture to avoid conflicts with top and bottom player controls
         if currentPos.y > scrubProgressBar.frame.origin.y
             || currentPos.y < mediaNavigationBar.frame.origin.y {
-            return
+            recognizer.state = .ended
         }
+
         let panType = detectPanType(recognizer)
         if panType == .none {
             return handleMinimizeGesture(recognizer)
@@ -1109,7 +1135,6 @@ extension VideoPlayerViewController {
 
         switch currentPanType {
         case .volume:
-
             if recognizer.state == .changed || recognizer.state == .ended {
                 let newValue = volumeControl.value - (verticalPanVelocity * volumeControl.speed)
                 volumeControl.value = min(max(newValue, 0), 1)
@@ -1351,13 +1376,13 @@ private extension VideoPlayerViewController {
     // MARK: - Constraints
 
     private func setupConstraints() {
-        setupBrightnessControlConstraints()
-        setupVolumeControlConstraints()
         setupVideoOutputConstraints()
         setupExternalVideoOutputConstraints()
         setupVideoPlayerControlsConstraints()
         setupMediaNavigationBarConstraints()
         setupScrubProgressBarConstraints()
+        setupBrightnessControlConstraints()
+        setupVolumeControlConstraints()
         setupStatusLabelConstraints()
         setupTitleSelectionConstraints()
     }
@@ -1392,14 +1417,16 @@ private extension VideoPlayerViewController {
     private func setupBrightnessControlConstraints() {
         setupCommonSliderConstraints(for: brightnessControlView)
         NSLayoutConstraint.activate([
-            brightnessControlView.leadingAnchor.constraint(equalTo: mainLayoutGuide.leadingAnchor)
+            brightnessControlView.leadingAnchor.constraint(equalTo: scrubProgressBar.leadingAnchor),
+            brightnessControlView.topAnchor.constraint(greaterThanOrEqualTo: optionsNavigationBar.bottomAnchor)
         ])
     }
 
     private func setupVolumeControlConstraints() {
         setupCommonSliderConstraints(for: volumeControlView)
         NSLayoutConstraint.activate([
-            volumeControlView.trailingAnchor.constraint(equalTo: mainLayoutGuide.trailingAnchor)
+            volumeControlView.trailingAnchor.constraint(equalTo: scrubProgressBar.trailingAnchor),
+            volumeControlView.topAnchor.constraint(greaterThanOrEqualTo: optionsNavigationBar.bottomAnchor)
         ])
     }
 
@@ -1426,11 +1453,10 @@ private extension VideoPlayerViewController {
 
     private func setupMediaNavigationBarConstraints() {
         let padding: CGFloat = 16
-
         NSLayoutConstraint.activate([
             mediaNavigationBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            mediaNavigationBar.leadingAnchor.constraint(equalTo: videoPlayerControls.leadingAnchor),
-            mediaNavigationBar.trailingAnchor.constraint(equalTo: videoPlayerControls.trailingAnchor),
+            mediaNavigationBar.leadingAnchor.constraint(equalTo: videoPlayerControls.leadingAnchor, constant: -8),
+            mediaNavigationBar.trailingAnchor.constraint(equalTo: videoPlayerControls.trailingAnchor, constant: 8),
             mediaNavigationBar.topAnchor.constraint(equalTo: layoutGuide.topAnchor,
                                                     constant: padding),
             optionsNavigationBar.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -padding),
@@ -1439,14 +1465,14 @@ private extension VideoPlayerViewController {
     }
 
     private func setupVideoPlayerControlsConstraints() {
-        let padding: CGFloat = 20
+        let padding: CGFloat = 8
         let minPadding: CGFloat = 5
 
         NSLayoutConstraint.activate([
             videoPlayerControlsHeightConstraint,
-            videoPlayerControls.leadingAnchor.constraint(lessThanOrEqualTo: layoutGuide.leadingAnchor,
+            videoPlayerControls.leadingAnchor.constraint(equalTo: layoutGuide.leadingAnchor,
                                                          constant: padding),
-            videoPlayerControls.trailingAnchor.constraint(greaterThanOrEqualTo: layoutGuide.trailingAnchor,
+            videoPlayerControls.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor,
                                                           constant: -padding),
             videoPlayerControls.widthAnchor.constraint(lessThanOrEqualTo: view.widthAnchor,
                                                        constant: -2 * minPadding),
@@ -1549,6 +1575,8 @@ private extension VideoPlayerViewController {
         optionsNavigationBar.playbackSpeedButton.isEnabled = enabled
         optionsNavigationBar.equalizerButton.isEnabled = enabled
         optionsNavigationBar.sleepTimerButton.isEnabled = enabled
+        optionsNavigationBar.abRepeatButton.isEnabled = enabled
+        optionsNavigationBar.abRepeatMarksButton.isEnabled = enabled
 
         videoPlayerControls.subtitleButton.isEnabled = enabled
         videoPlayerControls.shuffleButton.isEnabled = enabled
@@ -1629,6 +1657,18 @@ extension VideoPlayerViewController: VLCPlaybackServiceDelegate {
                                                             comment: ""))
         }
 
+        if currentState == .opening || currentState == .stopped {
+            resetABRepeat()
+        }
+
+        let media = VLCMLMedia(forPlaying: playbackService.currentlyPlayingMedia)
+        if let media = media, currentState == .opening &&
+            (media.type() == .audio && playbackService.numberOfVideoTracks == 0) {
+            // This media is audio only and can be played with the Audio Player.
+            delegate?.videoPlayerViewControllerShouldSwitchPlayer(self)
+            return
+        }
+
         if titleSelectionView.isHidden == false {
             titleSelectionView.updateHeightConstraints()
             titleSelectionView.reload()
@@ -1644,9 +1684,7 @@ extension VideoPlayerViewController: VLCPlaybackServiceDelegate {
         statusLabel.showStatusMessage(statusMessage)
     }
 
-    func playbackServiceDidSwitch(_ aspectRatio: VLCAspectRatio) {
-        // subControls.isInFullScreen = aspectRatio == .fillToScreen
-
+    func playbackServiceDidSwitchAspectRatio(_ aspectRatio: Int) {
         if #available(iOS 11.0, *) {
             adaptVideoOutputToNotch()
         }
@@ -1734,12 +1772,6 @@ extension VideoPlayerViewController: PlayerControllerDelegate {
             }
         }
     }
-
-    func playerControllerPlaybackDidStop(_ playerController: PlayerController) {
-        delegate?.videoPlayerViewControllerDidMinimize(self)
-        // Reset interface to default icon when dismissed
-//        subControls.isInFullScreen = false
-    }
 }
 
 // MARK: -
@@ -1749,7 +1781,7 @@ extension VideoPlayerViewController: PlayerControllerDelegate {
 extension VideoPlayerViewController: MediaNavigationBarDelegate {
     func mediaNavigationBarDidTapClose(_ mediaNavigationBar: MediaNavigationBar) {
         playbackService.stopPlayback()
-        playbackService.setPlayAsAudio(false)
+        playbackService.playAsAudio = false
     }
 
     func mediaNavigationBarDidToggleQueueView(_ mediaNavigationBar: MediaNavigationBar) {
@@ -1800,6 +1832,18 @@ extension VideoPlayerViewController: MediaScrubProgressBarDelegate {
     func mediaScrubProgressBarShouldResetIdleTimer() {
         resetIdleTimer()
     }
+
+    func mediaScrubProgressBarSetPlaybackPosition(to value: Float) {
+        playbackService.playbackPosition = value
+    }
+
+    func mediaScrubProgressBarGetAMark() -> ABRepeatMarkView {
+        return aMark
+    }
+
+    func mediaScrubProgressBarGetBMark() -> ABRepeatMarkView {
+        return bMark
+    }
 }
 
 // MARK: - MediaMoreOptionsActionSheetDelegate
@@ -1831,6 +1875,12 @@ extension VideoPlayerViewController: MediaMoreOptionsActionSheetDelegate {
         case .sleepTimer:
             showIcon(button: optionsNavigationBar.sleepTimerButton)
             return
+        case .abRepeat:
+            showIcon(button: optionsNavigationBar.abRepeatButton)
+            return
+        case .abRepeatMarks:
+            showIcon(button: optionsNavigationBar.abRepeatMarksButton)
+            return
         default:
             assertionFailure("VideoPlayerViewController: Option not valid.")
         }
@@ -1849,6 +1899,12 @@ extension VideoPlayerViewController: MediaMoreOptionsActionSheetDelegate {
             return
         case .sleepTimer:
             hideIcon(button: optionsNavigationBar.sleepTimerButton)
+            return
+        case .abRepeat:
+            hideIcon(button: optionsNavigationBar.abRepeatButton)
+            return
+        case .abRepeatMarks:
+            hideIcon(button: optionsNavigationBar.abRepeatMarksButton)
             return
         default:
             assertionFailure("VideoPlayerViewController: Option not valid.")
@@ -2014,6 +2070,39 @@ extension VideoPlayerViewController: MediaMoreOptionsActionSheetDelegate {
         videoPlayerControlsDelegateRepeat(videoPlayerControls)
         mediaMoreOptionsActionSheet.collectionView.reloadData()
     }
+
+    func mediaMoreOptionsActionSheetPresentABRepeatView(with abView: ABRepeatView) {
+        abView.translatesAutoresizingMaskIntoConstraints = false
+        abRepeatView = abView
+
+        guard let abRepeatView = abRepeatView else {
+            return
+        }
+
+        abRepeatView.aMarkView.isHidden = false
+
+        view.addSubview(abRepeatView)
+        view.bringSubviewToFront(abRepeatView)
+        abRepeatView.isUserInteractionEnabled = true
+        NSLayoutConstraint.activate([
+            abRepeatView.centerXAnchor.constraint(equalTo: layoutGuide.centerXAnchor),
+            abRepeatView.bottomAnchor.constraint(equalTo: scrubProgressBar.topAnchor, constant: -20.0),
+        ])
+
+        scrubProgressBar.shouldHideScrubLabels = true
+    }
+
+    func mediaMoreOptionsActionSheetDidSelectAMark() {
+        scrubProgressBar.setMark(aMark)
+        aMark.isEnabled = true
+    }
+
+    func mediaMoreOptionsActionSheetDidSelectBMark() {
+        scrubProgressBar.setMark(bMark)
+        bMark.isEnabled = true
+        scrubProgressBar.shouldHideScrubLabels = false
+        abRepeatView?.removeFromSuperview()
+    }
 }
 
 // MARK: - OptionsNavigationBarDelegate
@@ -2037,6 +2126,30 @@ extension VideoPlayerViewController: OptionsNavigationBarDelegate {
     private func resetSleepTimer() {
         hideIcon(button: optionsNavigationBar.sleepTimerButton)
         moreOptionsActionSheet.resetSleepTimer()
+    }
+
+    private func resetABRepeatMarks(_ shouldDisplayView: Bool = false) {
+        hideIcon(button: optionsNavigationBar.abRepeatMarksButton)
+        aMark.removeFromSuperview()
+        aMark.isEnabled = false
+
+        bMark.removeFromSuperview()
+        bMark.isEnabled = false
+
+        guard let abRepeatView = abRepeatView,
+              shouldDisplayView else {
+            return
+        }
+
+        mediaMoreOptionsActionSheetPresentABRepeatView(with: abRepeatView)
+    }
+
+    private func resetABRepeat() {
+        hideIcon(button: optionsNavigationBar.abRepeatButton)
+        if let abRepeatView = abRepeatView {
+            abRepeatView.removeFromSuperview()
+        }
+        resetABRepeatMarks()
     }
 
     private func showIcon(button: UIButton) {
@@ -2064,6 +2177,12 @@ extension VideoPlayerViewController: OptionsNavigationBarDelegate {
             return
         case optionsNavigationBar.sleepTimerButton:
             resetSleepTimer()
+            return
+        case optionsNavigationBar.abRepeatButton:
+            resetABRepeat()
+            return
+        case optionsNavigationBar.abRepeatMarksButton:
+            resetABRepeatMarks(true)
             return
         default:
             assertionFailure("VideoPlayerViewController: Unvalid button.")
@@ -2332,5 +2451,65 @@ extension VideoPlayerViewController: UIDocumentPickerDelegate {
         } else {
             return
         }
+    }
+}
+
+// MARK: - ActionSheetDelegate
+
+extension VideoPlayerViewController: ActionSheetDelegate {
+    func headerViewTitle() -> String? {
+        return NSLocalizedString("ASPECT_RATIO_TITLE", comment: "")
+    }
+
+    func itemAtIndexPath(_ indexPath: IndexPath) -> Any? {
+        return AspectRatio(rawValue: indexPath.row)
+    }
+
+    func actionSheet(collectionView: UICollectionView, didSelectItem item: Any, At indexPath: IndexPath) {
+        guard let aspectRatio = item as? AspectRatio else {
+            return
+        }
+
+        playbackService.setCurrentAspectRatio(aspectRatio.rawValue)
+        showStatusMessage(String(format: NSLocalizedString("AR_CHANGED", comment: ""), aspectRatio.stringToDisplay))
+    }
+}
+
+// MARK: - ActionSheetDataSource
+
+extension VideoPlayerViewController: ActionSheetDataSource {
+    func numberOfRows() -> Int {
+        return AspectRatio.allCases.count
+    }
+
+    func actionSheet(collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: ActionSheetCell.identifier,
+            for: indexPath) as? ActionSheetCell else {
+            assertionFailure("VideoPlayerViewController: AspectRatioActionSheet: Unable to dequeue reusable cell")
+            return UICollectionViewCell()
+        }
+
+        let aspectRatio = AspectRatio(rawValue: indexPath.row)
+
+        guard let aspectRatio = aspectRatio else {
+            assertionFailure("VideoPlayerViewController: AspectRatioActionSheet: Unable to retrieve the selected aspect ratio")
+            return UICollectionViewCell()
+        }
+
+        let colors: ColorPalette = PresentationTheme.currentExcludingWhite.colors
+        let isSelected = indexPath.row == playbackService.currentAspectRatio
+        cell.configure(with: aspectRatio.stringToDisplay, colors: colors, isSelected: isSelected)
+        cell.delegate = self
+
+        return cell
+    }
+}
+
+// MARK: - ActionSheetCellDelegate
+
+extension VideoPlayerViewController: ActionSheetCellDelegate {
+    func actionSheetCellShouldUpdateColors() -> Bool {
+        return true
     }
 }

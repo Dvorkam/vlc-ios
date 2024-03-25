@@ -61,7 +61,7 @@ class ActionSheetCellImageView: UIImageView {
 @objc (VLCActionSheetCellDelegate)
 protocol ActionSheetCellDelegate {
     func actionSheetCellShouldUpdateColors() -> Bool
-    func actionSheetCellDidToggleSwitch(for cell: ActionSheetCell, state: Bool)
+    @objc optional func actionSheetCellDidToggleSwitch(for cell: ActionSheetCell, state: Bool)
 }
 
 @objc (VLCDoubleActionSheetCellDelegate)
@@ -271,7 +271,7 @@ class ActionSheetCell: UICollectionViewCell {
         return String(describing: self)
     }
 
-    override var isSelected: Bool {
+    @objc override var isSelected: Bool {
         didSet {
             updateColors()
             // only checkmarks should be hidden if they arent selected
@@ -281,7 +281,7 @@ class ActionSheetCell: UICollectionViewCell {
         }
     }
 
-    let icon: ActionSheetCellImageView = {
+    @objc let icon: ActionSheetCellImageView = {
         let icon = ActionSheetCellImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.setContentHuggingPriority(.required, for: .horizontal)
@@ -289,7 +289,7 @@ class ActionSheetCell: UICollectionViewCell {
         return icon
     }()
 
-    let name: UILabel = {
+    @objc let name: UILabel = {
         let name = UILabel()
         let colors = PresentationTheme.current.colors
         name.textColor = colors.cellTextColor
@@ -299,7 +299,7 @@ class ActionSheetCell: UICollectionViewCell {
         return name
     }()
 
-    lazy private var accessoryTypeImageView: UIImageView = {
+    @objc lazy private var accessoryTypeImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .none
@@ -308,7 +308,7 @@ class ActionSheetCell: UICollectionViewCell {
         return imageView
     }()
     
-    lazy private var toggleSwitch: UISwitch = {
+    @objc lazy private var toggleSwitch: UISwitch = {
         let toggleSwitch = UISwitch()
         toggleSwitch.onTintColor = .orange
         toggleSwitch.translatesAutoresizingMaskIntoConstraints = false
@@ -364,10 +364,8 @@ class ActionSheetCell: UICollectionViewCell {
     }
 
     private func getThemeColors() -> ColorPalette {
-        if isMediaPlayerActionSheetCell && PresentationTheme.current.isBlack {
-            return PresentationTheme.blackTheme.colors
-        } else if isMediaPlayerActionSheetCell {
-            return PresentationTheme.darkTheme.colors
+        if isMediaPlayerActionSheetCell {
+            return PresentationTheme.currentExcludingWhite.colors
         } else {
             return PresentationTheme.current.colors
         }
@@ -376,17 +374,21 @@ class ActionSheetCell: UICollectionViewCell {
     private func updateColors() {
         let shouldUpdateColors = delegate?.actionSheetCellShouldUpdateColors() ?? true
         let colors = getThemeColors()
+
         if shouldUpdateColors {
             name.textColor = isSelected ? colors.orangeUI : colors.cellTextColor
             tintColor = isSelected ? colors.orangeUI : colors.cellDetailTextColor
         }
+
         if accessoryType != .toggleSwitch {
             accessoryView.tintColor = isSelected && accessoryType == .checkmark ? colors.orangeUI : colors.cellDetailTextColor
         }
+
+        viewToPresent?.backgroundColor = colors.background
     }
 
     @objc private func switchToggled(_ sender: UISwitch) {
-        delegate?.actionSheetCellDidToggleSwitch(for: self, state: sender.isOn)
+        delegate?.actionSheetCellDidToggleSwitch?(for: self, state: sender.isOn)
     }
 
     override func prepareForReuse() {
@@ -434,6 +436,15 @@ class ActionSheetCell: UICollectionViewCell {
         updateColors()
     }
 
+    func configure(with title: String, colors: ColorPalette, isSelected: Bool) {
+        name.text = title
+        name.textColor = isSelected ? colors.orangeUI : colors.cellTextColor
+
+        backgroundColor = colors.background
+        name.backgroundColor = colors.background
+        stackView.backgroundColor = colors.background
+    }
+
     func setToggleSwitch(state: Bool) {
         if accessoryType == .toggleSwitch {
             toggleSwitch.isOn = state
@@ -469,12 +480,8 @@ class ActionSheetCell: UICollectionViewCell {
     }
 
     @objc private func updateTheme() {
-        let colors = getThemeColors()
-        backgroundColor = colors.background
-        name.textColor = colors.cellTextColor
-        name.backgroundColor = backgroundColor
-        stackView.backgroundColor = colors.background
-        viewToPresent?.backgroundColor = backgroundColor
+        backgroundColor = .clear
+        name.backgroundColor = .clear
         updateColors()
     }
 

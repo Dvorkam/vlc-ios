@@ -47,18 +47,6 @@ NSString *VLCHTTPUploaderBackgroundTaskName = @"VLCHTTPUploaderBackgroundTaskNam
 
 @implementation VLCHTTPUploaderController
 
-+ (instancetype)sharedInstance
-{
-    static VLCHTTPUploaderController *sharedInstance = nil;
-    static dispatch_once_t pred;
-
-    dispatch_once(&pred, ^{
-        sharedInstance = [VLCHTTPUploaderController new];
-    });
-
-    return sharedInstance;
-}
-
 - (id)init
 {
     if (self = [super init]) {
@@ -439,6 +427,8 @@ NSString *VLCHTTPUploaderBackgroundTaskName = @"VLCHTTPUploaderBackgroundTaskNam
 #endif
 }
 
+#if TARGET_OS_IOS
+// never clean the cache on tvOS as we use it as a Documents folder replacement
 - (void)cleanCache
 {
     if ([[VLCActivityManager defaultManager] haveNetworkActivity])
@@ -452,7 +442,6 @@ NSString *VLCHTTPUploaderBackgroundTaskName = @"VLCHTTPUploaderBackgroundTaskNam
         [fileManager removeItemAtPath:uploadDirPath error:nil];
 }
 
-#if TARGET_OS_IOS
 - (void)resetIdleTimer
 {
     const int timeInterval = 4;

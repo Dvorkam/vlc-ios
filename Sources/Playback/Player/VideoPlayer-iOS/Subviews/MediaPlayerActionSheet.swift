@@ -20,8 +20,11 @@ enum ActionSheetCellIdentifier: String, CustomStringConvertible, CaseIterable {
     case chapters
     case bookmarks
     case addBookmarks
+    case abRepeat
     case interfaceLock
     case blackBackground
+    case playNextItem
+    case playlistPlayNextItem
 
     var description: String {
         switch self {
@@ -43,8 +46,14 @@ enum ActionSheetCellIdentifier: String, CustomStringConvertible, CaseIterable {
             return NSLocalizedString("INTERFACE_LOCK_BUTTON", comment: "")
         case .repeatShuffle:
             return NSLocalizedString("REPEAT_MODE", comment: "")
+        case .abRepeat:
+            return NSLocalizedString("AB_LOOP", comment: "")
         case .blackBackground:
             return NSLocalizedString("SETTINGS_THEME_BLACK", comment: "")
+        case .playNextItem:
+            return NSLocalizedString("SETTINGS_PLAY_ALL", comment: "")
+        case .playlistPlayNextItem:
+            return NSLocalizedString("SETTINGS_PLAYLIST_PLAY_ALL", comment: "")
         }
     }
 
@@ -66,6 +75,10 @@ enum ActionSheetCellIdentifier: String, CustomStringConvertible, CaseIterable {
             return NSLocalizedString("INTERFACE_LOCK_HINT", comment: "")
         case .blackBackground:
             return NSLocalizedString("SETTINGS_THEME_BLACK_SUBTITLE", comment: "")
+        case .playNextItem:
+            return NSLocalizedString("SETTINGS_PLAY_ALL_HINT", comment: "")
+        case .playlistPlayNextItem:
+            return NSLocalizedString("SETTINGS_PLAYLIST_PLAY_ALL_HINT", comment: "")
         default:
             return ""
         }
@@ -265,6 +278,9 @@ class MediaPlayerActionSheet: ActionSheet {
                     equalizerView.willShow()
                     actionSheet.moreOptionsDelegate?.mediaMoreOptionsActionSheetPresentPopupView(withChild: equalizerView)
                     self.removeActionSheet()
+                } else if let abRepeatView = item as? ABRepeatView {
+                    self.removeActionSheet()
+                    actionSheet.moreOptionsDelegate?.mediaMoreOptionsActionSheetPresentABRepeatView(with: abRepeatView)
                 } else {
                     self.add(childView: item)
                 }
@@ -275,7 +291,7 @@ class MediaPlayerActionSheet: ActionSheet {
                     bookmarksView.update()
                 }
             } else {
-                preconditionFailure("MediaMoreOptionsActionSheet: Action:: Item's could not be cased as UIView")
+                return
             }
         }
         setTheme()

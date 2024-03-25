@@ -39,6 +39,7 @@ NSString *const VLCPlaybackServicePlaybackMetadataDidChange = @"VLCPlaybackServi
 NSString *const VLCPlaybackServicePlaybackDidFail = @"VLCPlaybackServicePlaybackDidFail";
 NSString *const VLCPlaybackServicePlaybackPositionUpdated = @"VLCPlaybackServicePlaybackPositionUpdated";
 NSString *const VLCPlaybackServicePlaybackModeUpdated = @"VLCPlaybackServicePlaybackModeUpdated";
+NSString *const VLCPlaybackServiceShuffleModeUpdated = @"VLCPlaybackServiceShuffleModeUpdated";
 NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackServicePlaybackDidMoveOnToNextItem";
 
 #if TARGET_OS_IOS
@@ -58,7 +59,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     NSTimer *_sleepTimer;
 
     BOOL _isInFillToScreen;
-    NSUInteger _previousAspectRatio;
+    NSInteger _previousAspectRatio;
 
     UIView *_videoOutputViewWrapper;
     UIView *_actualVideoOutputView;
@@ -135,6 +136,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
         _playbackSessionManagementLock = [[NSLock alloc] init];
         _shuffleMode = NO;
+        _shuffledList = nil;
 
         // Initialize a separate media player in order to play silence so that the application can
         // stay alive in background exclusively for Chromecast.
@@ -298,12 +300,10 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     [_mediaPlayer setDeinterlace:deinterlace withFilter:@"blend"];
 
     [_listPlayer setMediaList:self.mediaList];
-#if TARGET_OS_IOS
     if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
         VLCRepeatMode repeatMode = [defaults integerForKey:kVLCPlayerIsRepeatEnabled];
         [_listPlayer setRepeatMode:repeatMode];
     }
-#endif
 
     [_playbackSessionManagementLock unlock];
 
@@ -346,16 +346,13 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     /* we are playing a collection without a valid index,
      * so this is either 0 or totally random */
     if (_itemInMediaListToBePlayedFirst == -1) {
-        if (_shuffleMode) {
-            int count = (int)_mediaList.count;
-            if (count > 0) {
+        int count = (int)_mediaList.count;
+        if (_shuffleMode && count > 0) {
                 _currentIndex = arc4random_uniform(count - 1);
                 [self shuffleMediaList];
-                _itemInMediaListToBePlayedFirst = (int)[_shuffledOrder[0] integerValue];
-            }
-        } else {
-            _itemInMediaListToBePlayedFirst = 0;
         }
+
+        _itemInMediaListToBePlayedFirst = 0;
     }
 
     VLCMedia *media = [_mediaList mediaAtIndex:_itemInMediaListToBePlayedFirst];
@@ -433,6 +430,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         }
 
         _mediaPlayer = nil;
+        _shuffledList = nil;
         _listPlayer = nil;
     }
 
@@ -463,7 +461,9 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
     if (media) {
         _mediaPlayer.currentAudioTrackIndex = (int) media.audioTrackIndex;
-        _mediaPlayer.currentVideoSubTitleIndex = (int) media.subtitleTrackIndex;
+
+        BOOL disableSubtitles = [[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles];
+        _mediaPlayer.currentVideoSubTitleIndex = disableSubtitles ? -1 : (int) media.subtitleTrackIndex;
     }
 }
 #endif
@@ -512,12 +512,10 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackModeUpdated object:self];
 
-#if TARGET_OS_IOS
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
         [defaults setInteger:repeatMode forKey:kVLCPlayerIsRepeatEnabled];
     }
-#endif
 }
 
 - (BOOL)currentMediaHasChapters
@@ -627,6 +625,11 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 - (NSInteger)indexOfCurrentTitle
 {
     return _mediaPlayer.currentTitleIndex;
+}
+
+- (NSInteger)numberOfVideoTracks
+{
+    return [_mediaPlayer numberOfVideoTracks];
 }
 
 - (NSInteger)numberOfAudioTracks
@@ -800,7 +803,9 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
             NSInteger nextIndex = [self nextMediaIndex:false];
 
             if (nextIndex > -1) {
-                [_listPlayer playItemAtNumber:@(nextIndex)];
+                if (_listPlayer.repeatMode != VLCRepeatCurrentItem) {
+                    [_listPlayer playItemAtNumber:@(nextIndex)];
+                }
                 [[NSNotificationCenter defaultCenter]
                  postNotificationName:VLCPlaybackServicePlaybackMetadataDidChange object:self];
             }
@@ -834,11 +839,6 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     });
 }
 
-- (void)setPlayAsAudio:(BOOL)playAsAudio
-{
-    _playAsAudio = playAsAudio;
-}
-
 #pragma mark - playback controls
 - (void)playPause
 {
@@ -857,10 +857,12 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
 - (void)playItemAtIndex:(NSUInteger)index
 {
-    VLCMedia *media = [_mediaList mediaAtIndex:index];
+    VLCMediaList *mediaList = _shuffleMode ? _shuffledList : _mediaList;
+    VLCMedia *media = [mediaList mediaAtIndex:index];
     [_listPlayer playItemAtNumber:[NSNumber numberWithUnsignedInteger:index]];
     _mediaPlayer.media = media;
-    _currentIndex = [_mediaList indexOfMedia:media];
+    _currentIndex = [mediaList indexOfMedia:media];
+
     if ([self.delegate respondsToSelector:@selector(prepareForMediaPlayback:)])
         [self.delegate prepareForMediaPlayback:self];
 }
@@ -872,21 +874,32 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     if (_shuffleMode) {
         [self shuffleMediaList];
         _currentIndex = 0;
+
+        if ([_shuffledList count] == 0) {
+            NSMutableArray<VLCMedia *> *shuffledMedias = [[NSMutableArray alloc] init];
+            for (NSInteger i = _currentIndex; i < _mediaList.count; i++) {
+                [shuffledMedias addObject:[_mediaList mediaAtIndex:[_shuffledOrder[i] integerValue]]];
+            }
+
+            _shuffledList = [[VLCMediaList alloc] initWithArray:shuffledMedias];
+            _listPlayer.mediaList = _shuffledList;
+        }
     } else {
-        _currentIndex = [_shuffledOrder[_currentIndex] integerValue];
+        _currentIndex = [_mediaList indexOfMedia:self.currentlyPlayingMedia];
+        _shuffledList = nil;
+        _listPlayer.mediaList = _mediaList;
     }
 
     if ([self.delegate respondsToSelector:@selector(playModeUpdated)]) {
         [self.delegate playModeUpdated];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackModeUpdated object:self];
 
-#if TARGET_OS_IOS
+    [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServiceShuffleModeUpdated object:self];
+
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([[defaults valueForKey:kVLCPlayerShouldRememberState] boolValue]) {
         [defaults setBool:shuffleMode forKey:kVLCPlayerIsShuffleEnabled];
     }
-#endif
 }
 
 - (void)shuffleMediaList {
@@ -914,18 +927,11 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
     NSInteger nextIndex = 0;
     if (!_currentIndex) {
-        _currentIndex = [_mediaList indexOfMedia:self.currentlyPlayingMedia];
+        VLCMediaList *currentMediaList = _shuffleMode ? _shuffledList : _mediaList;
+        _currentIndex = [currentMediaList indexOfMedia:self.currentlyPlayingMedia];
     }
 
-    // Change the repeat mode if next button is pressed
-    if (self.repeatMode == VLCRepeatCurrentItem && isButtonPressed) {
-        [self setRepeatMode:VLCRepeatAllItems];
-        if ([self.delegate respondsToSelector:@selector(playModeUpdated)]) {
-            [self.delegate playModeUpdated];
-        }
-
-        [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackModeUpdated object:self];
-    } else if (self.repeatMode == VLCRepeatCurrentItem && !isButtonPressed) {
+    if (self.repeatMode == VLCRepeatCurrentItem && !isButtonPressed) {
         return _currentIndex;
     }
 
@@ -941,10 +947,6 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     }
 
     _currentIndex = nextIndex;
-
-    if (_shuffleMode && mediaListCount > 2 && _currentIndex >= 0 && _currentIndex < _shuffledOrder.count) {
-        return [_shuffledOrder[_currentIndex] integerValue];
-    }
 
     return _currentIndex;
 }
@@ -992,30 +994,17 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
             [self savePlaybackState];
 #endif
             if (!_currentIndex) {
-                _currentIndex = [_mediaList indexOfMedia:self.currentlyPlayingMedia];
+                VLCMediaList *currentMediaList = _shuffleMode ? _shuffledList : _mediaList;
+                _currentIndex = [currentMediaList indexOfMedia:self.currentlyPlayingMedia];
             }
 
-            // Change the repeat mode if next button is pressed
-            if (self.repeatMode == VLCRepeatCurrentItem) {
-                [self setRepeatMode:VLCRepeatAllItems];
-                if ([self.delegate respondsToSelector:@selector(playModeUpdated)]) {
-                    [self.delegate playModeUpdated];
-                }
-                [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackModeUpdated object:self];
-            }
-
-            if(_currentIndex > 0) {
+            if (_currentIndex > 0) {
                 _currentIndex -= 1;
-            } else{
-                if(_listPlayer.repeatMode == VLCRepeatAllItems) {
-                    _currentIndex = _mediaList.count - 1;
-                }
+            } else if (_listPlayer.repeatMode == VLCRepeatAllItems) {
+                _currentIndex = _mediaList.count - 1;
             }
-            if(_shuffleMode){
-                [_listPlayer playItemAtNumber:@([_shuffledOrder[_currentIndex] integerValue])];
-            }else{
-                [_listPlayer playItemAtNumber:@(_currentIndex)];
-            }
+
+            [_listPlayer playItemAtNumber:@(_currentIndex)];
         }
     } else {
         NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackBackwardSkipLength];
@@ -1070,12 +1059,27 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         _currentAspectRatio = _isInFillToScreen ? _previousAspectRatio : VLCAspectRatioFillToScreen;
     } else {
         // Increment unless hitting last aspectratio
-        _currentAspectRatio = _currentAspectRatio == VLCAspectRatioSixteenToTen ? VLCAspectRatioDefault : _currentAspectRatio + 1;
+        _currentAspectRatio = _currentAspectRatio == VLCAspectRatioThirtyNineToOne ? VLCAspectRatioDefault : _currentAspectRatio + 1;
     }
 
     // If fullScreen is toggled directly and then the aspect ratio changes, fullScreen is not reset
     if (_isInFillToScreen) _isInFillToScreen = NO;
 
+    [self applyAspectRatio];
+
+    if ([self.delegate respondsToSelector:@selector(showStatusMessage:)]) {
+        [self.delegate showStatusMessage:[NSString stringWithFormat:NSLocalizedString(@"AR_CHANGED", nil), [VLCAspectRatioBridge stringToDisplayFor:_currentAspectRatio]]];
+    }
+}
+
+- (void)setCurrentAspectRatio:(NSInteger)currentAspectRatio
+{
+    _currentAspectRatio = currentAspectRatio;
+    [self applyAspectRatio];
+}
+
+- (void)applyAspectRatio
+{
     switch (_currentAspectRatio) {
         case VLCAspectRatioDefault:
             _mediaPlayer.scaleFactor = 0;
@@ -1091,41 +1095,24 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
             [self switchToFillToScreen];
             break;
         case VLCAspectRatioFourToThree:
+        case VLCAspectRatioFiveToFour:
         case VLCAspectRatioSixteenToTen:
         case VLCAspectRatioSixteenToNine:
+        case VLCAspectRatioTwentyOneToOne:
+        case VLCAspectRatioThirtyFiveToOne:
+        case VLCAspectRatioThirtyNineToOne:
             _mediaPlayer.scaleFactor = 0;
+            NSString *aspectRatio = [VLCAspectRatioBridge valueFor:_currentAspectRatio];
 #if LIBVLC_VERSION_MAJOR == 3
             _mediaPlayer.videoCropGeometry = NULL;
-            _mediaPlayer.videoAspectRatio = (char *)[[self stringForAspectRatio:_currentAspectRatio] UTF8String];
+            _mediaPlayer.videoAspectRatio = (char *)[aspectRatio UTF8String];
 #else
-            _mediaPlayer.videoAspectRatio = [self stringForAspectRatio:_currentAspectRatio];
+            _mediaPlayer.videoAspectRatio = aspectRatio;
 #endif
-    }
-
-    if ([self.delegate respondsToSelector:@selector(showStatusMessage:)]) {
-        [self.delegate showStatusMessage:[NSString stringWithFormat:NSLocalizedString(@"AR_CHANGED", nil), [self stringForAspectRatio:_currentAspectRatio]]];
     }
 
     if ([self.delegate respondsToSelector:@selector(playbackServiceDidSwitchAspectRatio:)]) {
         [_delegate playbackServiceDidSwitchAspectRatio:_currentAspectRatio];
-    }
-}
-
-- (NSString *)stringForAspectRatio:(VLCAspectRatio)ratio
-{
-    switch (ratio) {
-            case VLCAspectRatioFillToScreen:
-            return NSLocalizedString(@"FILL_TO_SCREEN", nil);
-            case VLCAspectRatioDefault:
-            return NSLocalizedString(@"DEFAULT", nil);
-            case VLCAspectRatioFourToThree:
-            return @"4:3";
-            case VLCAspectRatioSixteenToTen:
-            return @"16:10";
-            case VLCAspectRatioSixteenToNine:
-            return @"16:9";
-        default:
-            NSAssert(NO, @"this shouldn't happen");
     }
 }
 
@@ -1446,33 +1433,39 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 #if TARGET_OS_IOS
 - (void)_recoverLastPlaybackState
 {
-    VLCMLMedia *media = [VLCMLMedia mediaForPlayingMedia:_mediaPlayer.media];
-    if (!media) return;
+    VLCMedia *media = _mediaPlayer.media;
+    VLCMLMedia *libraryMedia = [VLCMLMedia mediaForPlayingMedia:media];
+    if (!libraryMedia) return;
 
-    if (self.repeatMode != VLCDoNotRepeat) {
+    VLCMediaList *mediaList = [_listPlayer mediaList];
+    NSUInteger mediaIndex = [mediaList indexOfMedia:media];
+
+    /* continue playback for the first item even if repeating */
+    if (self.repeatMode != VLCDoNotRepeat && mediaIndex != _itemInMediaListToBePlayedFirst) {
         goto bailout;
     }
 
-    CGFloat lastPosition = media.progress;
-    // .95 prevents the controller from opening and closing immediatly when restoring state
-    //  Additionally, check if the media is more than 10 sec
-    if (lastPosition < .95
-        && _mediaPlayer.position < lastPosition) {
+    CGFloat lastPosition = libraryMedia.progress;
+    SInt64 mediaDuration = libraryMedia.duration;
+
+    if (_mediaPlayer.position < lastPosition) {
         NSInteger continuePlayback;
-        if (media.type == VLCMLMediaTypeAudio) {
-            if (!media.isPodcast) {
+        if (libraryMedia.type == VLCMLMediaTypeAudio) {
+            if (!libraryMedia.isPodcast) {
                 goto bailout;
             }
             continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioPlayback] integerValue];
         } else {
-            if (media.duration < 10000 && !media.isExternalMedia) {
+            if (mediaDuration < 10000 && !libraryMedia.isExternalMedia) {
                 goto bailout;
             }
             continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinuePlayback] integerValue];
         }
 
         if (continuePlayback == 1) {
-            [self setPlaybackPosition:lastPosition];
+            if (lastPosition * mediaDuration > 120000.) {
+                [self setPlaybackPosition:lastPosition];
+            }
         } else if (continuePlayback == 0) {
             NSArray<VLCAlertButton *> *buttonsAction = @[[[VLCAlertButton alloc] initWithTitle: NSLocalizedString(@"BUTTON_CANCEL", nil)
                                                                                          style: UIAlertActionStyleCancel
@@ -1485,7 +1478,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
             UIViewController *presentingVC = [UIApplication sharedApplication].delegate.window.rootViewController;
             presentingVC = presentingVC.presentedViewController ?: presentingVC;
             [VLCAlertViewController alertViewManagerWithTitle:NSLocalizedString(@"CONTINUE_PLAYBACK", nil)
-                                                 errorMessage:[NSString stringWithFormat:NSLocalizedString(@"CONTINUE_PLAYBACK_LONG", nil), media.title]
+                                                 errorMessage:[NSString stringWithFormat:NSLocalizedString(@"CONTINUE_PLAYBACK_LONG", nil), libraryMedia.title]
                                                viewController:presentingVC
                                                 buttonsAction:buttonsAction];
 

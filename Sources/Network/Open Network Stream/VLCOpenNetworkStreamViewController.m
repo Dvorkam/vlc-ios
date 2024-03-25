@@ -2,7 +2,7 @@
  * VLCOpenNetworkStreamViewController.m
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2013-2022 VideoLAN. All rights reserved.
+ * Copyright (c) 2013-2023 VideoLAN. All rights reserved.
  * $Id$
  *
  * Authors: Felix Paul Kühne <fkuehne # videolan.org>
@@ -16,6 +16,7 @@
 #import "VLCPlaybackService.h"
 #import "VLCStreamingHistoryCell.h"
 #import "VLC-Swift.h"
+#import "VLCOpenNetworkSubtitlesFinder.h"
 
 @interface VLCOpenNetworkStreamViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, VLCStreamingHistoryCellMenuItemProtocol>
 {
@@ -144,16 +145,23 @@
     // This will be called every time this VC is opened by the side menu controller
     [self updatePasteboardTextInURLField];
 
-    // Registering a custom menu item for renaming streams
-    NSString *renameTitle = NSLocalizedString(@"BUTTON_RENAME", nil);
-    SEL renameStreamSelector = @selector(renameStream:);
-    UIMenuItem *renameItem = [[UIMenuItem alloc] initWithTitle:renameTitle action:renameStreamSelector];
+    // Registering a custom menu items for renaming streams and editing their URLs
+    UIMenuItem *renameItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"BUTTON_RENAME", nil)
+                                                        action:@selector(renameStream:)];
+    UIMenuItem *editURLItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"BUTTON_EDIT", nil)
+                                                         action:@selector(editURL:)];
     UIMenuController *sharedMenuController = [UIMenuController sharedMenuController];
-    [sharedMenuController setMenuItems:@[renameItem]];
+    [sharedMenuController setMenuItems:@[renameItem,editURLItem]];
     [sharedMenuController update];
     [self updateForTheme];
 
     self.historyTableView.rowHeight = [VLCStreamingHistoryCell heightOfCell];
+
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                              initWithTitle:NSLocalizedString(@"BUTTON_EDIT", nil)
+                                              style:UIBarButtonItemStylePlain
+                                              target:self
+                                              action:@selector(editTableView:)];
 }
 
 - (NSString *)detailText
@@ -203,6 +211,10 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     self.privateToggleButton.selected = [defaults boolForKey:kVLCPrivateWebStreaming];
     self.scanSubToggleButton.selected = [defaults boolForKey:kVLChttpScanSubtitle];
+
+    self.historyTableView.editing = NO;
+    self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"BUTTON_EDIT", nil);
+    self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStylePlain;
 
     [super viewWillAppear:animated];
 }
@@ -258,14 +270,8 @@
             if ([_recentURLs indexOfObject:urlString] != NSNotFound)
                 [_recentURLs removeObject:urlString];
 
-            if (_recentURLs.count >= 100)
-                [_recentURLs removeLastObject];
             [_recentURLs addObject:urlString];
-            if ([self ubiquitousKeyStoreAvailable]) {
-                [[NSUbiquitousKeyValueStore defaultStore] setArray:_recentURLs forKey:kVLCRecentURLs];
-            } else {
-                [[NSUserDefaults standardUserDefaults] setObject:_recentURLs forKey:kVLCRecentURLs];
-            }
+            [self _saveData];
 
             [self.historyTableView reloadData];
         }
@@ -274,26 +280,44 @@
     [self _openURLStringAndDismiss:self.urlField.text];
 }
 
+- (void)editTableView:(id)sender
+{
+    BOOL editing = self.historyTableView.editing;
+    [self.historyTableView setEditing:!editing animated:YES];
+    if (editing) {
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"BUTTON_EDIT", nil);
+        self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStylePlain;
+    } else {
+        self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"BUTTON_DONE", nil);
+        self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
+    }
+}
+
+#pragma mark - table view cell delegation
+
 - (void)renameStreamFromCell:(UITableViewCell *)cell {
     NSIndexPath *cellIndexPath = [self.historyTableView indexPathForCell:cell];
-    NSString *renameString = NSLocalizedString(@"BUTTON_RENAME", nil);
-    NSString *cancelString = NSLocalizedString(@"BUTTON_CANCEL", nil);
+    NSInteger row = cellIndexPath.row;
+    NSString *streamName = [_recentURLTitles objectForKey:[@(row) stringValue]];
+    if (streamName == nil) {
+        streamName = [[_recentURLs[row] stringByRemovingPercentEncoding] lastPathComponent];
+    }
 
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:renameString
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BUTTON_RENAME", nil)
                                                                              message:nil
                                                                       preferredStyle:UIAlertControllerStyleAlert];
 
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:cancelString
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_CANCEL", nil)
                                                            style:UIAlertActionStyleCancel
                                                          handler:nil];
-    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *streamTitle = alertController.textFields.firstObject.text;
-        [self renameStreamWithTitle:streamTitle atIndex:cellIndexPath.row];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_RENAME", nil)
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+        [self renameStreamWithTitle:alertController.textFields.firstObject.text atIndex:cellIndexPath.row];
     }];
 
     [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.text = cell.textLabel.text;
-
+        textField.text = streamName;
         [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification
                                                           object:textField
                                                            queue:[NSOperationQueue mainQueue]
@@ -311,16 +335,55 @@
 - (void)renameStreamWithTitle:(NSString *)title atIndex:(NSInteger)index
 {
     [_recentURLTitles setObject:title forKey:[@(index) stringValue]];
-    if ([self ubiquitousKeyStoreAvailable]) {
-        [[NSUbiquitousKeyValueStore defaultStore] setDictionary:_recentURLTitles forKey:kVLCRecentURLTitles];
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            [self.historyTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }];
-    } else {
-        [[NSUserDefaults standardUserDefaults] setObject:_recentURLTitles forKey:kVLCRecentURLTitles];
+    [self _saveData];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
         [self.historyTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
+    }];
 }
+
+- (void)editURLFromCell:(UITableViewCell *)cell
+{
+    NSIndexPath *cellIndexPath = [self.historyTableView indexPathForCell:cell];
+    NSString *urlString = _recentURLs[cellIndexPath.row];
+
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"BUTTON_EDIT", nil)
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_CANCEL", nil)
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
+    UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"BUTTON_SAVE", nil)
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+        [self updateURL:alertController.textFields.firstObject.text atIndex:cellIndexPath.row];
+    }];
+
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.text = urlString;
+        [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification
+                                                          object:textField
+                                                           queue:[NSOperationQueue mainQueue]
+                                                      usingBlock:^(NSNotification * _Nonnull note) {
+            okAction.enabled = (textField.text.length != 0);
+        }];
+    }];
+
+    [alertController addAction:cancelAction];
+    [alertController addAction:okAction];
+
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)updateURL:(NSString *)urlString atIndex:(NSInteger)index
+{
+    [_recentURLs replaceObjectAtIndex:index withObject:urlString];
+    [self _saveData];
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        [self.historyTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }];
+}
+
 
 #pragma mark - table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -348,6 +411,7 @@
     cell.subtitleLabel.text = content;
     cell.thumbnailView.image = [UIImage imageNamed:@"serverIcon"];
     cell.delegate = self;
+    cell.showsReorderControl = YES;
 
     return cell;
 }
@@ -364,16 +428,10 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [_recentURLs removeObjectAtIndex:indexPath.row];
         [_recentURLTitles removeObjectForKey:[@(indexPath.row) stringValue]];
-        if ([self ubiquitousKeyStoreAvailable]) {
-            NSUbiquitousKeyValueStore *keyValueStore = [NSUbiquitousKeyValueStore defaultStore];
-            [keyValueStore setArray:_recentURLs forKey:kVLCRecentURLs];
-            [keyValueStore setDictionary:_recentURLTitles forKey:kVLCRecentURLTitles];
-        } else {
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults setObject:_recentURLs forKey:kVLCRecentURLs];
-            [userDefaults setObject:_recentURLTitles forKey:kVLCRecentURLTitles];
-        }
 
+        [self _saveData];
+
+        [tableView endEditing:NO];
         [tableView reloadData];
     }
 }
@@ -413,6 +471,25 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     return YES;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    NSString *stringURL = _recentURLs[sourceIndexPath.row];
+    NSString *titleKey = [@(sourceIndexPath.row) stringValue];
+    NSString *title = _recentURLTitles[titleKey];
+    [_recentURLs removeObjectAtIndex:sourceIndexPath.row];
+    [_recentURLs insertObject:stringURL atIndex:destinationIndexPath.row];
+    if (title) {
+        [_recentURLTitles removeObjectForKey:titleKey];
+        [_recentURLTitles setObject:title forKey:[@(destinationIndexPath.row) stringValue]];
+    }
+    [self _saveData];
+}
+
 #pragma mark - internals
 - (void)_openURLStringAndDismiss:(NSString *)url
 {
@@ -423,61 +500,23 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
     [medialist addMedia:media];
     [[VLCPlaybackService sharedInstance] playMediaList:medialist firstIndex:0 subtitlesFilePath:nil];
 
-    if (([playbackURL.scheme isEqualToString:@"http"] || [playbackURL.scheme isEqualToString:@"https"]) && self.scanSubToggleButton.selected) {
-        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self _tryToFindSubtitleOnServerForURL:playbackURL];
-        });
+    if (self.scanSubToggleButton.selected) {
+        [VLCOpenNetworkSubtitlesFinder tryToFindSubtitleOnServerForURL:playbackURL];
     }
 }
 
-- (void)_tryToFindSubtitleOnServerForURL:(NSURL *)url
+- (void)_saveData
 {
-    NSCharacterSet *characterFilter = [NSCharacterSet characterSetWithCharactersInString:@"\\.():$"];
-    NSString *subtitleFileExtensions = [[kSupportedSubtitleFileExtensions componentsSeparatedByCharactersInSet:characterFilter] componentsJoinedByString:@""];
-    NSArray *arraySubtitleFileExtensions = [subtitleFileExtensions componentsSeparatedByString:@"|"];
-    NSURL *urlWithoutExtension = [url URLByDeletingPathExtension];
-    NSUInteger count = arraySubtitleFileExtensions.count;
-    NSURL *matchedURL = nil;
-
-    for (int i = 0; i < count; i++) {
-        matchedURL = [urlWithoutExtension URLByAppendingPathExtension:arraySubtitleFileExtensions[i]];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:matchedURL];
-        request.HTTPMethod = @"HEAD";
-
-        NSURLResponse *response = nil;
-        NSError *error = nil;
-        [self sendSynchronousRequest:request returningResponse:&response error:&error];
-        NSInteger httpStatus = [(NSHTTPURLResponse *)response statusCode];
-
-        if (httpStatus == 200) {
-            APLog(@"%s:found matching spu file: %@", __PRETTY_FUNCTION__, matchedURL);
-            break;
-        }
+    if ([self ubiquitousKeyStoreAvailable]) {
+        NSUbiquitousKeyValueStore *keyValueStore = [NSUbiquitousKeyValueStore defaultStore];
+        [keyValueStore setArray:_recentURLs forKey:kVLCRecentURLs];
+        [keyValueStore setDictionary:_recentURLTitles forKey:kVLCRecentURLTitles];
+        [keyValueStore synchronize];
+    } else {
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        [userDefaults setObject:_recentURLs forKey:kVLCRecentURLs];
+        [userDefaults setObject:_recentURLTitles forKey:kVLCRecentURLTitles];
     }
-
-    if (matchedURL) {
-        [[VLCPlaybackService sharedInstance] addSubtitlesToCurrentPlaybackFromURL:matchedURL];
-    }
-}
-
-- (NSData *)sendSynchronousRequest:(NSURLRequest *)request returningResponse:(NSURLResponse **)response error:(NSError **)error
-{
-    NSError __block *erreur = NULL;
-    NSData __block *data;
-    NSURLResponse __block *urlResponse;
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
-    [[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable _data, NSURLResponse * _Nullable _response, NSError * _Nullable _error) {
-        urlResponse = _response;
-        erreur = _error;
-        data = _data;
-        dispatch_semaphore_signal(semaphore);
-    }] resume];
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-
-    *response = urlResponse;
-    *error = erreur;
-    return data;
 }
 
 #pragma mark - text view delegate

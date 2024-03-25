@@ -2,7 +2,7 @@
  * VLCAppCoordinator.h
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2022 VideoLAN. All rights reserved.
+ * Copyright (c) 2022-2023 VideoLAN. All rights reserved.
  * $Id$
  *
  * Author: Felix Paul Kühne <fkuehne # videolan.org>
@@ -14,23 +14,36 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#if TARGET_OS_IOS
 @class MediaLibraryService;
 @class VLCRendererDiscovererManager;
 @class VLCMLMedia;
+@class VLCStripeController;
+#endif
+@class VLCFavoriteService;
+
+
+@class VLCHTTPUploaderController;
 
 @interface VLCAppCoordinator : NSObject
 
 + (nonnull instancetype)sharedInstance;
 
+@property (readonly) VLCHTTPUploaderController *httpUploaderController;
+@property (readonly) VLCFavoriteService *favoriteService;
+
+#if TARGET_OS_IOS
 @property (readonly) MediaLibraryService *mediaLibraryService;
 @property (readonly) VLCRendererDiscovererManager *rendererDiscovererManager;
-@property (nullable) UIWindow *externalWindow;
+@property (readonly) VLCStripeController *stripeController;
 
-- (void)setTabBarController:(UITabBarController *)tabBarController;
+@property (nullable) UIWindow *externalWindow;
+@property (retain) UITabBarController *tabBarController;
 
 - (void)handleShortcutItem:(UIApplicationShortcutItem *)shortcutItem;
 
-- (VLCMLMedia *)mediaForUserActivity:(NSUserActivity *)userActivity;
+- (nullable VLCMLMedia *)mediaForUserActivity:(NSUserActivity *)userActivity;
+#endif
 
 @end
 

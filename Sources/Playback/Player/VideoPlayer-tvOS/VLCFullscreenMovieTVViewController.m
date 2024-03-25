@@ -1,7 +1,7 @@
 /*****************************************************************************
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2015 VideoLAN. All rights reserved.
+ * Copyright (c) 2015-2023 VideoLAN. All rights reserved.
  * $Id$
  *
  * Authors: Felix Paul Kühne <fkuehne # videolan.org>
@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 
 @property (nonatomic) CADisplayLink *displayLink;
 @property (nonatomic) NSTimer *audioDescriptionScrollTimer;
-@property (nonatomic) NSTimer *hidePlaybackControlsViewAfterDeleayTimer;
+@property (nonatomic) NSTimer *hidePlaybackControlsViewAfterDelayTimer;
 @property (nonatomic) VLCPlaybackInfoTVViewController *infoViewController;
 @property (nonatomic) NSNumber *scanSavedPlaybackRate;
 @property (nonatomic) VLCPlayerScanState scanState;
@@ -43,6 +43,8 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 
 @property (nonatomic) NSSet<UIGestureRecognizer *> *simultaneousGestureRecognizers;
 @property (nonatomic) BOOL disabledIdleTimer;
+
+@property (nonatomic) BOOL playbackUIShouldHide;
 
 // 360 Support
 @property (nonatomic) CGPoint projectionLocation;
@@ -88,6 +90,9 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     self.yaw = 0;
     self.bufferingLabel.text = NSLocalizedString(@"PLEASE_WAIT", nil);
 
+    self.pitch = 0;
+    self.yaw = 0;
+
     _disabledIdleTimer = NO;
 
     NSMutableSet<UIGestureRecognizer *> *simultaneousGestureRecognizers = [NSMutableSet set];
@@ -108,7 +113,8 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     menuTapGestureRecognizer.delegate = self;
     [self.view addGestureRecognizer:menuTapGestureRecognizer];
 
-   //  IR only recognizer
+    //  IR only recognizer
+
     UITapGestureRecognizer *upArrowRecognizer = [[VLCIRTVTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleIRPressUp)];
     upArrowRecognizer.allowedPressTypes = @[@(UIPressTypeUpArrow)];
     [self.view addGestureRecognizer:upArrowRecognizer];
@@ -167,7 +173,24 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 
     VLCPlaybackService *vpc = [VLCPlaybackService sharedInstance];
     vpc.delegate = self;
-    [self updateThumbnailImageViewsWith:[UIImage imageNamed:@"about-app-icon"]];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
+        vpc.shuffleMode = [defaults boolForKey:kVLCPlayerIsShuffleEnabled];
+        vpc.repeatMode = [defaults integerForKey:kVLCPlayerIsRepeatEnabled];
+    }
+
+    self.playbackUIShouldHide = [defaults boolForKey:kVLCPlayerUIShouldHide];
+    if (self.playbackUIShouldHide) {
+        self.activityIndicator.alpha = 0.;
+        [self.activityIndicator stopAnimating];
+        self.bufferingLabel.hidden = YES;
+        self.audioArtworkImageView.image = nil;
+        self.audioLargeBackgroundImageView.image = nil;
+    } else {
+        [self updateThumbnailImageViewsWith:[UIImage imageNamed:@"about-app-icon"]];
+    }
+
     [vpc recoverPlaybackState];
 }
 
@@ -301,8 +324,8 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
                           delay:0.0
                         options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         bar.scrubbingFraction = scrubbingFraction;
-                     }
+        bar.scrubbingFraction = scrubbingFraction;
+    }
                      completion:nil];
     [self updateTimeLabelsForScrubbingFraction:scrubbingFraction];
 }
@@ -331,6 +354,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
         [vpc playPause];
     }
 }
+
 - (void)menuButtonPressed:(UITapGestureRecognizer *)recognizer
 {
     VLCTransportBar *bar = self.transportBar;
@@ -448,7 +472,8 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     [self scanForwardPrevious];
 }
 
-- (void)updateProjection:(VLCSiriRemoteGestureRecognizer *)recognizer {
+- (void)updateProjection:(VLCSiriRemoteGestureRecognizer *)recognizer
+{
     CGPoint newLocationInView = [recognizer locationInView:self.view];
 
     CGFloat diffX = newLocationInView.x - self.projectionLocation.x;
@@ -463,15 +488,15 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     [self applyYaw:diffYaw pitch:diffPitch];
 }
 
-- (void)applyYaw:(CGFloat)yaw pitch:(CGFloat)pitch {
-    
+- (void)applyYaw:(CGFloat)yaw pitch:(CGFloat)pitch
+{
     self.yaw += yaw;
     self.pitch = self.pitch  + MIN(MAX(pitch, -90), 90);
-    
+
     [self setPitch: self.pitch + pitch];
+
     VLCPlaybackService *vpc = [VLCPlaybackService sharedInstance];
     [vpc updateViewpoint:self.yaw pitch:self.pitch roll:0 fov:85 absolute:YES];
-    
 }
 
 - (void)handleSiriRemote:(VLCSiriRemoteGestureRecognizer *)recognizer
@@ -529,7 +554,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
                 break;
             }
         case UIGestureRecognizerStateChanged:
-            if (![[VLCPlaybackService sharedInstance] currentMediaIs360Video]){
+            if (![[VLCPlaybackService sharedInstance] currentMediaIs360Video]) {
                 if (recognizer.isLongPress) {
                     if (!self.isSeekable && recognizer.touchLocation == VLCSiriRemoteTouchLocationRight) {
                         [self setScanState:VLCPlayerScanStateForward2];
@@ -573,9 +598,8 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     }
 
     if (!self.transportBar.isScrubbing) {
-       [self updateProjection:recognizer];
+        [self updateProjection:recognizer];
     }
-    
     self.transportBar.hint = self.isSeekable ? hint : VLCPlayerScanStateNone;
 }
 
@@ -797,6 +821,9 @@ static const NSInteger VLCJumpInterval = 10000; // 10 seconds
 }
 
 - (void)updateActivityIndicatorForState:(VLCMediaPlayerState)state {
+    if (self.playbackUIShouldHide) {
+        return;
+    }
     UIActivityIndicatorView *indicator = self.activityIndicator;
     switch (state) {
         case VLCMediaPlayerStateBuffering:
@@ -835,7 +862,7 @@ static const NSInteger VLCJumpInterval = 10000; // 10 seconds
 
 - (void)updateThumbnailImageViewsWith:(UIImage *)artworkImage
 {
-    if (artworkImage == nil) {
+    if (artworkImage == nil && !self.playbackUIShouldHide) {
         artworkImage = [UIImage imageNamed:@"about-app-icon"];
     }
 
@@ -875,7 +902,7 @@ static const NSInteger VLCJumpInterval = 10000; // 10 seconds
 }
 - (void)hidePlaybackControlsIfNeededAfterDelay
 {
-    self.hidePlaybackControlsViewAfterDeleayTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
+    self.hidePlaybackControlsViewAfterDelayTimer = [NSTimer scheduledTimerWithTimeInterval:.75
                                                                                      target:self
                                                                                    selector:@selector(fireHidePlaybackControlsIfNotPlayingTimer:)
                                                                                    userInfo:nil repeats:NO];
@@ -889,15 +916,15 @@ static const NSInteger VLCJumpInterval = 10000; // 10 seconds
     CGFloat alpha = visible ? 1.0 : 0.0;
     [UIView animateWithDuration:duration
                      animations:^{
-                         self.bottomOverlayView.alpha = alpha;
-                     }];
+        self.bottomOverlayView.alpha = alpha;
+    }];
 }
 
 
 #pragma mark - Properties
-- (void)setHidePlaybackControlsViewAfterDeleayTimer:(NSTimer *)hidePlaybackControlsViewAfterDeleayTimer {
-    [_hidePlaybackControlsViewAfterDeleayTimer invalidate];
-    _hidePlaybackControlsViewAfterDeleayTimer = hidePlaybackControlsViewAfterDeleayTimer;
+- (void)setHidePlaybackControlsViewAfterDelayTimer:(NSTimer *)hidePlaybackControlsViewAfterDelayTimer {
+    [_hidePlaybackControlsViewAfterDelayTimer invalidate];
+    _hidePlaybackControlsViewAfterDelayTimer = hidePlaybackControlsViewAfterDelayTimer;
 }
 
 - (VLCPlaybackInfoTVViewController *)infoViewController
@@ -926,7 +953,7 @@ static const NSInteger VLCJumpInterval = 10000; // 10 seconds
                       isPlaying:(BOOL)isPlaying
 currentMediaHasTrackToChooseFrom:(BOOL)currentMediaHasTrackToChooseFrom
         currentMediaHasChapters:(BOOL)currentMediaHasChapters
-          forPlaybackService:(VLCPlaybackService *)playbackService
+             forPlaybackService:(VLCPlaybackService *)playbackService
 {
 
     [self updateActivityIndicatorForState:currentState];
@@ -968,21 +995,18 @@ currentMediaHasTrackToChooseFrom:(BOOL)currentMediaHasTrackToChooseFrom
                 self.audioAlbumNameLabel.text = albumName;
                 self.audioAlbumNameLabel.hidden = NO;
             }];
-            APLog(@"Audio-only track meta changed, tracing artist '%@' and album '%@'", artist, albumName);
         } else if (artist != nil) {
             [UIView animateWithDuration:.3 animations:^{
                 self.audioArtistLabel.text = artist;
                 self.audioArtistLabel.hidden = NO;
                 self.audioAlbumNameLabel.hidden = YES;
             }];
-            APLog(@"Audio-only track meta changed, tracing artist '%@'", artist);
         } else if (title != nil) {
             NSRange deviderRange = [title rangeOfString:@" - "];
             if (deviderRange.length != 0) { // for radio stations, all we have is "ARTIST - TITLE"
                 artist = [title substringToIndex:deviderRange.location];
                 title = [title substringFromIndex:deviderRange.location + deviderRange.length];
             }
-            APLog(@"Audio-only track meta changed, tracing artist '%@'", artist);
             [UIView animateWithDuration:.3 animations:^{
                 self.audioArtistLabel.text = artist;
                 self.audioArtistLabel.hidden = NO;

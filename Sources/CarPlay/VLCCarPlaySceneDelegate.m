@@ -2,7 +2,7 @@
  * VLCCarPlaySceneDelegate.m
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2022 VideoLAN. All rights reserved.
+ * Copyright (c) 2022-2023 VideoLAN. All rights reserved.
  * $Id$
  *
  * Author: Felix Paul Kühne <fkuehne # videolan.org>
@@ -14,10 +14,10 @@
 
 #import <CarPlay/CarPlay.h>
 
-#import "CPListTemplate+Artists.h"
+#import "VLCCarPlayArtistsController.h"
 #import "CPListTemplate+Genres.h"
 #import "CPListTemplate+NetworkStreams.h"
-#import "CPListTemplate+Playlists.h"
+#import "VLCCarPlayPlaylistsController.h"
 #import "VLCNowPlayingTemplateObserver.h"
 
 #import "VLC-Swift.h"
@@ -30,6 +30,8 @@
     CPInterfaceController *_interfaceController;
     CarPlayMediaLibraryObserver *_mediaLibraryObserver;
     VLCNowPlayingTemplateObserver *_nowPlayingTemplateObserver;
+    VLCCarPlayArtistsController *_artistsController;
+    VLCCarPlayPlaylistsController *_playlistsController;
 }
 
 @end
@@ -63,10 +65,19 @@ didDisconnectInterfaceController:(CPInterfaceController *)interfaceController
 
 - (CPTabBarTemplate *)generateRootTemplate
 {
-    CPListTemplate *artists = [CPListTemplate artistList];
+    if (!_artistsController) {
+        _artistsController = [[VLCCarPlayArtistsController alloc] init];
+        _artistsController.interfaceController = _interfaceController;
+    }
+    if (!_playlistsController) {
+        _playlistsController = [[VLCCarPlayPlaylistsController alloc] init];
+        _playlistsController.interfaceController = _interfaceController;
+    }
+
+    CPListTemplate *artists = [_artistsController artistList];
     CPListTemplate *genres = [CPListTemplate genreList];
     CPListTemplate *streams = [CPListTemplate streamList];
-    CPListTemplate *playlists = [CPListTemplate playlists];
+    CPListTemplate *playlists = [_playlistsController playlists];
 
     return [[CPTabBarTemplate alloc] initWithTemplates:@[artists, genres, streams, playlists]];
 }

@@ -60,9 +60,10 @@ class QueueViewController: UIViewController {
             PlaybackService.sharedInstance()
         }
     }
+
     private var mediaList: VLCMediaList {
         get {
-            PlaybackService.sharedInstance().mediaList
+            playbackService.isShuffleMode ? PlaybackService.sharedInstance().shuffledList : PlaybackService.sharedInstance().mediaList
         }
     }
 
@@ -102,14 +103,20 @@ class QueueViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initViews()
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(themeDidChange),
-                                               name: .VLCThemeDidChangeNotification,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(deviceOrientationDidChange),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
+
+        let defaultCenter: NotificationCenter = NotificationCenter.default
+        defaultCenter.addObserver(self,
+                                  selector: #selector(themeDidChange),
+                                  name: .VLCThemeDidChangeNotification,
+                                  object: nil)
+        defaultCenter.addObserver(self,
+                                  selector: #selector(deviceOrientationDidChange),
+                                  name: UIDevice.orientationDidChangeNotification,
+                                  object: nil)
+        defaultCenter.addObserver(self,
+                                  selector: #selector(reload),
+                                  name: Notification.Name(VLCPlaybackServiceShuffleModeUpdated),
+                                  object: nil)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -221,6 +228,14 @@ class QueueViewController: UIViewController {
 
         topConstraint?.constant = topConstraintConstant
         reload()
+
+        guard let currentMedia = playbackService.currentlyPlayingMedia else {
+            return
+        }
+
+        let currentIndex = playbackService.mediaList.index(of: currentMedia)
+        let currentIndexPath = IndexPath(row: Int(currentIndex), section: 0)
+        queueCollectionView.scrollToItem(at: currentIndexPath, at: .centeredVertically, animated: true)
     }
 
     @objc init(medialibraryService: MediaLibraryService) {

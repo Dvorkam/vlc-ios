@@ -16,6 +16,8 @@ import AVKit
     case playbackSpeed
     case equalizer
     case sleepTimer
+    case abRepeat
+    case abRepeatMarks
 }
 
 protocol OptionsNavigationBarDelegate: AnyObject {
@@ -33,6 +35,7 @@ class OptionsNavigationBar: UIStackView {
         let image = UIImage(named: "filter")?.withRenderingMode(.alwaysTemplate)
         videoFiltersButton.setImage(image, for: .normal)
         videoFiltersButton.tintColor = PresentationTheme.current.colors.orangeUI
+        videoFiltersButton.imageView?.contentMode = .scaleAspectFit
         videoFiltersButton.accessibilityLabel = NSLocalizedString("VIDEO_FILTER", comment: "")
         videoFiltersButton.contentHorizontalAlignment = .right
         videoFiltersButton.isHidden = true
@@ -46,6 +49,7 @@ class OptionsNavigationBar: UIStackView {
         let image = UIImage(named: "playback")?.withRenderingMode(.alwaysTemplate)
         playbackSpeedButton.setImage(image, for: .normal)
         playbackSpeedButton.tintColor = PresentationTheme.current.colors.orangeUI
+        playbackSpeedButton.imageView?.contentMode = .scaleAspectFit
         playbackSpeedButton.accessibilityLabel = NSLocalizedString("PLAYBACK_SPEED", comment: "")
         playbackSpeedButton.contentHorizontalAlignment = .right
         playbackSpeedButton.isHidden = true
@@ -59,6 +63,7 @@ class OptionsNavigationBar: UIStackView {
         let image = UIImage(named: "equalizer")?.withRenderingMode(.alwaysTemplate)
         equalizerButton.setImage(image, for: .normal)
         equalizerButton.tintColor = PresentationTheme.current.colors.orangeUI
+        equalizerButton.imageView?.contentMode = .scaleAspectFit
         equalizerButton.accessibilityLabel = NSLocalizedString("EQUALIZER_CELL_TITLE", comment: "")
         equalizerButton.contentHorizontalAlignment = .right
         equalizerButton.isHidden = true
@@ -72,11 +77,40 @@ class OptionsNavigationBar: UIStackView {
         let image = UIImage(named: "sleepTimer")?.withRenderingMode(.alwaysTemplate)
         sleepTimerButton.setImage(image, for: .normal)
         sleepTimerButton.tintColor = PresentationTheme.current.colors.orangeUI
+        sleepTimerButton.imageView?.contentMode = .scaleAspectFit
         sleepTimerButton.accessibilityLabel = NSLocalizedString("BUTTON_SLEEP_TIMER", comment: "")
         sleepTimerButton.contentHorizontalAlignment = .right
         sleepTimerButton.isHidden = true
         sleepTimerButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return sleepTimerButton
+    }()
+
+    lazy var abRepeatButton: UIButton = {
+        var abRepeatButton = UIButton(type: .system)
+        abRepeatButton.addTarget(self, action: #selector(handleABRepeatTap), for: .touchUpInside)
+        let image = UIImage(named: "abRepeat")?.withRenderingMode(.alwaysTemplate)
+        abRepeatButton.setImage(image, for: .normal)
+        abRepeatButton.tintColor = PresentationTheme.current.colors.orangeUI
+        abRepeatButton.imageView?.contentMode = .scaleAspectFit
+        abRepeatButton.accessibilityLabel = NSLocalizedString("AB_LOOP", comment: "")
+        abRepeatButton.contentHorizontalAlignment = .right
+        abRepeatButton.isHidden = true
+        abRepeatButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        return abRepeatButton
+    }()
+
+    lazy var abRepeatMarksButton: UIButton = {
+        var abRepeatMarksButton = UIButton(type: .system)
+        abRepeatMarksButton.addTarget(self, action: #selector(handleABRepeatMarksTap), for: .touchUpInside)
+        let image = UIImage(named: "abRepeatMarker")?.withRenderingMode(.alwaysTemplate)
+        abRepeatMarksButton.setImage(image, for: .normal)
+        abRepeatMarksButton.tintColor = PresentationTheme.current.colors.orangeUI
+        abRepeatMarksButton.imageView?.contentMode = .scaleAspectFit
+        abRepeatMarksButton.accessibilityLabel = NSLocalizedString("AB_LOOP_MARKS", comment: "")
+        abRepeatMarksButton.contentHorizontalAlignment = .right
+        abRepeatMarksButton.isHidden = true
+        abRepeatMarksButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        return abRepeatMarksButton
     }()
 
     // MARK: - Initializers
@@ -99,6 +133,8 @@ class OptionsNavigationBar: UIStackView {
         addArrangedSubview(playbackSpeedButton)
         addArrangedSubview(equalizerButton)
         addArrangedSubview(sleepTimerButton)
+        addArrangedSubview(abRepeatMarksButton)
+        addArrangedSubview(abRepeatButton)
     }
 
     // MARK: - Button Actions
@@ -126,5 +162,17 @@ class OptionsNavigationBar: UIStackView {
         let secondLine = NSLocalizedString("RESET_SLEEP_TIMER", comment: "")
         let message = firstLine + secondLine
         delegate?.optionsNavigationBarDisplayAlert(title: title, message: message, button: sleepTimerButton)
+    }
+
+    @objc private func handleABRepeatTap() {
+        let title = NSLocalizedString("AB_LOOP", comment: "")
+        let message = NSLocalizedString("RESET_AB_LOOP", comment: "")
+        delegate?.optionsNavigationBarDisplayAlert(title: title, message: message, button: abRepeatButton)
+    }
+
+    @objc private func handleABRepeatMarksTap() {
+        let title = NSLocalizedString("AB_LOOP_MARKS", comment: "")
+        let message = NSLocalizedString("RESET_AB_LOOP_MARKS", comment: "")
+        delegate?.optionsNavigationBarDisplayAlert(title: title, message: message, button: abRepeatMarksButton)
     }
 }

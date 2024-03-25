@@ -65,6 +65,8 @@
 				<integer>0</integer>
 				<integer>1</integer>
 			</array>
+			<key>infobuttonvalue</key>
+			<string>SETTINGS_CONTINUE_AUDIO_PLAYBACK_INFO</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -97,6 +99,8 @@
 				<integer>0</integer>
 				<integer>1</integer>
 			</array>
+			<key>infobuttonvalue</key>
+			<string>SETTINGS_CONTINUE_VIDEO_PLAYBACK_INFO</string>
 		</dict>
 		<dict>
 			<key>DefaultValue</key>
@@ -298,6 +302,18 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>SETTINGS_SUBTITLES_DISABLE</string>
+			<key>Key</key>
+			<string>kVLCSettingDisableSubtitles</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>infobuttonvalue</key>
+			<string>SETTINGS_SUBTITLES_INFO</string>
+			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
 			<string>SETTINGS_SUBTITLES_FONT</string>
@@ -403,6 +419,8 @@
 			</array>
 		</dict>
 		<dict>
+			<key>infobuttonvalue</key>
+			<string>SETTINGS_SUBTITLES_INFO</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
@@ -429,6 +447,8 @@
 			</array>
 		</dict>
 		<dict>
+			<key>infobuttonvalue</key>
+			<string>SETTINGS_SUBTITLES_INFO</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
@@ -439,6 +459,8 @@
 			<false/>
 		</dict>
 		<dict>
+			<key>infobuttonvalue</key>
+			<string>SETTINGS_SUBTITLES_INFO</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Title</key>
@@ -473,6 +495,8 @@
 			</array>
 		</dict>
 		<dict>
+			<key>infobuttonvalue</key>
+			<string>SETTINGS_SUBTITLES_INFO</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
 			<key>Titles</key>

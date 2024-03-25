@@ -22,6 +22,8 @@
 "TRACKS" = "%i Tracks";
 "TRACK" = "%i Track";
 "TRACKS_DURATION" = "%u tracks, duration: %@";
+"NB_ALBUM_FORMAT" = "%i Album";
+"NB_ALBUMS_FORMAT" = "%i Albums";
 
 "PLAYING_EXTERNALLY_TITLE" = "TV Connected";
 "PLAYING_EXTERNALLY_DESC" = "This video is playing on the TV";
@@ -77,13 +79,21 @@
 
 "UPGRADING_LIBRARY" = "Upgrading Media Library";
 
-"FAVORITE" = "Favorite";
+"FAVORITES" = "Favorites";
+"NO_FAVORITES" = "There are no Favorites yet";
+"NO_FAVORITES_DESCRIPTION" = "Mark your favorite folders while browsing servers to have them listed here.";
+"ADD_FAVORITE" = "Add to Favorites";
+"REMOVE_FAVORITE" = "Remove from Favorites";
+"FAVORITE_ALERT_TITLE" = "Would you like to add this folder to your Favorites?";
+"UNFAVORITE_ALERT_TITLE" = "Would you like to remove this folder from your Favorites?";
+
 "OPEN_NETWORK" = "Open Network Stream";
 "NETWORK_TITLE" = "Network Stream";
 "OPEN_NETWORK_HELP" = "Enter any HTTP, RTSP, RTMP, MMS, FTP or UDP/RTP address to open the stream directly.";
 "HTTP_UPLOAD_SERVER_OFF" = "Inactive Server";
 "HTTP_UPLOAD_NO_CONNECTIVITY" = "No active Wi-Fi connection";
 "OPEN_STREAM_OR_DOWNLOAD" = "Would you like to download or play this URL?";
+"ALWAYS_STREAM_URL" = "Always play URLs";
 "SHARED_VLC_IOS_LIBRARY" = "Shared VLC for iOS Library";
 "SMB_CIFS_FILE_SERVERS" = "File Servers (SMB)";
 
@@ -110,7 +120,7 @@
 "SHARING_ERROR_NO_APPLICATIONS" = "Could not find any applications to open this type of file";
 "SHARING_SUCCESS_CAMERA_ROLL" = "File was successfully saved to the Camera Roll";
 
-"FAVORITEVC_DETAILTEXT" = "See your favorite folder";
+"FAVORITEVC_DETAILTEXT" = "See your favorite folders";
 "STREAMVC_DETAILTEXT" = "Play streams directly without downloading";
 "DOWNLOADVC_DETAILTEXT" = "Download files directly to your device";
 "HEADER_TITLE_RENDERER" = "Select a casting device";
@@ -213,9 +223,9 @@
 "VO_VIDEOPLAYER_TITLE" = "Video Player";
 "VO_VIDEOPLAYER_DOUBLETAP" = "Double tap to show or hide playback controls";
 
-"FIRST_STEPS_ITUNES" = "iTunes File Sync";
+"FIRST_STEPS_ITUNES" = "File Sync";
 "FIRST_STEPS_ITUNES_TITLE" = "Sync With Your Computer";
-"FIRST_STEPS_ITUNES_DETAILS" = "Connect your device to iTunes and select your device. Select \"File Sharing\" on the left side menu of iTunes and look for VLC to transfer files";
+"FIRST_STEPS_ITUNES_DETAILS" = "Connect your %@ to use the Finder or iTunes for \"File Sharing\". Select VLC to transfer files.";
 "FIRST_STEPS_WIFI_TITLE" = "Share via Wi-Fi";
 "FIRST_STEPS_WIFI_DETAILS" = "Enter the generated URL in your favorite web browser while connected to the same network as your phone";
 "FIRST_STEPS_CLOUDS" = "Clouds";
@@ -452,9 +462,16 @@
 
 "INTERFACE_LOCK_BUTTON" = "Lock interface";
 
+"AB_LOOP" = "A→B Loop";
+"AB_LOOP_MARKS" = "A→B Loop Marks";
+
+"RESET_AB_LOOP" = "Do you want to remove the A→B loop?";
+"RESET_AB_LOOP_MARKS" = "Do you want to reset the A→B loop marks?";
+
 "SHUFFLE_HINT" = "Shuffle media list";
 "SHUFFLE_OFF_HINT" = "Do not shuffle media list";
 
+"ASPECT_RATIO_TITLE" = "Aspect Ratios";
 "VIDEO_ASPECT_RATIO_BUTTON" = "Video aspect ratio";
 "VIDEO_ASPECT_RATIO_HINT" = "Change the aspect ratio of the current video";
 
@@ -486,6 +503,8 @@
 "DISPLAY_PLAYBACK_SPEED_SHORTCUT_HINT" = "Enable to display the playback speed shortcut";
 "VIDEO_FILTERS_HINT" = "Select to open the video filters view";
 "PLAYBACK_SPEED_HINT" = "Select to open the playback speed view";
+"SUBTITLES_DELAY_HINT" = "Select to open the subtitles delay view";
+"AUDIO_DELAY_HINT" = "Select to open the audio delay view";
 "SLEEP_TIMER_HINT" = "Select to open the sleep timer view";
 "EQUALIZER_HINT" = "Select to open the equalizer view";
 "CHAPTERS_HINT" = "Select to open the chapters view";
@@ -503,6 +522,16 @@
 
 "SETTINGS_THEME_BLACK" = "Use black background on dark mode";
 "SETTINGS_THEME_BLACK_SUBTITLE" = "Improves battery life on devices with an OLED screen";
+
+"SETTINGS_RESET_TITLE" = "Reset the settings";
+"SETTINGS_RESET_MESSAGE" = "Do you want to reset all the settings to their default values?";
+
+"SETTINGS_PLAY_ALL" = "Seamless playback for collections";
+"SETTINGS_PLAY_ALL_HINT" = "Enable to automatically play the next media in the audio or video tabs";
+"SETTINGS_PLAYLIST_PLAY_ALL" = "Seamless playback for playlists";
+"SETTINGS_PLAYLIST_PLAY_ALL_HINT" = "Enable to automatically play the next media in a playlist";
+
+"SETTINGS_DOCUMENTATION" = "Documentation";
 
 // MARK: - Local Network
 
@@ -541,16 +570,6 @@
 "MEDIALIBRARY_FILES_PLACEHOLDER" = "Place media here to add them";
 "MEDIALIBRARY_ADDING_PLACEHOLDER" = "Adding...";
 
-// MARK: - tip jar
-"GIVE_TIP" = "Give a Tip";
-"MAKE_DONATION_TITLE" = "Make a donation";
-"DONATION_DESCRIPTION" = "Your sponsorship will allow us to improve the VLC-iOS app and support the VideoLAN association.";
-"CANNOT_MAKE_PAYMENTS" = "You are not allowed to make payments on this device.";
-"PURCHASE_FAILED" = "Purchase Failed.";
-"SEND_DONATION" = "Send your donation";
-"PURCHASE_SUCESS_TITLE" = "Donation sent";
-"PURCHASE_SUCESS_DESCRIPTION" = "Thank you for your donation!";
-
 // MARK: - QueueViewController
 
 "PLAY_HINT" = "Play";
@@ -580,6 +599,52 @@
 
 "ACTIONSHEET_BACKGROUND_LABEL" = "Action sheet background";
 "ACTIONSHEET_BACKGROUND_HINT" = "Tap to remove the action sheet.";
+
+// MARK: - Donation
+"DONATION_CUSTOM_AMOUNT" = "Enter Custom Amount";
+"DONATION_TITLE" = "Privacy over profit";
+"DONATION_DESCRIPTION" = "Private, open-source multimedia, funded by you. No ads, no tracking, no compromise. Free for everyone to use. Donate now to support VideoLAN.";
+"DONATION_WINDOW_TITLE" = "Make a Donation to VideoLAN";
+"DONATE_CC_DC" = "Credit or Debit card";
+"DONATION_CHOOSE_PP" = "Please select your payment provider";
+"DONATION_CHOOSE_CURRENCY" = "Please select a currency";
+"DONATION_AMOUNT" = "Donation amount: %@";
+"DONATION_CC_NUM" = "Credit Card Number";
+"DONATION_CC_EXPIRY_DATE" = "Expiry Date";
+"DONATION_CC_EXPIRY_DATE_MONTH" = "MM";
+"DONATION_CC_EXPIRY_DATE_YEAR" = "YY";
+"DONATION_CC_CVV" = "CVV";
+"DONATION_APPLE_PAY_NOT_POSSIBLE" = "Failure configuring Apple Pay";
+"DONATION_APPLE_PAY_NOT_POSSIBLE_LONG" = "VLC failed to configure Apple Pay to perform your donation. Please choose a different payment provider to continue.";
+"DONATION_DONATE_BUTTON" = "Donate";
+"PURCHASE_FAILED" = "Purchase Failed.";
+"SEND_DONATION" = "Send your donation";
+"PURCHASE_SUCESS_TITLE" = "Donation sent";
+"PURCHASE_SUCESS_DESCRIPTION" = "Thank you for your donation!";
+"DONATION_CONTINUE" = "Continue";
+"BUTTON_NOT_NOW" = "Not now";
+"DONATION_NAGSCREEN_TITLE" = "Donate today";
+"DONATION_NAGSCREEN_SUBTITLE" = "Support free and open source multimedia";
+"DONATION_INVOICES" = "Invoices";
+"DONATION_RECEIPTS" = "Receipts";
+"DONATION_INVOICES_RECEIPTS" = "Invoices & Receipts";
+"DONATION_CHARGES_CLEARED_ON_REINSTALL" = "If you have reinstalled VLC, invoices or receipts from previous donations will not be available as all your personal information is stored on this device only.\n\nIf you have any questions, contact us at donation@videolan.org and mention this anonymous user ID: %@";
+"DONATION_CANCEL_MONTHLY" = "Cancel Regular Donation";
+"DONATION_MONTHLY" = "Monthly";
+"DONATION_MONTHLY_FORMAT" = "%@/month";
+"DONATION_MONTHLY_VIDEOLAN" = "Monthly Donation to VideoLAN";
+"DONATION_ONCE" = "One-Time";
+"DONATION_UPDATE_MONTHLY" = "Update Regular Donation";
+"DONATION_VIDEOLAN" = "Donation to VideoLAN";
+"DONATION_CANCEL_LONG" = "We are sad to see you cancelling the regular monthly donations to VideoLAN. Your previous support means a lot to us. Thank you so much!";
+"DONATION_BANK_TRANSFER" = "Bank Transfer";
+"DONATION_BANK_TRANSFER_LONG" = "Stripe processes donations made to VideoLAN. VideoLAN does not store or collect your personal information.";
+"DONATION_BUTTON_AGREE" = "Agree";
+"DONATION_IBAN" = "Bank Account Number (IBAN)";
+"DONATION_EMAIL" = "Email";
+"DONATION_NAME" = "Name";
+"DONATION_NAME_BANK_ACCOUNT" = "Name on Bank Account";
+"DONATION_EMBARGOED_COUNTRY" = "We currently cannot accept donations in your country. Enjoy VLC!";
 
 // MARK: - Playback keyboard shortcuts
 

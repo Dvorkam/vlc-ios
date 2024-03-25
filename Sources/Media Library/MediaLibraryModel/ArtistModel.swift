@@ -182,8 +182,15 @@ extension VLCMLArtist: MediaCollectionModel {
 
 extension VLCMLArtist {
     @objc func numberOfTracksString() -> String {
-        let tracksString = tracks()?.count == 1 ? NSLocalizedString("TRACK", comment: "") : NSLocalizedString("TRACKS", comment: "")
-        return String(format: tracksString, tracks()?.count ?? 0)
+        let tracksCount = tracksCount()
+        let tracksString = tracksCount == 1 ? NSLocalizedString("TRACK", comment: "") : NSLocalizedString("TRACKS", comment: "")
+        return String(format: tracksString, tracksCount)
+    }
+
+    @objc func numberOfAlbumsString() -> String {
+        let albumCount = albumsCount()
+        let albumsString = albumCount == 1 ? NSLocalizedString("NB_ALBUM_FORMAT", comment: "") : NSLocalizedString("NB_ALBUMS_FORMAT", comment: "")
+        return String(format: albumsString, albumCount)
     }
 
     @objc func artistName() -> String {

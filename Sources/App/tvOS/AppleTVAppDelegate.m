@@ -1,7 +1,7 @@
 /*****************************************************************************
  * VLC for iOS
  *****************************************************************************
- * Copyright (c) 2015, 2021 VideoLAN. All rights reserved.
+ * Copyright (c) 2015, 2021, 2023 VideoLAN. All rights reserved.
  * $Id$
  *
  * Authors: Felix Paul Kühne <fkuehne # videolan.org>
@@ -20,7 +20,7 @@
 #import "VLCHTTPUploaderController.h"
 #import "VLCRemotePlaybackViewController.h"
 #import "VLCMicroMediaLibraryService.h"
-#import "VLCRemoteControlService.h"
+#import "VLCAppCoordinator.h"
 
 @interface AppleTVAppDelegate ()
 {
@@ -32,7 +32,6 @@
     VLCOpenNetworkStreamTVViewController *_openNetworkVC;
     VLCOpenManagedServersViewController *_openManagedServersVC;
     VLCSettingsViewController *_settingsVC;
-    VLCRemoteControlService *_remoteControlService;
 }
 
 @end
@@ -63,9 +62,12 @@
                                   kVLCSettingPlaybackBackwardSkipLength : kVLCSettingPlaybackBackwardSkipLengthDefaultValue,
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCAutomaticallyPlayNextItem : @(YES),
+                                  kVLCPlayerShouldRememberState: @(YES),
+                                  kVLCPlayerUIShouldHide : @(NO),
                                   kVLCSettingDownloadArtwork : @(YES),
                                   kVLCForceSMBV1 : @(YES),
-                                  kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue};
+                                  kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
+                                  kVLCSettingPlaybackSpeedDefaultValue: @(1.0)};
     [defaults registerDefaults:appDefaults];
 }
 
@@ -77,7 +79,6 @@
     _openNetworkVC = [[VLCOpenNetworkStreamTVViewController alloc] initWithNibName:nil bundle:nil];
     _openManagedServersVC = [[VLCOpenManagedServersViewController alloc] initWithNibName:nil bundle:nil];
     _settingsVC = [[VLCSettingsViewController alloc] initWithNibName:nil bundle:nil];
-
     _mainViewController = [[UITabBarController alloc] init];
     _mainViewController.tabBar.barTintColor = [UIColor VLCOrangeTintColor];
     
@@ -85,7 +86,7 @@
     [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_localNetworkVC]];
     [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_remotePlaybackVC]];
     [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_openNetworkVC]];
-
+    
     if(_openManagedServersVC.hasManagedServers) {
         [viewControllers addObject:[[UINavigationController alloc] initWithRootViewController:_openManagedServersVC]];
     }
@@ -97,9 +98,8 @@
     self.window.rootViewController = _mainViewController;
 
     // Init the HTTP Server and the micro media library
-    [VLCHTTPUploaderController sharedInstance];
+    [VLCAppCoordinator sharedInstance];
     [[VLCMicroMediaLibraryService sharedInstance] updateMediaList];;
-    _remoteControlService = [[VLCRemoteControlService alloc] init];
 
     [self.window makeKeyAndVisible];
     return YES;
@@ -115,6 +115,12 @@
         }
     }
     return NO;
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    VLCFavoriteService *fs = [[VLCAppCoordinator sharedInstance] favoriteService];
+    [fs storeContentSynchronously];
 }
 
 @end

@@ -2,9 +2,14 @@
 * SettingsSection.swift
 * VLC for iOS
 *****************************************************************************
-* Copyright (c) 2020 VideoLAN. All rights reserved.
+* Copyright (c) 2020-2023 VideoLAN. All rights reserved.
 *
 * Authors: Swapnanil Dhol <swapnanildhol # gmail.com>
+*          Soomin Lee < bubu@mikan.io >
+*          Edgar Fouillet <vlc # edgar.fouillet.eu>
+*          Diogo Simao Marques <dogo@videolabs.io>
+*          Felix Paul Kühne <fkuehne # videolan.org>
+*          Eshan Singh <eeeshan789@icloud.com>
 *
 * Refer to the COPYING file of the official project for license.
 *****************************************************************************/
@@ -14,6 +19,7 @@ import LocalAuthentication
 
 enum SettingsSection: Int, CaseIterable, CustomStringConvertible {
     case main
+    case donation
     case generic
     case privacy
     case gestureControl
@@ -24,10 +30,13 @@ enum SettingsSection: Int, CaseIterable, CustomStringConvertible {
     case mediaLibrary
     case network
     case lab
+    case reset
 
     var description: String {
         switch self {
         case .main:
+            return ""
+        case .donation:
             return ""
         case .generic:
             return "SETTINGS_GENERIC_TITLE"
@@ -49,6 +58,8 @@ enum SettingsSection: Int, CaseIterable, CustomStringConvertible {
             return "SETTINGS_NETWORK"
         case .lab:
             return "SETTINGS_LAB"
+        case .reset:
+            return "SETTINGS_RESET_TITLE"
         }
     }
 }
@@ -96,6 +107,24 @@ enum MainOptions: Int, CaseIterable, SectionType {
     }
 }
 
+enum DonationOptions: Int, CaseIterable, SectionType {
+    case donate
+
+    var description: String {
+        return "SETTINGS_DONATE"
+    }
+
+    var containsSwitch: Bool { return false }
+
+    var containsInfobutton: Bool { return false }
+
+    var subtitle: String? {
+        return "SETTINGS_DONATE_LONG"
+    }
+
+    var preferenceKey: String? { return nil }
+}
+
 enum GenericOptions: Int, CaseIterable, SectionType {
     case defaultPlaybackSpeed
     case continueAudioPlayback
@@ -135,7 +164,7 @@ enum GenericOptions: Int, CaseIterable, SectionType {
         case .continueVideoPlayback:
             return false
         case .automaticallyPlayNextItem:
-            return true
+            return false
         case .enableTextScrollingInMediaList:
             return true
         case .rememberPlayerState:
@@ -143,7 +172,16 @@ enum GenericOptions: Int, CaseIterable, SectionType {
         }
     }
 
-    var containsInfobutton: Bool { return false }
+    var containsInfobutton: Bool {
+        switch self {
+        case .continueAudioPlayback:
+            return true
+        case .continueVideoPlayback:
+            return true
+        default:
+            return false
+        }
+    }
 
     var subtitle: String? {
         switch self {
@@ -410,7 +448,18 @@ enum VideoOptions: Int, CaseIterable, SectionType {
         }
     }
 
-    var containsInfobutton: Bool { return true }
+    var containsInfobutton: Bool {
+        switch self {
+        case .deBlockingFilter:
+            return true
+        case .deInterlace:
+            return true
+        case .hardwareDecoding:
+            return true
+        case .rememberPlayerBrightness:
+            return false
+        }
+    }
 
     var subtitle: String? {
         switch self {
@@ -440,6 +489,7 @@ enum VideoOptions: Int, CaseIterable, SectionType {
 }
 
 enum SubtitlesOptions: Int, CaseIterable, SectionType {
+    case disableSubtitles
     case font
     case relativeFontSize
     case useBoldFont
@@ -448,6 +498,8 @@ enum SubtitlesOptions: Int, CaseIterable, SectionType {
 
     var description: String {
         switch self {
+        case .disableSubtitles:
+            return "SETTINGS_SUBTITLES_DISABLE"
         case .font:
             return "SETTINGS_SUBTITLES_FONT"
         case .relativeFontSize:
@@ -463,6 +515,8 @@ enum SubtitlesOptions: Int, CaseIterable, SectionType {
 
     var containsSwitch: Bool {
         switch self {
+        case .disableSubtitles:
+            return true
         case .font:
             return false
         case .relativeFontSize:
@@ -478,6 +532,8 @@ enum SubtitlesOptions: Int, CaseIterable, SectionType {
 
     var subtitle: String? {
         switch self {
+        case .disableSubtitles:
+            return "SETTINGS_SUBTITLES_DISABLE_LONG"
         case .font:
             return "Arial"
         case .relativeFontSize:
@@ -493,6 +549,8 @@ enum SubtitlesOptions: Int, CaseIterable, SectionType {
 
     var preferenceKey: String? {
         switch self {
+        case .disableSubtitles:
+            return kVLCSettingDisableSubtitles
         case .font:
             return kVLCSettingSubtitlesFont
         case .relativeFontSize:
@@ -506,7 +564,7 @@ enum SubtitlesOptions: Int, CaseIterable, SectionType {
         }
     }
 
-    var containsInfobutton: Bool { return false }
+    var containsInfobutton: Bool { return true }
 }
 
 enum CastingOptions: Int, CaseIterable, SectionType {
@@ -763,4 +821,18 @@ enum Lab: Int, CaseIterable, SectionType {
     }
 
     var containsInfobutton: Bool { return false }
+}
+
+enum Reset: Int, CaseIterable, SectionType {
+    case resetOptions
+
+    var containsSwitch: Bool { return false }
+
+    var subtitle: String? { return nil }
+
+    var preferenceKey: String? { return kVLCResetSettings }
+
+    var containsInfobutton: Bool { return false }
+
+    var description: String { return "SETTINGS_RESET" }
 }

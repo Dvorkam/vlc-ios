@@ -24,6 +24,7 @@
 "SETTINGS_PASSCODE_LOCK_ALLOWFACEID" = "Allow Face ID for unlock";
 "SETTINGS_HIDE_LIBRARY_IN_FILES_APP" = "Hide the media library in Files";
 "SETTINGS_VIDEO_FULLSCREEN" = "Play video in fullscreen";
+"SETTINGS_HIDE_UI_DURING_PLAYBACK" = "Hide user interface during playback";
 "SETTINGS_CONTINUE_VIDEO_PLAYBACK" = "Continue video playback";
 "SETTINGS_CONTINUE_AUDIO_PLAYBACK" = "Continue audio playback";
 "SETTINGS_CONTINUE_PLAYBACK_NEVER" = "Never";
@@ -114,12 +115,13 @@
 "SETTINGS_RTSP_TCP" = "Use RTP over RTSP (TCP)";
 "SETTINGS_NETWORK_SATIP_CUSTOM_CHANNEL_LIST" = "Custom SAT>IP channel list URL";
 
-"SETTINGS_ARTWORK" = "Artwork";
 "SETTINGS_DOWNLOAD_ARTWORK" = "Download artwork";
 
 "SETTINGS_LAB" = "Lab";
 "SETTINGS_DEBUG_LOG" = "Save debug logs on device";
 "SETTINGS_EXPORT_LIBRARY" = "Dump media library";
+
+"SETTINGS_RESET" = "Reset the settings";
 
 "ABOUT_APP_TV" = "About VLC for tvOS";
 
