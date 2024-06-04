@@ -47,6 +47,7 @@ currentMediaHasTrackToChooseFrom:(BOOL)currentMediaHasTrackToChooseFrom
 - (void)playbackService:(VLCPlaybackService *)playbackService
               nextMedia:(VLCMedia *)media;
 - (void)playModeUpdated;
+- (void)reloadPlayQueue;
 @end
 
 NS_SWIFT_NAME(PlaybackService)
@@ -145,6 +146,7 @@ NS_SWIFT_NAME(PlaybackService)
 
 - (void)recoverDisplayedMetadata;
 - (void)recoverPlaybackState;
+- (void)disableSubtitlesIfNeeded;
 
 - (BOOL)isPlayingOnExternalScreen;
 
@@ -162,6 +164,8 @@ NS_SWIFT_NAME(PlaybackService)
 #if TARGET_OS_IOS
 - (void)savePlaybackState;
 - (void)restoreAudioAndSubtitleTrack;
+- (BOOL)mediaListContains:(NSURL *)url;
+- (void)removeMediaFromMediaListAtIndex:(NSUInteger)index;
 #endif
 
 NS_ASSUME_NONNULL_END

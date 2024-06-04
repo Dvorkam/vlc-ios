@@ -227,11 +227,10 @@
 "FIRST_STEPS_ITUNES_TITLE" = "Sync With Your Computer";
 "FIRST_STEPS_ITUNES_DETAILS" = "Connect your %@ to use the Finder or iTunes for \"File Sharing\". Select VLC to transfer files.";
 "FIRST_STEPS_WIFI_TITLE" = "Share via Wi-Fi";
-"FIRST_STEPS_WIFI_DETAILS" = "Enter the generated URL in your favorite web browser while connected to the same network as your phone";
+"FIRST_STEPS_WIFI_DETAILS" = "Enter the generated URL in your favorite web browser while connected to the same network as your %@.";
 "FIRST_STEPS_CLOUDS" = "Clouds";
 "FIRST_STEPS_CLOUD_TITLE" = "Cloud";
 "FIRST_STEPS_CLOUD_DETAILS" = "Upload your media to a cloud service like Google Drive or Dropbox to remotely download or stream them.";
-
 
 "PLEX_CHECK_ACCOUNT" = "Check your Plex account in settings";
 "PLEX_ERROR_ACCOUNT" = "Plex login Error";
@@ -263,7 +262,6 @@
 "TITLE" = "Title";
 
 "AUDIO_INFO_VC_TITLE" = "Audio Info";
-"CLOUD_LOGIN_LONG" = "To access Cloud Services, sign-in to iCloud on both this Apple TV and an iOS device with the same Apple ID and enable Keychain Sharing in System Settings.\nAfterwards, login to the cloud provider of your choice using the VLC app on your iOS device. Finally, select it on this screen.";
 "ENTER_URL" = "Enter URL to play";
 "HTTP_SERVER_ON" = "Disable Remote Playback";
 "HTTP_SERVER_OFF" = "Enable Remote Playback";

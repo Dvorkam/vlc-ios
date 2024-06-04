@@ -137,6 +137,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         _playbackSessionManagementLock = [[NSLock alloc] init];
         _shuffleMode = NO;
         _shuffledList = nil;
+        _shuffledOrder = [[NSMutableArray alloc] init];
 
         // Initialize a separate media player in order to play silence so that the application can
         // stay alive in background exclusively for Chromecast.
@@ -317,26 +318,23 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         APLog(@"%s: locking failed", __PRETTY_FUNCTION__);
         return;
     }
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     BOOL equalizerEnabled = ![userDefaults boolForKey:kVLCSettingEqualizerProfileDisabled];
+
+    VLCAudioEqualizer *equalizer;
 
     if (equalizerEnabled) {
         NSArray *presets = [VLCAudioEqualizer presets];
         unsigned int profile = (unsigned int)[userDefaults integerForKey:kVLCSettingEqualizerProfile];
-        VLCAudioEqualizer *equalizer = [[VLCAudioEqualizer alloc] initWithPreset:presets[profile]];
-        equalizer.preAmplification = [userDefaults floatForKey:kVLCSettingDefaultPreampLevel];
-        _mediaPlayer.equalizer = equalizer;
+        equalizer = [[VLCAudioEqualizer alloc] initWithPreset:presets[profile]];
     } else {
         float preampValue = [userDefaults floatForKey:kVLCSettingDefaultPreampLevel];
-        if (preampValue != 0.) {
-            APLog(@"Enforcing presumbly disabled equalizer due to custom preamp value of %f2.0", preampValue);
-            VLCAudioEqualizer *equalizer = [[VLCAudioEqualizer alloc] init];
-            equalizer.preAmplification = preampValue;
-            _mediaPlayer.equalizer = equalizer;
-        }
+        equalizer = [[VLCAudioEqualizer alloc] init];
+        equalizer.preAmplification = preampValue;
     }
 
+    _mediaPlayer.equalizer = equalizer;
     [_mediaPlayer addObserver:self forKeyPath:@"time" options:0 context:nil];
 
 #if TARGET_OS_IOS
@@ -449,8 +447,10 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     [_playbackSessionManagementLock unlock];
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackDidStop object:self];
     if (_sessionWillRestart) {
-        _sessionWillRestart = NO;
-        [self startPlayback];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self->_sessionWillRestart = NO;
+            [self startPlayback];
+        });
     }
 }
 
@@ -634,12 +634,20 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
 - (NSInteger)numberOfAudioTracks
 {
+#if TARGET_OS_IOS
     return [_mediaPlayer numberOfAudioTracks] + 1;
+#else
+    return [_mediaPlayer numberOfAudioTracks];
+#endif
 }
 
 - (NSInteger)numberOfVideoSubtitlesIndexes
 {
-    return _mediaPlayer.videoSubTitlesIndexes.count + 2;
+#if TARGET_OS_IOS
+    return [_mediaPlayer numberOfSubtitlesTracks] + 2;
+#else
+    return [_mediaPlayer numberOfSubtitlesTracks] + 1;
+#endif
 }
 
 - (NSInteger)numberOfTitles
@@ -655,24 +663,23 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 - (NSString *)videoSubtitleNameAtIndex:(NSInteger)index
 {
     NSInteger count = _mediaPlayer.videoSubTitlesNames.count;
-    if (index >= 0 && index < count) {
-        return _mediaPlayer.videoSubTitlesNames[index];
-    } else if (index == count) {
+
+    if (index == count) {
         return NSLocalizedString(@"SELECT_SUBTITLE_FROM_FILES", nil);
+    } else {
+        return _mediaPlayer.videoSubTitlesNames[index];
     }
-    else if (index == count + 1) {
-        return NSLocalizedString(@"DOWNLOAD_SUBS_FROM_OSO", nil);
-    }
-    return @"";
 }
 
 - (NSString *)audioTrackNameAtIndex:(NSInteger)index
 {
-    if (index >= 0 && index < _mediaPlayer.audioTrackNames.count)
-        return _mediaPlayer.audioTrackNames[index];
-    else if (index == _mediaPlayer.audioTrackNames.count)
+    NSInteger count = _mediaPlayer.audioTrackNames.count;
+
+    if (index == count) {
         return NSLocalizedString(@"SELECT_AUDIO_FROM_FILES", nil);
-    return @"";
+    } else {
+        return _mediaPlayer.audioTrackNames[index];
+    }
 }
 
 - (NSDictionary *)titleDescriptionsDictAtIndex:(NSInteger)index
@@ -875,14 +882,23 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         [self shuffleMediaList];
         _currentIndex = 0;
 
-        if ([_shuffledList count] == 0) {
-            NSMutableArray<VLCMedia *> *shuffledMedias = [[NSMutableArray alloc] init];
-            for (NSInteger i = _currentIndex; i < _mediaList.count; i++) {
-                [shuffledMedias addObject:[_mediaList mediaAtIndex:[_shuffledOrder[i] integerValue]]];
-            }
+        @synchronized (_shuffledOrder) {
+            if ([_shuffledList count] == 0) {
+                NSMutableArray<VLCMedia *> *shuffledMedias = [[NSMutableArray alloc] init];
+                NSUInteger mediaListCount = _mediaList.count;
+                NSUInteger shuffledOrderCount = _shuffledOrder.count;
+                for (NSInteger i = _currentIndex; i < mediaListCount; i++) {
+                    if (i < shuffledOrderCount) {
+                        NSUInteger shuffleOrderIndex = [_shuffledOrder[i] unsignedIntegerValue];
+                        if (shuffleOrderIndex < mediaListCount) {
+                            [shuffledMedias addObject:[_mediaList mediaAtIndex:shuffleOrderIndex]];
+                        }
+                    }
+                }
 
-            _shuffledList = [[VLCMediaList alloc] initWithArray:shuffledMedias];
-            _listPlayer.mediaList = _shuffledList;
+                _shuffledList = [[VLCMediaList alloc] initWithArray:shuffledMedias];
+                _listPlayer.mediaList = _shuffledList;
+            }
         }
     } else {
         _currentIndex = [_mediaList indexOfMedia:self.currentlyPlayingMedia];
@@ -903,21 +919,25 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 }
 
 - (void)shuffleMediaList {
-    NSInteger mediaListLength = _mediaList.count;
+    @synchronized (_shuffledOrder) {
+        NSInteger mediaListLength = _mediaList.count;
 
-    if (mediaListLength <= 1) {
-        return;
-    }
-    _shuffledOrder = [[NSMutableArray alloc]init];
-    for (int i = 0; i < mediaListLength; i++)
-    {
-        [_shuffledOrder addObject:[NSNumber numberWithInt:i]];
-    }
-    [_shuffledOrder exchangeObjectAtIndex:0 withObjectAtIndex:_currentIndex];
-    for (NSInteger i = 1; i < mediaListLength; i++) {
-        NSInteger nElements = mediaListLength - i;
-        NSInteger n = arc4random_uniform((uint32_t)nElements) + i;
-        [_shuffledOrder exchangeObjectAtIndex:i withObjectAtIndex:n];
+        if (mediaListLength <= 1) {
+            return;
+        }
+
+        [_shuffledOrder removeAllObjects];
+
+        for (int i = 0; i < mediaListLength; i++)
+        {
+            [_shuffledOrder addObject:[NSNumber numberWithInt:i]];
+        }
+        [_shuffledOrder exchangeObjectAtIndex:0 withObjectAtIndex:_currentIndex];
+        for (NSInteger i = 1; i < mediaListLength; i++) {
+            NSInteger nElements = mediaListLength - i;
+            NSInteger n = arc4random_uniform((uint32_t)nElements) + i;
+            [_shuffledOrder exchangeObjectAtIndex:i withObjectAtIndex:n];
+        }
     }
 }
 
@@ -1548,6 +1568,13 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
         [self.delegate prepareForMediaPlayback:self];
 }
 
+- (void)disableSubtitlesIfNeeded
+{
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles]) {
+        _mediaPlayer.currentVideoSubTitleIndex = -1;
+    }
+}
+
 - (void)scheduleSleepTimerWithInterval:(NSTimeInterval)timeInterval
 {
     if (_sleepTimer) {
@@ -1641,6 +1668,33 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
     BOOL activePlaybackSession = self.isPlaying || _playerIsSetup;
     if (activePlaybackSession)
         [[VLCAppCoordinator sharedInstance].mediaLibraryService savePlaybackStateFrom:self];
+}
+
+- (BOOL)mediaListContains:(NSURL *)url
+{
+    for (int index = 0; index < _mediaList.count; index++) {
+        if ([[_mediaList mediaAtIndex:index].url isEqual:url]) {
+            return YES;
+        }
+    }
+
+    return NO;
+}
+
+- (void)removeMediaFromMediaListAtIndex:(NSUInteger)index
+{
+    BOOL deleteCurrentMedia = [_mediaList indexOfMedia:self.currentlyPlayingMedia] == index ? YES : NO;
+
+    [_mediaList removeMediaAtIndex:index];
+    [_delegate reloadPlayQueue];
+
+    if (deleteCurrentMedia && _mediaList.count == 1) {
+        _currentIndex = 0;
+        [_listPlayer playItemAtNumber:@(_currentIndex)];
+    } else if (deleteCurrentMedia) {
+        _currentIndex -= 1;
+        [self next];
+    }
 }
 #endif
 

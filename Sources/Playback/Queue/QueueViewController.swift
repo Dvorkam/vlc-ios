@@ -233,7 +233,12 @@ class QueueViewController: UIViewController {
             return
         }
 
-        let currentIndex = playbackService.mediaList.index(of: currentMedia)
+        let currentIndex = mediaList.index(of: currentMedia)
+
+        guard currentIndex != NSNotFound else {
+            return
+        }
+
         let currentIndexPath = IndexPath(row: Int(currentIndex), section: 0)
         queueCollectionView.scrollToItem(at: currentIndexPath, at: .centeredVertically, animated: true)
     }

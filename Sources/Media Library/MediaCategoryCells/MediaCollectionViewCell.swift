@@ -213,8 +213,6 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        scrollView.isScrollEnabled = isMediaBeingPlayed ? false : true
-
         if scrollView.contentOffset.x < 0 {
             scrollView.contentOffset.x = 0
             hasXGoneNegative = true
@@ -368,7 +366,9 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
         thumbnailView.layer.cornerRadius = thumbnailView.frame.size.width / 2.0
         titleLabel.text = artist.artistName()
         accessibilityLabel = artist.accessibilityText()
-        sizeDescriptionLabel.text = artist.numberOfTracksString()
+        let numberOfAlbums = artist.albumsCount()
+        sizeDescriptionLabel.text = numberOfAlbums == 0 ? artist.numberOfTracksString() :
+                                    String(format: "%@ · %@", artist.numberOfAlbumsString(), artist.numberOfTracksString())
         thumbnailView.image = artist.thumbnail()
         scrollView.isScrollEnabled = false
         updateSizeDescriptionLabelConstraint()
