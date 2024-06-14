@@ -303,6 +303,28 @@ extension EditController: EditToolbarDelegate {
             }
         })
     }
+    
+    func editToolbarDidEditMetadata(_ editToolbar: EditToolbar) {
+        guard !selectedCellIndexPaths.isEmpty else {
+            return
+        }
+        
+        editActions.objects.removeAll()
+        
+        for indexPath in selectedCellIndexPaths.sorted(by: { $0 > $1 }) {
+            editActions.objects.append(currentDataSet[indexPath.row])
+        }
+        
+        editActions.editMetaData({
+            [weak self] state in
+            if state == .success || state == .fail {
+                self?.resetSelections(resetUI: true)
+                self?.delegate?.editControllerSetNavigationItemTitle(with: nil)
+                self?.delegate?.editControllerDidDeSelectMultipleItem()
+                self?.delegate?.editControllerDidFinishEditing(editController: self)
+            }
+        })
+    }
 }
 
 // MARK: - UICollectionViewDelegate

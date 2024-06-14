@@ -147,12 +147,18 @@ extension CollectionViewCellPreviewController {
 
         if let media = modelContent as? VLCMLMedia {
             infos.append(PreviewInformation(value: media.title, type: .title))
-
+            print(media.releaseDate())
+        
+            print(media.trackNumber)
+            print(media.genre?.name)
+            print(media.languages())
+            print(media.description)
             if media.subtype() == .albumTrack {
                 var description: [String] = [media.albumTrackArtistName()]
-
+                print("ARTIST Name", media.albumTrackArtistName())
                 if let album = media.album, !album.title.isEmpty {
                     description.append(album.title)
+                    print("Title:" , album.title)
                 }
                 infos.append(PreviewInformation(value: description.joined(separator: listSeparator),
                                                 type: .subtitle))
@@ -180,6 +186,7 @@ extension CollectionViewCellPreviewController {
                 }
                 return infos
             } else {
+
                 var collectionDetails: [String] = [collection.numberOfTracksString()]
                 var releaseYear: String?
                 if let collection = collection as? VLCMLAlbum {

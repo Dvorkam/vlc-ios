@@ -1042,6 +1042,14 @@ private extension MediaCategoryViewController {
                     _ in
                     self.generatePlayAction(for: modelContent, type: .playAsAudio)
                 })
+            case .editMetaData:
+                return $0.action({
+                    [weak self] _ in
+                    if let modelContent = modelContent {
+                        self?.editController.editActions.objects = self?.objects(from: modelContent) ?? []
+                        self?.editController.editActions.editMetaData()
+                    }
+                })
             }
         })
     }

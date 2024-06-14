@@ -26,7 +26,12 @@ class EditActions {
         addToCollectionViewController.delegate = self
         return addToCollectionViewController
     }()
-
+    
+    private lazy var metaDataEditorViewController: MetaDataEditorViewController = {
+        var metaViewController = MetaDataEditorViewController()
+        return metaViewController
+    }()
+    
     init(model: MediaLibraryBaseModel, mediaLibraryService: MediaLibraryService) {
         self.rootViewController = UIApplication.shared.keyWindow!.rootViewController!
         self.model = model
@@ -73,7 +78,14 @@ extension EditActions {
             addToNewPlaylist()
         }
     }
-
+    
+    func editMetaData(_ completion: ((completionState) -> Void)? = nil) {
+        self.completion = completion
+        let navigationController = UINavigationController(rootViewController: metaDataEditorViewController)
+        rootViewController.present(navigationController, animated: true, completion: nil)
+        
+    }
+    
     func addToMediaGroup(_ completion: ((completionState) -> Void)? = nil) {
         self.completion = completion
 
@@ -159,7 +171,7 @@ extension EditActions {
                     return
                 }
 
-                if let media = mlObject as? VLCMLMedia {
+                if var media = mlObject as? VLCMLMedia {
                     media.updateTitle(text)
                 } else if let playlist = mlObject as? VLCMLPlaylist {
                     playlist.updateName(text)

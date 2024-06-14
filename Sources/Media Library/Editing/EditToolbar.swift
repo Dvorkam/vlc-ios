@@ -17,6 +17,7 @@ protocol EditToolbarDelegate: AnyObject {
     func editToolbarDidRemoveFromMediaGroup(_ editToolbar: EditToolbar)
     func editToolbarDidRename(_ editToolbar: EditToolbar)
     func editToolbarDidShare(_ editToolbar: EditToolbar)
+    func editToolbarDidEditMetadata(_ editToolbar: EditToolbar)
 }
 
 class EditToolbar: UIView {
@@ -54,6 +55,7 @@ class EditToolbar: UIView {
     private var removeFromMediaGroupButton: UIButton!
     private var renameButton: UIButton!
     private var deleteButton: UIButton!
+    private var editMetaDataButton: UIButton!
     private(set) var shareButton: UIButton!
 
     @objc func addToPlaylist() {
@@ -79,7 +81,11 @@ class EditToolbar: UIView {
     @objc func share() {
         delegate?.editToolbarDidShare(self)
     }
-
+    
+    @objc func editMetaData() {
+        delegate?.editToolbarDidEditMetadata(self)
+    }
+    
     func enableEditActions(_ enable: Bool) {
         addToPlaylistButton.isEnabled = enable
         addToMediaGroupButton.isEnabled = enable
@@ -87,6 +93,7 @@ class EditToolbar: UIView {
         renameButton.isEnabled = enable
         deleteButton.isEnabled = enable
         shareButton.isEnabled = enable
+        editMetaDataButton.isEnabled = enable
     }
 
     func updateEditToolbar(for model: MediaLibraryBaseModel) {
@@ -104,7 +111,8 @@ class EditToolbar: UIView {
         renameButton.isHidden = true
         deleteButton.isHidden = true
         shareButton.isHidden = true
-
+        editMetaDataButton.isHidden = true
+        
         enableEditActions(false)
 
         for buttonType in buttonTypeList {
@@ -129,13 +137,15 @@ class EditToolbar: UIView {
                  .appendToQueue,
                  .playAsAudio:
                 break
+            case .editMetaData:
+                editMetaDataButton.isHidden = false
             }
         }
     }
 
     private func setupRightStackView() {
         let buttons = EditButtonsFactory.generate(buttons: [.addToMediaGroup, .removeFromMediaGroup,
-                                                            .rename, .delete, .share])
+                                                            .rename, .delete, .share, .editMetaData])
         for button in buttons {
             switch button.identifier {
             case .addToPlaylist:
@@ -153,14 +163,17 @@ class EditToolbar: UIView {
                 deleteButton = button.button(#selector(deleteSelection))
                 rightStackView.addArrangedSubview(deleteButton)
             case .share:
-                shareButton = button.button(#selector(share))
-                rightStackView.addArrangedSubview(shareButton)
+                 shareButton = button.button(#selector(share))
+                 rightStackView.addArrangedSubview(shareButton)
             //Not supported in edit mode
             case .play,
                  .playNextInQueue,
                  .appendToQueue,
                  .playAsAudio:
                 break
+            case .editMetaData:
+                editMetaDataButton = button.button(#selector(editMetaData))
+                rightStackView.addArrangedSubview(editMetaDataButton)
             }
         }
     }
