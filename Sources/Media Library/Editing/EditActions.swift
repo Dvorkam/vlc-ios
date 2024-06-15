@@ -29,6 +29,9 @@ class EditActions {
     
     private lazy var metaDataEditorViewController: MetaDataEditorViewController = {
         var metaViewController = MetaDataEditorViewController()
+        if let media = objects.first as? VLCMLMedia {
+            metaViewController.medias = [media]
+        }
         return metaViewController
     }()
     
@@ -171,8 +174,8 @@ extension EditActions {
                     return
                 }
 
-                if var media = mlObject as? VLCMLMedia {
-                    media.updateTitle(text)
+                if let media = mlObject as? VLCMLMedia {
+                       media.updateTitle(text)
                 } else if let playlist = mlObject as? VLCMLPlaylist {
                     playlist.updateName(text)
                 } else if let mediaGroup = mlObject as? VLCMLMediaGroup,

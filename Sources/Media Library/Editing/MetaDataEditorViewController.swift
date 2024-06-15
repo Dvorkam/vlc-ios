@@ -26,12 +26,15 @@ class MetaDataEditorViewController: UIViewController {
     var vlcConeImageView = UIImageView()
     var newValues = [MetaDataType : String]()
     
+    var medias = [VLCMLMedia]()
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if #available(iOS 11.0, *) {
             self.navigationController?.navigationBar.prefersLargeTitles = false
         }
         UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+        
     }
 
     override func viewDidLoad() {
@@ -84,11 +87,7 @@ class MetaDataEditorViewController: UIViewController {
         
     }
     
-    override func viewWillLayoutSubviews() {
-        
-  
-    }
-    
+   
     func setStackViewConstraints() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 45).isActive = true
@@ -99,12 +98,26 @@ class MetaDataEditorViewController: UIViewController {
     
     @objc func dismissView() {
         self.dismiss(animated: true, completion: nil)
+        VLCAppCoordinator().mediaLibraryService.reload()
     }
     
     @objc func submitButtonTapped() {
       // Save the Values from Dictionary to the backend here
-        print(newValues)
+        if var media = medias.first {
+            if let mainFile = media.mainFile() {
+                let libVLCmedia = VLCMedia(url: mainFile.mrl)
+                libVLCmedia.metaData.title = newValues[.title]
+                libVLCmedia.metaData.album = newValues[.albumName]
+                libVLCmedia.metaData.genre = newValues[.genre]
+                libVLCmedia.metaData.albumArtist = newValues[.artistName]
+                libVLCmedia.metaData.save()
+                
+            }
+        }
+        medias.removeAll()
+        dismissView()
     }
+    
     override func viewDidLayoutSubviews() {
         
     }
