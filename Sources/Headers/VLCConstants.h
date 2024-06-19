@@ -189,3 +189,5 @@
 #define kVLCFTPPassword @"ftp-pass"
 #define kVLCPLEXServer @"plex-server"
 #define kVLCPLEXPort @"plex-port"
+
+#define kVLCCurrentPlayingModel @"CurrentPlayingModel"
