@@ -10,6 +10,7 @@
  *****************************************************************************/
 
 import UIKit
+import WidgetKit
 
 @objc (VLCAudioPlayerViewControllerDelegate)
 protocol AudioPlayerViewControllerDelegate: AnyObject {
@@ -450,6 +451,55 @@ extension AudioPlayerViewController {
         }
 
         moreOptionsActionSheet.currentMediaHasChapters = currentMediaHasChapters
+
+        if currentState == .playing, #available(iOS 14.0, *) {
+            guard let currentMedia = playbackService.currentlyPlayingMedia,
+                  let mlMedia = VLCMLMedia(forPlaying: currentMedia),
+                  let artist = mlMedia.artist?.artistName(),
+                  let thumbnailImage = mlMedia.thumbnailImage() else {
+                return
+            }
+
+            let imageData = thumbnailImage.pngData()
+            let stringData = imageData?.base64EncodedString(options: .lineLength64Characters)
+
+            guard let stringData = stringData else {
+                return
+            }
+
+            let averageColor = thumbnailImage.averageColor()
+            var colorValues: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+                var red: CGFloat = 0
+                var green: CGFloat = 0
+                var blue: CGFloat = 0
+                var alpha: CGFloat = 0
+
+                guard let averageColor = averageColor,
+                      averageColor.getRed(&red, green: &green, blue: &blue, alpha: &alpha) else {
+                    return (0, 0, 0, 0)
+                }
+
+                return (red, green, blue, alpha)
+            }
+
+            let color = CodableColor(red: colorValues.red, green: colorValues.green, blue: colorValues.blue, alpha: colorValues.alpha)
+            let object = MLWidgetBridge(albumName: mlMedia.title, artistName: artist, imageData: stringData, mediaURL: currentMedia.url!.lastPathComponent, color: color)
+            let mediaData = try! JSONEncoder().encode(object)
+            UserDefaults(suiteName: "group..vlc-ios")!.set(mediaData, forKey: "media")
+
+            // Update the widgets only if needed
+            let widgetCenter = WidgetCenter.shared
+            widgetCenter.getCurrentConfigurations({ result in
+                switch result {
+                case let .success(widgetInfo):
+                    if !widgetInfo.isEmpty {
+                        widgetCenter.reloadAllTimelines()
+                    }
+                case let .failure(error):
+                    assertionFailure("AudioMiniPlayer: \(error)")
+                }
+            })
+        }
     }
 
     func displayMetadata(for playbackService: PlaybackService, metadata: VLCMetaData) {
