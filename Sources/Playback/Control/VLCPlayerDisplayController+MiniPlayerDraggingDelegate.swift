@@ -22,8 +22,7 @@ extension VLCPlayerDisplayController: MiniPlayerDraggingDelegate {
                     playqueueBottomConstraint?.constant += translation.y
                 }
             case .horizontal:
-                leadingConstraint?.constant += translation.x
-                trailingConstraint?.constant += translation.x
+                break
         }
     }
 

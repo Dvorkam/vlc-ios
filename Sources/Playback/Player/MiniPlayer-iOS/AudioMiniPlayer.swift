@@ -54,8 +54,6 @@ class AudioMiniPlayer: UIView, MiniPlayer, QueueViewControllerDelegate {
     @IBOutlet private weak var nextButton: UIButton!
     @IBOutlet private weak var repeatButton: UIButton!
     @IBOutlet private weak var shuffleButton: UIButton!
-    @IBOutlet private weak var previousNextOverlay: UIView!
-    @IBOutlet private weak var previousNextImage: UIImageView!
 
     private let draggingDelegate: MiniPlayerDraggingDelegate
 
@@ -313,20 +311,20 @@ private extension AudioMiniPlayer {
 extension AudioMiniPlayer {
 
 // MARK: Drag gesture handlers
-    @IBAction func didDrag(_ sender: UIPanGestureRecognizer) {
+    @IBAction func didDragAudioMiniPlayer(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
             case .began:
-                dragDidBegin(sender)
+                dragAudioMiniPlayerDidBegin(sender)
             case .changed:
-                dragStateDidChange(sender)
+                dragAudioMiniPlayerStateDidChange(sender)
             case .ended:
-                dragDidEnd(sender)
+                dragAudioMiniPlayerDidEnd(sender)
             default:
                 break
         }
     }
 
-    private func dragDidBegin(_ sender: UIPanGestureRecognizer) {
+    private func dragAudioMiniPlayerDidBegin(_ sender: UIPanGestureRecognizer) {
         getPanDirection(sender)
         switch panDirection {
             case .vertical:
@@ -337,14 +335,14 @@ extension AudioMiniPlayer {
         originY = frame.minY
     }
 
-    private func dragStateDidChange(_ sender: UIPanGestureRecognizer) {
+    private func dragAudioMiniPlayerStateDidChange(_ sender: UIPanGestureRecognizer) {
         draggingDelegate.miniPlayerDragStateDidChange(self, sender: sender, panDirection: panDirection)
         sender.setTranslation(CGPoint.zero, in: UIApplication.shared.keyWindow?.rootViewController?.view)
         handleHapticFeedback()
         draggingDelegate.miniPlayerNeedsLayout(self)
     }
 
-    private func dragDidEnd(_ sender: UIPanGestureRecognizer) {
+    private func dragAudioMiniPlayerDidEnd(_ sender: UIPanGestureRecognizer) {
         let velocity = sender.velocity(in: UIApplication.shared.keyWindow?.rootViewController?.view)
         if let superview = superview {
             switch panDirection {
@@ -373,18 +371,9 @@ extension AudioMiniPlayer {
                             }
                     }
                 case .horizontal:
-                    switch position.horizontal {
-                        case .right:
-                            playbackService.previous()
-                        case .left:
-                            playbackService.next()
-                        case .center:
-                            break
-                    }
-                    draggingDelegate.miniPlayerCenterHorizontaly(self)
-                    position.horizontal = .center
+                        break
             }
-            hidePreviousNextOverlay()
+
             draggingDelegate.miniPlayerDragDidEnd(self, sender: sender, panDirection: panDirection)
             UIView.animate(withDuration: animationDuration, animations: {
                 self.draggingDelegate.miniPlayerNeedsLayout(self)
@@ -424,49 +413,10 @@ extension AudioMiniPlayer {
         }
         if position.vertical == .bottom {
             if stopGestureEnabled && frame.minY > originY + 10 {
-                previousNextImage.image = UIImage(named: "stopIcon")
-                previousNextOverlay.alpha = 0.8
-                previousNextOverlay.isHidden = false
+                //TODO: - Add stop
             } else if frame.minY > originY {
                 queueViewController?.hide()
-            } else {
-                hidePreviousNextOverlay()
             }
-        }
-        return hapticFeedbackNeeded
-    }
-
-    private func horizontalTranslation(in superview: UIView) -> Bool {
-        var hapticFeedbackNeeded = false
-        switch position.horizontal {
-            case .center:
-                if center.x < superview.frame.width / 3 {
-                    hapticFeedbackNeeded = true
-                    position.horizontal = .left
-                } else if center.x > 2 * superview.frame.width / 3 {
-                    hapticFeedbackNeeded = true
-                    position.horizontal = .right
-                }
-            case .left:
-                if center.x > superview.frame.width / 3 {
-                    hapticFeedbackNeeded = true
-                    position.horizontal = .center
-                    hidePreviousNextOverlay()
-                } else {
-                    previousNextImage.image = UIImage(named: "MiniNext")
-                    previousNextOverlay.alpha = abs(superview.center.x - center.x) / (superview.frame.width / 2)
-                    previousNextOverlay.isHidden = false
-                }
-            case .right:
-                if center.x < 2 * superview.frame.width / 3 {
-                    hapticFeedbackNeeded = true
-                    position.horizontal = .center
-                    hidePreviousNextOverlay()
-                } else {
-                    previousNextImage.image = UIImage(named: "MiniPrev")
-                    previousNextOverlay.alpha = abs(superview.center.x - center.x) / (superview.frame.width / 2)
-                    previousNextOverlay.isHidden = false
-                }
         }
         return hapticFeedbackNeeded
     }
@@ -478,7 +428,7 @@ extension AudioMiniPlayer {
                 case .vertical:
                     hapticFeedbackNeeded = verticalTranslation(in: superview)
                 case .horizontal:
-                    hapticFeedbackNeeded = horizontalTranslation(in: superview)
+                    break
             }
         }
         if hapticFeedbackNeeded, #available(iOS 10.0, *) {
@@ -504,12 +454,6 @@ extension AudioMiniPlayer {
         draggingDelegate.miniPlayerPositionToBottom(self, completion: completion)
     }
 
-    func hidePreviousNextOverlay() {
-        UIView.animate(withDuration: animationDuration, animations: {
-            self.previousNextOverlay.alpha = 0.0
-            self.previousNextOverlay.isHidden = true
-        })
-    }
 }
 
 // MARK: - Setters
