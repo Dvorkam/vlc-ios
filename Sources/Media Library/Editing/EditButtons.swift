@@ -20,6 +20,8 @@
     case playNextInQueue
     case appendToQueue
     case playAsAudio
+    case editMetaData
+    
 }
 
 class EditButton {
@@ -79,6 +81,9 @@ class EditButtonsFactory {
 
         if !(model is ArtistModel) && !(model is GenreModel) && !(model is AlbumModel) {
             actionList.append(.rename)
+            if !(model is MediaGroupViewModel) {
+                actionList.append(.editMetaData)
+            }
         }
         actionList.append(.delete)
         actionList.append(.share)
@@ -152,6 +157,8 @@ class EditButtonsFactory {
                                                   image: "Audio",
                                                   accessibilityLabel: NSLocalizedString("PLAY_AS_AUDIO", comment: ""),
                                                   accessibilityHint: NSLocalizedString("PLAY_AS_AUDIO_HINT", comment: "")))
+            case .editMetaData:
+                editButtons.append(EditButton(identifier: button, title: "Edit Song's Meta Data", image: "metaEdit", accessibilityLabel: "", accessibilityHint: ""))
             }
         }
         return editButtons

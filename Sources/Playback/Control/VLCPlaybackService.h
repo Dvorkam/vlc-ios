@@ -142,6 +142,7 @@ NS_SWIFT_NAME(PlaybackService)
 
 - (void)playItemAtIndex:(NSUInteger)index;
 
+
 - (BOOL)updateViewpoint:(CGFloat)yaw pitch:(CGFloat)pitch roll:(CGFloat)roll fov:(CGFloat)fov absolute:(BOOL)absolute;
 - (NSInteger)currentMediaProjection;
 

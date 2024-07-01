@@ -62,6 +62,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 
 - (void)viewDidLoad
 {
+   
     self.extendedLayoutIncludesOpaqueBars = YES;
     self.edgesForExtendedLayout = UIRectEdgeAll;
 
@@ -83,10 +84,10 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     self.transportBar.bufferEndFraction = 1.0;
     self.transportBar.playbackFraction = 0.0;
     self.transportBar.scrubbingFraction = 0.0;
-
+    self.pitch = 0;
     self.dimmingView.alpha = 0.0;
     self.bottomOverlayView.alpha = 0.0;
-
+    self.yaw = 0;
     self.bufferingLabel.text = NSLocalizedString(@"PLEASE_WAIT", nil);
 
     self.pitch = 0;
@@ -113,6 +114,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     [self.view addGestureRecognizer:menuTapGestureRecognizer];
 
     //  IR only recognizer
+
     UITapGestureRecognizer *upArrowRecognizer = [[VLCIRTVTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleIRPressUp)];
     upArrowRecognizer.allowedPressTypes = @[@(UIPressTypeUpArrow)];
     [self.view addGestureRecognizer:upArrowRecognizer];
@@ -128,6 +130,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     UITapGestureRecognizer *rightArrowRecognizer = [[VLCIRTVTapGestureRecognizer alloc] initWithTarget:self action:@selector(handleIRPressRight)];
     rightArrowRecognizer.allowedPressTypes = @[@(UIPressTypeRightArrow)];
     [self.view addGestureRecognizer:rightArrowRecognizer];
+
 
     UILongPressGestureRecognizer *rightLongPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleRightLongPress:)];
     rightLongPressGestureRecognizer.allowedPressTypes = @[@(UIPressTypeRightArrow)];
@@ -146,7 +149,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     [simultaneousGestureRecognizers addObject:siriArrowRecognizer];
 
     self.simultaneousGestureRecognizers = simultaneousGestureRecognizers;
-
+   
     [super viewDidLoad];
 }
 
@@ -249,6 +252,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 
 - (void)panGesture:(UIPanGestureRecognizer *)panGestureRecognizer
 {
+    
     VLCPlaybackService *vpc = [VLCPlaybackService sharedInstance];
     NSInteger currentTitle = [vpc indexOfCurrentTitle];
     if (currentTitle < [vpc numberOfTitles]) {
@@ -266,7 +270,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
         default:
             break;
     }
-
+  
     VLCTransportBar *bar = self.transportBar;
 
     UIView *view = self.view;
@@ -299,6 +303,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     }
 
     if (!canScrub) {
+        NSLog(@"Return from here");
         return;
     }
 
@@ -574,7 +579,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
                     }
                 }
             }
-            break;
+          break;
         case UIGestureRecognizerStateEnded:
             if (![[VLCPlaybackService sharedInstance] currentMediaIs360Video]) {
                 if (recognizer.isClick && !recognizer.isLongPress) {
@@ -596,7 +601,6 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     if (!self.transportBar.isScrubbing) {
         [self updateProjection:recognizer];
     }
-
     self.transportBar.hint = self.isSeekable ? hint : VLCPlayerScanStateNone;
 }
 
