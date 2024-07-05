@@ -21,7 +21,6 @@ class MiniPlayerInfoCollectionViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        print("MiniPlayerInfoCollectionViewCell")
         mediaTitleLabel.labelize = enableMarquee
         artistTitleLabel.labelize = enableMarquee
         clipsToBounds = true

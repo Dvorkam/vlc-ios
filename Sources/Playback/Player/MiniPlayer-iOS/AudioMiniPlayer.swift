@@ -219,6 +219,7 @@ extension AudioMiniPlayer: VLCPlaybackServiceDelegate {
         if !playbackService.isPlayingOnExternalScreen() && !playbackService.playAsAudio {
             playbackService.videoOutputView = artworkImageView
         }
+        updateMediaInfoCollectionView()
     }
 
     func mediaPlayerStateChanged(_ currentState: VLCMediaPlayerState,
@@ -482,7 +483,6 @@ extension AudioMiniPlayer {
 
 private extension AudioMiniPlayer {
     private func setMediaInfo(_ metadata: VLCMetaData) {
-        setMediaInfoCollectionData()
         if (!UIAccessibility.isReduceTransparencyEnabled && metadata.isAudioOnly) ||
             playbackService.playAsAudio {
             // Only update the artwork image when the media is being played
@@ -503,10 +503,11 @@ private extension AudioMiniPlayer {
         }
     }
 
-    private func setMediaInfoCollectionData() {
+    private func updateMediaInfoCollectionView() {
         guard let media = playbackService.currentlyPlayingMedia else { return }
         let mediaIndex = playbackService.mediaList.index(of: media)
-        guard let currentIndex = mediaInfoCollectionView.indexPathsForVisibleItems.first else { return }
+        guard let currentCell = mediaInfoCollectionView.visibleCells.first,
+        let currentIndex = mediaInfoCollectionView.indexPath(for: currentCell) else { return }
 
         if abs(Int(mediaIndex) - currentIndex.row) == 1 {
             mediaInfoCollectionView.scrollToItem(at: IndexPath(row: Int(mediaIndex), section: 0), at: .centeredHorizontally, animated: true)
