@@ -46,14 +46,16 @@ class AudioMiniPlayer: UIView, MiniPlayer, QueueViewControllerDelegate {
     @IBOutlet private weak var artworkImageView: UIImageView!
     @IBOutlet private weak var artworkBlurImageView: UIImageView!
     @IBOutlet weak var artworkBlurView: UIVisualEffectView!
-    @IBOutlet private weak var titleLabel: VLCMarqueeLabel!
-    @IBOutlet private weak var artistLabel: VLCMarqueeLabel!
+    @IBOutlet weak var mediaInfoCollectionView: UICollectionView!
     @IBOutlet private weak var progressBarView: UIProgressView!
     @IBOutlet private weak var playPauseButton: UIButton!
     @IBOutlet private weak var previousButton: UIButton!
     @IBOutlet private weak var nextButton: UIButton!
     @IBOutlet private weak var repeatButton: UIButton!
     @IBOutlet private weak var shuffleButton: UIButton!
+
+    @IBOutlet weak var stopOverlay: UIView!
+    @IBOutlet weak var stopImageView: UIImageView!
 
     private let draggingDelegate: MiniPlayerDraggingDelegate
 
@@ -69,6 +71,8 @@ class AudioMiniPlayer: UIView, MiniPlayer, QueueViewControllerDelegate {
     var tapticPosition = MiniPlayerPosition(vertical: .bottom, horizontal: .center)
     var panDirection: PanDirection = .vertical
 
+    var mediaInfoCollectionViewContentOffset: CGPoint = .zero
+
     var stopGestureEnabled: Bool {
         if #available(iOS 13.0, *) {
             return false
@@ -83,6 +87,7 @@ class AudioMiniPlayer: UIView, MiniPlayer, QueueViewControllerDelegate {
         super.init(frame: .zero)
         initView()
         setupConstraint()
+        setupMediaInfoCollectionView()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -121,6 +126,12 @@ class AudioMiniPlayer: UIView, MiniPlayer, QueueViewControllerDelegate {
     @objc func setupQueueViewController(with view: QueueViewController) {
         queueViewController = view
         queueViewController?.delegate = self
+    }
+
+    func setupMediaInfoCollectionView() {
+        mediaInfoCollectionView.register(UINib(nibName: "MiniPlayerInfoCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "MiniPlayerInfoCollectionViewCell")
+        mediaInfoCollectionView.delegate = self
+        mediaInfoCollectionView.dataSource = self
     }
 }
 
@@ -373,7 +384,7 @@ extension AudioMiniPlayer {
                 case .horizontal:
                         break
             }
-
+            hideStopOverlay()
             draggingDelegate.miniPlayerDragDidEnd(self, sender: sender, panDirection: panDirection)
             UIView.animate(withDuration: animationDuration, animations: {
                 self.draggingDelegate.miniPlayerNeedsLayout(self)
@@ -413,9 +424,13 @@ extension AudioMiniPlayer {
         }
         if position.vertical == .bottom {
             if stopGestureEnabled && frame.minY > originY + 10 {
-                //TODO: - Add stop
+                stopImageView.image = UIImage(named: "stopIcon")
+                stopOverlay.alpha = 0.8
+                stopOverlay.isHidden = false
             } else if frame.minY > originY {
                 queueViewController?.hide()
+            } else {
+                hideStopOverlay()
             }
         }
         return hapticFeedbackNeeded
@@ -454,18 +469,20 @@ extension AudioMiniPlayer {
         draggingDelegate.miniPlayerPositionToBottom(self, completion: completion)
     }
 
+    func hideStopOverlay() {
+        UIView.animate(withDuration: animationDuration, animations: {
+            self.stopOverlay.alpha = 0.0
+            self.stopOverlay.isHidden = true
+        })
+    }
+
 }
 
 // MARK: - Setters
 
 private extension AudioMiniPlayer {
     private func setMediaInfo(_ metadata: VLCMetaData) {
-        if metadata.descriptiveTitle != nil {
-            titleLabel.text = metadata.descriptiveTitle
-        } else {
-            titleLabel.text = metadata.title
-        }
-        artistLabel.text = metadata.artist
+        setMediaInfoCollectionData()
         if (!UIAccessibility.isReduceTransparencyEnabled && metadata.isAudioOnly) ||
             playbackService.playAsAudio {
             // Only update the artwork image when the media is being played
@@ -483,6 +500,18 @@ private extension AudioMiniPlayer {
             artworkBlurView.isHidden = true
             queueViewController?.reloadBackground(with: nil)
             playbackService.videoOutputView = artworkImageView
+        }
+    }
+
+    private func setMediaInfoCollectionData() {
+        guard let media = playbackService.currentlyPlayingMedia else { return }
+        let mediaIndex = playbackService.mediaList.index(of: media)
+        guard let currentIndex = mediaInfoCollectionView.indexPathsForVisibleItems.first else { return }
+
+        if abs(Int(mediaIndex) - currentIndex.row) == 1 {
+            mediaInfoCollectionView.scrollToItem(at: IndexPath(row: Int(mediaIndex), section: 0), at: .centeredHorizontally, animated: true)
+        } else {
+            mediaInfoCollectionView.scrollToItem(at: IndexPath(row: Int(mediaIndex), section: 0), at: .centeredHorizontally, animated: false)
         }
     }
 }
@@ -572,6 +601,56 @@ extension AudioMiniPlayer: UIContextMenuInteractionDelegate {
 
     private func addContextMenu() {
         audioMiniPlayer.addInteraction(UIContextMenuInteraction(delegate: self))
+    }
+}
+
+// MARK: - Media Info CollectionView Delegate
+
+extension AudioMiniPlayer: UICollectionViewDelegate, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return playbackService.mediaList.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MiniPlayerInfoCollectionViewCell", for: indexPath) as? MiniPlayerInfoCollectionViewCell else {
+            fatalError("Couldn't load MiniPlayerInfoCollectionViewCell")
+        }
+
+        let indexMedia = playbackService.mediaList.media(at: UInt(indexPath.row))
+        cell.configure(for: indexMedia)
+        return cell
+    }
+    
+}
+
+// MARK: - Media Info ScrollView Delegate
+
+extension AudioMiniPlayer: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        mediaInfoCollectionViewContentOffset = scrollView.contentOffset
+    }
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            handlePreviousNextAction()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        handlePreviousNextAction()
+    }
+
+    private func handlePreviousNextAction() {
+        let finalContentOffset = mediaInfoCollectionView.contentOffset
+        if finalContentOffset.x > mediaInfoCollectionViewContentOffset.x {
+            playbackService.next()
+        } else if finalContentOffset.x < mediaInfoCollectionViewContentOffset.x {
+            playbackService.previousMedia()
+        }
     }
 }
 
