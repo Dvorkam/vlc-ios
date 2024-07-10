@@ -34,7 +34,11 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
 
     var searchBar = UISearchBar(frame: .zero)
     private var currentDataSet: [VLCMLObject] {
-        return searchDataSource.isSearching ? searchDataSource.searchData : model.anyfiles
+        if let model = model as? FolderModel {
+            return searchDataSource.isSearching ? searchDataSource.searchData : model.files + model.folderMediaFiles
+        } else {
+            return searchDataSource.isSearching ? searchDataSource.searchData : model.anyfiles
+        }
     }
     private let mediaGridCellNibIdentifier = "MediaGridCollectionCell"
     private var searchBarConstraint: NSLayoutConstraint?
@@ -160,7 +164,10 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         if model is HistoryModel {
             emptyView.contentType = .noHistory
         }
-
+        
+        if model is FolderModel {
+            emptyView.contentType = .emptyFolder
+        }
         // Check if it is inside a playlist
         if let collectionModel = model as? CollectionModel,
             collectionModel.mediaCollection is VLCMLPlaylist {
@@ -422,7 +429,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         setupCollectionView() //Fixes crash that is caused due to layout change
         setNavbarAppearance()
         loadSort()
-        
+        reloadData()
         addInitializationCommonObservers()
     }
 
@@ -1101,7 +1108,15 @@ extension MediaCategoryViewController {
             createSpotlightItem(media: media)
             return
         }
-
+        
+        if let folder = modelContent as? VLCMLFolder {
+            if let model = model as? FolderModel {
+                let folderVC = FolderCategoryViewController(medialib: mediaLibraryService, folder: folder, isAudio: model.isAudio)
+                navigationController?.pushViewController(folderVC, animated: true)
+            }
+            return
+        }
+        
         if let media = modelContent as? VLCMLMedia {
             play(media: media, at: indexPath)
             createSpotlightItem(media: media)
@@ -1128,6 +1143,9 @@ extension MediaCategoryViewController {
                                  contextMenuConfigurationForItemAt indexPath: IndexPath,
                                  point: CGPoint) -> UIContextMenuConfiguration? {
         let modelContent = currentDataSet.objectAtIndex(index: indexPath.row)
+        if modelContent is VLCMLFolder {
+            return nil
+        }
         let cell = collectionView.cellForItem(at: indexPath)
         var thumbnail: UIImage? = nil
         if let cell = cell as? MovieCollectionViewCell {
@@ -1636,6 +1654,9 @@ extension MediaCategoryViewController {
             }
         } else if let model = model as? MediaCollectionModel {
             tracks = model.files() ?? []
+        } else if let model = model as? FolderModel {
+            tracks = model.folderMediaFiles
+            index = index - model.files.count
         } else {
             tracks = currentDataSet as? [VLCMLMedia] ?? []
         }
