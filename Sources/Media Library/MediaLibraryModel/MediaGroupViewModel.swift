@@ -37,9 +37,23 @@ class MediaGroupViewModel: MLBaseModel {
                                             autoreleaseFrequency: .inherit,
                                             target: nil)
         self.medialibrary = medialibrary
+        var mediaGroups = medialibrary.medialib.mediaGroups() ?? []
+
         files = medialibrary.medialib.mediaGroups() ?? []
         medialibrary.observable.addObserver(self)
+
+        var newMedia = [VLCMLMedia]()
+
+        for mediaGroup in files {
+            for media in mediaGroup.media(of: .video)! {
+                if media.isNew {
+                    newMedia.append(media)
+                }
+            }
+        }
+        updateRecentlyAdded(with: newMedia)
     }
+
 
     func append(_ item: VLCMLMediaGroup) {
         fileArrayQueue.sync {
@@ -137,6 +151,27 @@ class MediaGroupViewModel: MLBaseModel {
         }
         return true
     }
+
+    func updateRecentlyAdded(with newMedia: [VLCMLMedia]) {
+        var recentlyExist = false
+        for mediaGroup in files {
+            if mediaGroup.name() == "Recently Added" {
+                recentlyExist = true
+                for media in newMedia {
+                    mediaGroup.add(media)
+                }
+            }
+        }
+
+        if !recentlyExist {
+            if let mediaGroup = medialibrary.medialib.createMediaGroup(withName: "Recently Added") {
+                for media in newMedia {
+                    mediaGroup.add(media)
+                }
+                files.append(mediaGroup)
+            }
+        }
+    }
 }
 
 extension VLCMLMediaGroup {
@@ -167,9 +202,23 @@ extension MediaGroupViewModel: MediaLibraryObserver {
                       didAddMediaGroups mediaGroups: [VLCMLMediaGroup]) {
         fileArrayQueue.sync {
             for mediaGroup in mediaGroups {
-                if !files.contains(where: { $0.identifier() == mediaGroup.identifier() }) {
-                    files.append(mediaGroup)
+                guard let videoMediaGroup = mediaGroup.media(of: .video) else {
+                    continue
                 }
+
+                let mediaGroupIsNew = videoMediaGroup.allSatisfy { $0.isNew }
+
+                if !mediaGroupIsNew {
+                    if !files.contains(where: { $0.identifier() == mediaGroup.identifier() }) {
+                        files.append(mediaGroup)
+                    }
+                    return
+                }
+
+                let newMedia = videoMediaGroup
+                var recentlyExist = false
+                updateRecentlyAdded(with: newMedia)
+
             }
         }
         observable.observers.forEach() {
@@ -183,8 +232,8 @@ extension MediaGroupViewModel: MediaLibraryObserver {
 
         mediaGroupsIds.forEach() {
             guard let safeMediaGroup = medialibrary.medialib.mediaGroup(withIdentifier: $0.int64Value)
-                else {
-                    return
+            else {
+                return
             }
             mediaGroups.append(safeMediaGroup)
         }

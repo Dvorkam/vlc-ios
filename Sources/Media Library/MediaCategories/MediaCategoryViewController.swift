@@ -1242,6 +1242,14 @@ extension MediaCategoryViewController {
                 }
             }
         } else if let media = mediaObject as? VLCMLMedia {
+            if let model = self.model as? CollectionModel {
+               let title = model.mediaCollection.title()
+                    if title == "Recently Added" {
+                       if !media.isNew {
+                           media.removeFromGroup()
+                       }
+                    }
+            }
             if media.type() == .unknown || media.type() == .video {
                 mediaLibraryService.requestThumbnail(for: media)
                 assert(media.mainFile() != nil, "The mainfile is nil")
