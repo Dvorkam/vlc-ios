@@ -34,6 +34,7 @@ protocol MediaLibraryBaseModel {
 
     // Give a name to a model to identify each model programmatically
     var name: String { get }
+    func getMedia()
 }
 
 protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
@@ -50,9 +51,16 @@ protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
 
     var indicatorName: String { get }
 
+    // Pagination
+    var intialPageSize: Int { get set }
+    var currentPage: Int { get set }
+    var firstTime: Bool { get set }
+
     func append(_ item: MLType)
     func delete(_ items: [MLType])
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
+
+    func getMedia()
 }
 
 extension MLBaseModel {

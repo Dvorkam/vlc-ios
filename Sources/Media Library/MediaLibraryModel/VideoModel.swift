@@ -31,6 +31,10 @@ class VideoModel: MediaModel {
 
     var indicatorName: String = NSLocalizedString("ALL_VIDEOS", comment: "")
 
+    var intialPageSize = 12
+    var currentPage = 0
+    var firstTime = true
+
     required init(medialibrary: MediaLibraryService) {
         defer {
             fileArrayLock.unlock()
@@ -38,7 +42,19 @@ class VideoModel: MediaModel {
         self.medialibrary = medialibrary
         medialibrary.observable.addObserver(self)
         fileArrayLock.lock()
-        files = medialibrary.media(ofType: .video)
+    }
+
+    func getMedia() {
+        currentPage += 1
+        var didAppend = false
+        let offset = (currentPage - 1) * intialPageSize
+        let mediaAtOffset = medialibrary.media(ofType: .video, sortingCriteria: sortModel.currentSort, desc: sortModel.desc, items: UInt32(intialPageSize), offset: UInt32(offset))
+            for media in mediaAtOffset {
+                    files.append(media)
+            }
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 }
 
@@ -49,14 +65,16 @@ extension VideoModel {
         defer {
             fileArrayLock.unlock()
         }
-        fileArrayLock.lock()
-        files = medialibrary.media(ofType: .video,
-                                   sortingCriteria: criteria,
-                                   desc: desc)
         sortModel.currentSort = criteria
         sortModel.desc = desc
-        observable.observers.forEach() {
-            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        if firstTime {
+            getMedia()
+            firstTime = false
+        } else {
+            files.removeAll()
+            intialPageSize = 12
+            currentPage = 0
+            getMedia()
         }
     }
 }

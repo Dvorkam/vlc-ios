@@ -19,6 +19,10 @@ class TrackModel: MediaModel {
     var files = [VLCMLMedia]()
     var fileArrayLock = NSRecursiveLock()
 
+    var intialPageSize = 12
+    var currentPage = 0
+    var firstTime = true
+
     var cellType: BaseCollectionViewCell.Type {
         return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(name)") ? MediaGridCollectionCell.self : MediaCollectionViewCell.self
     }
@@ -36,7 +40,21 @@ class TrackModel: MediaModel {
         self.medialibrary = medialibrary
         medialibrary.observable.addObserver(self)
         fileArrayLock.lock()
-        files = medialibrary.media(ofType: .audio)
+    }
+
+    func getMedia() {
+        currentPage += 1
+        let offset = (currentPage - 1) * intialPageSize
+        let mediaAtOffset = medialibrary.media(ofType: .audio, sortingCriteria: sortModel.currentSort, desc: sortModel.desc, items: UInt32(intialPageSize), offset: UInt32(offset))
+            for media in mediaAtOffset {
+                    files.append(media)
+            }
+
+        print(intialPageSize)
+
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
     }
 }
 
@@ -48,14 +66,16 @@ extension TrackModel {
         defer {
             fileArrayLock.unlock()
         }
-        fileArrayLock.lock()
-        files = medialibrary.media(ofType: .audio,
-                                   sortingCriteria: criteria,
-                                   desc: desc)
         sortModel.currentSort = criteria
         sortModel.desc = desc
-        observable.observers.forEach() {
-            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        if firstTime {
+            getMedia()
+            firstTime = false
+        } else {
+            files.removeAll()
+            intialPageSize = 12
+            currentPage = 0
+            getMedia()
         }
     }
 }
