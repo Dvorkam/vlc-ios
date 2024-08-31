@@ -26,10 +26,10 @@
 #import <stdatomic.h>
 
 
-#if TARGET_OS_IOS
+
 #import "VLCMLMedia+Podcast.h"
 #import "VLCMLMedia+isWatched.h"
-#endif
+
 #import "VLCAppCoordinator.h"
 #import "VLC-Swift.h"
 
@@ -1591,6 +1591,7 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
                 #endif
             }
             if (continuePlayback == 1) {
+                CGFloat mediaDuration = [libraryMedia.mediaDuration doubleValue];
                 if (lastPosition * mediaDuration > 120000. || lastPosition < 0.95) {
                     [self setPlaybackPosition:lastPosition];
                 }
