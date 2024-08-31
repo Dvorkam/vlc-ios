@@ -1,7 +1,6 @@
 #import "VLCTVConstants.h"
 #import <VLCKit/VLCKit.h>
 #import <VLCMediaLibraryKit/VLCMediaLibraryKit.h>
-#import <TVVLCKit/TVVLCKit.h>
 #import "VLCMLMedia+App.h"
 #import "VLCNetworkServerLoginInformation.h"
 #import "VLCNetworkServerLoginInformation+Keychain.h"
