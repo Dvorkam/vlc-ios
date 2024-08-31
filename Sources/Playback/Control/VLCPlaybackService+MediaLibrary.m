@@ -117,7 +117,7 @@
 
 #endif
 
-- (void)configureMediaListWithMLMedia:(NSArray<VLCMLMedia *> *)mlMedia indexToPlay:(int)index {
+- (VLCMediaList *)configureMediaListWithMLMedia:(NSArray<VLCMLMedia *> *)mlMedia indexToPlay:(int)index {
     VLCMediaList *list = [[VLCMediaList alloc] init];
 
     VLCMedia *media;
