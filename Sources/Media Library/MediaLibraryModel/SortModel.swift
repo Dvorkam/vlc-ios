@@ -10,7 +10,7 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-class SortModel {
+class SortModel: NSObject {
     var currentSort: VLCMLSortingCriteria
     var desc: Bool
     var sortingCriteria: [VLCMLSortingCriteria]
@@ -72,6 +72,9 @@ extension VLCMLSortingCriteria: CustomStringConvertible {
             return NSLocalizedString("TRACK_ID", comment: "")
         case .default:
             return NSLocalizedString("DEFAULT", comment: "")
+        @unknown default:
+            return NSLocalizedString("DEFAULT", comment: "")
         }
     }
 }
+

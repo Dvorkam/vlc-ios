@@ -10,7 +10,6 @@ def shared_pods
   pod 'AFNetworking', '~>4.0'
   pod 'VLCKit', '4.0.0a6'
   pod 'VLCMediaLibraryKit', '0.13.0a6'
-
   # debug
   pod 'SwiftLint', '~> 0.47.1', :configurations => ['Debug']
 end
@@ -45,6 +44,7 @@ target 'VLC-tvOS' do
   platform :tvos, '12.0'
   shared_pods
   pod 'GRKArrayDiff', :git => 'https://code.videolan.org/fkuehne/GRKArrayDiff.git'
+  pod 'TVVLCKit', '3.6.0b4'
   pod 'MetaDataFetcherKit', '~>0.5.0'
 end
 
@@ -65,3 +65,4 @@ post_install do |installer_representation|
     end
   end
 end
+

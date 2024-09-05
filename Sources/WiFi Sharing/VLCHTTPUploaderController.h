@@ -32,9 +32,8 @@
 - (nonnull NSString *)hostnamePort;
 
 - (void)moveFileFrom:(nonnull NSString *)filepath;
-
-#if TARGET_OS_IOS
 - (void)cleanCache;
+#if TARGET_OS_IOS
 - (void)resetIdleTimer;
 #endif
 

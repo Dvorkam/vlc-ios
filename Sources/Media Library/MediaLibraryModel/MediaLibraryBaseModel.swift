@@ -11,7 +11,7 @@ import Foundation
  *****************************************************************************/
 
 @objc(VLCMediaLibraryBaseModelObserver)
-protocol MediaLibraryBaseModelObserver {
+ protocol MediaLibraryBaseModelObserver {
     func mediaLibraryBaseModelReloadView()
     @objc optional func mediaLibraryBaseModelReload(at indexPaths: [IndexPath])
     @objc optional func mediaLibraryBaseModelPopView()
@@ -23,15 +23,15 @@ protocol MediaLibraryBaseModel {
 
     var anyfiles: [VLCMLObject] { get }
 
-    var sortModel: SortModel { get }
-
     var indicatorName: String { get }
+    #if os(iOS)
     var cellType: BaseCollectionViewCell.Type { get }
-
+    #endif
     func anyAppend(_ item: VLCMLObject)
     func anyDelete(_ items: [VLCMLObject])
+    
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
-
+    var sortModel: SortModel { get }
     // Give a name to a model to identify each model programmatically
     var name: String { get }
 }
@@ -45,13 +45,14 @@ protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
     var files: [MLType] { get set }
 
     var medialibrary: MediaLibraryService { get }
-
-    var observable: Observable<MediaLibraryBaseModelObserver> { get }
-
+    
     var indicatorName: String { get }
 
     func append(_ item: MLType)
     func delete(_ items: [MLType])
+    
+    var observable: Observable<MediaLibraryBaseModelObserver> { get }
+
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
 }
 
@@ -73,7 +74,7 @@ extension MLBaseModel {
         }
         delete(items)
     }
-
+    
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
         fatalError()
     }
@@ -154,6 +155,7 @@ extension VLCMLObject {
     }
 }
 
+#if os(iOS)
 extension MediaCollectionModel {
     func files(with criteria: VLCMLSortingCriteria = .default,
                desc: Bool = false) -> [VLCMLMedia]? {
@@ -183,3 +185,4 @@ extension MediaCollectionModel {
         return image
     }
 }
+#endif

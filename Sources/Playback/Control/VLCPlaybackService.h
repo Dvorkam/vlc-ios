@@ -169,12 +169,14 @@ NS_SWIFT_NAME(PlaybackService)
 - (void)setAmplification:(CGFloat)amplification forBand:(unsigned int)index;
 
 #if TARGET_OS_IOS
-- (void)savePlaybackState;
 - (void)restoreAudioAndSubtitleTrack;
 - (BOOL)mediaListContains:(NSURL *)url;
 - (void)removeMediaFromMediaListAtIndex:(NSUInteger)index;
 - (NSIndexPath *)selectedEqualizerProfile;
 #endif
+
+- (void)setPlayAsAudio:(BOOL)playAsAudio;
+- (void)savePlaybackState;
 
 NS_ASSUME_NONNULL_END
 @end
