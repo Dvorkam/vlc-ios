@@ -40,8 +40,9 @@ class MiniPlayerInfoCollectionViewCell: UICollectionViewCell {
 
         mediaTitleLabel.text = handleMediaTitle(mlMedia: mlMedia)
         
-        if mlMedia.subtype() == .albumTrack {
-            artistTitleLabel.text = mlMedia.artist?.artistName()
+        if mlMedia.subtype() == .albumTrack,
+           let artistName = mlMedia.artist?.artistName() {
+            artistTitleLabel.text = artistName
         } else {
             artistTitleLabel.isHidden = true
         }
@@ -52,7 +53,10 @@ class MiniPlayerInfoCollectionViewCell: UICollectionViewCell {
     private func handleMediaTitle(mlMedia: VLCMLMedia) -> String {
         var title = mlMedia.title
         
-        if (mlMedia.subtype() == .albumTrack || mlMedia.videoTracks?.isEmpty ?? true) && !mlMedia.isExternalMedia() {
+        // Media Artist title and album
+        if (mlMedia.subtype() == .albumTrack ||
+            mlMedia.videoTracks?.isEmpty ?? true) &&
+            !mlMedia.isExternalMedia() {
             if let album = mlMedia.album?.title {
                 title += " - "
                 title += album
