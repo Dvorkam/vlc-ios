@@ -699,10 +699,6 @@ extension AudioMiniPlayer: UIScrollViewDelegate {
     }
 
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let contentWidth = scrollView.contentSize.width
-        let scrollViewWidth = scrollView.frame.size.width
-        let offsetX = scrollView.contentOffset.x
-        
         let isBouncingOnLeftEdge = (scrollOffsetAfterDecelerating.x < -25)
       
         if isRepeatAllMode && isBouncingOnLeftEdge {
