@@ -177,7 +177,9 @@ extension EditActions {
     }
 
     func delete(_ completion: ((completionState) -> Void)? = nil) {
+        
         let mediaTitle = getObjectTitle(for: objects.first) ?? ""
+        
         self.completion = completion
         var title = String(format: NSLocalizedString("DELETE_SINGLE_TITLE", comment: ""), mediaTitle)
         if objects.count != 1 {
@@ -196,9 +198,14 @@ extension EditActions {
                                           style: .destructive,
                                           action: {
                                             [unowned self] action in
-                                            self.model.anyDelete(self.objects)
-                                            self.objects.removeAll()
-                                            self.completion?(.success)
+                     if let model = model as? FolderModel {
+                            model.delete(media: (self.objects as? [VLCMLMedia])!)
+                            self.completion?(.success)
+                     } else {
+                            self.model.anyDelete(self.objects)
+                            self.objects.removeAll()
+                     }
+                      self.completion?(.success)
         })
 
         VLCAlertViewController.alertViewManager(title: title,

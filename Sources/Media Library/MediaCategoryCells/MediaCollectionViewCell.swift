@@ -80,6 +80,8 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
                 update(genre: genre)
             } else if let mediaGroup = media as? VLCMLMediaGroup {
                 update(mediaGroup: mediaGroup)
+            } else if let folder = media as? VLCMLFolder {
+                update(folder: folder)
             } else {
                 assertionFailure("MovieCollectionViewCell: media: Needs to be of a supported Type.")
             }
@@ -390,7 +392,16 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
         updateSizeDescriptionLabelConstraint()
         updateLabelsViewContraint()
     }
-
+    
+    func update(folder: VLCMLFolder) {
+        titleLabel.text = folder.mrl.lastPathComponent
+        scrollView.isScrollEnabled = false
+        newLabel.isHidden = true
+        thumbnailView.layer.cornerRadius = 3
+        thumbnailView.image = UIImage(named: "folder")
+        sizeDescriptionLabel.text = ""
+    }
+    
     func update(playlist: VLCMLPlaylist) {
         newLabel.isHidden = true
         titleLabel.text = playlist.name
