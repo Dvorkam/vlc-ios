@@ -1084,37 +1084,37 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
 - (BOOL)previous
 {
+    return [self previous: NO];
+}
+
+- (BOOL)previous:(BOOL)forcePrevious
+{
     if (_mediaList.count > 1) {
         VLCTime *playedTime = self.playedTime;
-        if (playedTime.value.longLongValue / 2000 >= 1) {
+        if (playedTime.value.longLongValue / 2000 >= 1 && !forcePrevious){
             self.playbackPosition = .0;
         } else {
-            [self previousMedia];
+#if TARGET_OS_IOS
+            [self savePlaybackState];
+#endif
+            if (!_currentIndex) {
+                VLCMediaList *currentMediaList = _shuffleMode ? _shuffledList : _mediaList;
+                _currentIndex = [currentMediaList indexOfMedia:self.currentlyPlayingMedia];
+            }
+
+            if (_currentIndex > 0) {
+                _currentIndex -= 1;
+            } else if (_listPlayer.repeatMode == VLCRepeatAllItems) {
+                _currentIndex = _mediaList.count - 1;
+            }
+
+            [_listPlayer playItemAtNumber:@(_currentIndex)];
         }
     } else {
         NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackBackwardSkipLength];
         [_mediaPlayer jumpBackward:skipLength.intValue];
     }
     return YES;
-}
-
-- (void)previousMedia
-{
-#if TARGET_OS_IOS
-        [self savePlaybackState];
-#endif
-        if (!_currentIndex) {
-            VLCMediaList *currentMediaList = _shuffleMode ? _shuffledList : _mediaList;
-            _currentIndex = [currentMediaList indexOfMedia:self.currentlyPlayingMedia];
-        }
-        
-        if (_currentIndex > 0) {
-            _currentIndex -= 1;
-        } else if (_listPlayer.repeatMode == VLCRepeatAllItems) {
-            _currentIndex = _mediaList.count - 1;
-        }
-        
-        [_listPlayer playItemAtNumber:@(_currentIndex)];
 }
 
 - (void)jumpForward:(int)interval
