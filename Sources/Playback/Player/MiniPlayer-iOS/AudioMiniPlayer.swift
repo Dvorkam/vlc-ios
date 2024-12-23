@@ -89,6 +89,8 @@ class AudioMiniPlayer: UIView, MiniPlayer, QueueViewControllerDelegate {
     var scrollOffsetBeforeDragging: CGPoint = .zero
     var scrollOffsetAfterDecelerating: CGPoint = .zero
 
+    private let language = Locale.current.languageCode
+
     var stopGestureEnabled: Bool {
         if #available(iOS 13.0, *) {
             return false
@@ -250,10 +252,7 @@ extension AudioMiniPlayer: VLCPlaybackServiceDelegate {
         if !playbackService.isPlayingOnExternalScreen() && !playbackService.playAsAudio {
             playbackService.videoOutputView = artworkImageView
         }
-        
-        updateMediaInfoIndex()
         playModeUpdated()
-        mediaInfoCollectionView.reloadData()
     }
 
     func mediaPlayerStateChanged(_ currentState: VLCMediaPlayerState,
@@ -271,6 +270,8 @@ extension AudioMiniPlayer: VLCPlaybackServiceDelegate {
         if currentState == .opening {
             applyCustomEqualizerProfileIfNeeded()
         }
+        updateMediaInfoIndex()
+        mediaInfoCollectionView.reloadData()
     }
 
     func displayMetadata(for playbackService: PlaybackService, metadata: VLCMetaData) {
@@ -697,10 +698,10 @@ extension AudioMiniPlayer: UIScrollViewDelegate {
             handlePreviousNextAction()
         }
     }
-
+    
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        let isBouncingOnLeftEdge = (scrollOffsetAfterDecelerating.x < -25)
-      
+        let isBouncingOnLeftEdge = scrollOffsetAfterDecelerating.x < -25
+        
         if isRepeatAllMode && isBouncingOnLeftEdge {
             handlePreviousNextAction(forcePrevious: true)
         } else if mediaInfoCollectionView.contentOffset.x >= 0 {
@@ -718,7 +719,7 @@ extension AudioMiniPlayer: UIScrollViewDelegate {
         let flowLayout = mediaInfoCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
         let cellWidth = flowLayout.itemSize.width + flowLayout.minimumLineSpacing
         
-        // current offset before scrolling end.
+        // current offset before scrolling ends.
         //This helper for determining if there is bouncing happened.
         scrollOffsetAfterDecelerating = scrollView.contentOffset
 
@@ -786,21 +787,10 @@ extension AudioMiniPlayer {
     
     private func handlePreviousNextAction(forcePrevious: Bool = false) {
         let finalContentOffset = mediaInfoCollectionView.contentOffset
-        // Normal Mode
         if finalContentOffset.x > scrollOffsetBeforeDragging.x {
             playbackService.next()
         } else if finalContentOffset.x < scrollOffsetBeforeDragging.x || forcePrevious {
-            playbackService.previousMedia()
-        }
-    }
-
-    private func handlePreviousNextRepeatOnRepeatAll() {
-        let finalContentOffset = mediaInfoCollectionView.contentOffset
-
-        if finalContentOffset.x > (mediaInfoCollectionView.contentSize.width) {
-            playbackService.next()
-        } else {
-            playbackService.previousMedia()
+            playbackService.previous(true)
         }
     }
 }
