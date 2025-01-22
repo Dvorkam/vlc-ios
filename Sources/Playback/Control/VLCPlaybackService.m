@@ -1095,9 +1095,14 @@ NSString *const VLCPlaybackServicePlaybackDidMoveOnToNextItem = @"VLCPlaybackSer
 
 - (BOOL)previous
 {
+    return [self previous: NO];
+}
+
+- (BOOL)previous:(BOOL)forcePrevious
+{
     if (_mediaList.count > 1) {
         VLCTime *playedTime = self.playedTime;
-        if (playedTime.value.longLongValue / 2000 >= 1) {
+        if (playedTime.value.longLongValue / 2000 >= 1 && !forcePrevious){
             self.playbackPosition = .0;
         } else {
 #if TARGET_OS_IOS

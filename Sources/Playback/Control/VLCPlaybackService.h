@@ -130,6 +130,7 @@ NS_SWIFT_NAME(PlaybackService)
 - (void)pause;
 - (BOOL)next;
 - (BOOL)previous;
+- (BOOL)previous:(BOOL)forcePrevious;
 - (void)jumpForward:(int)interval;
 - (void)jumpBackward:(int)interval;
 - (void)toggleRepeatMode;
