@@ -74,19 +74,19 @@ class VLCPagingViewController<ButtonBarCellType: UICollectionViewCell>: PagerTab
         buttonBarView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonBarView)
         NSLayoutConstraint.activate([
-            buttonBarView.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
-            buttonBarView.rightAnchor.constraint(equalTo: view.rightAnchor),
-            buttonBarView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            buttonBarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            buttonBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            buttonBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             buttonBarView.heightAnchor.constraint(equalToConstant: buttonbarViewHeight)
-            ])
+        ])
+
         // make sure that top and bottom are not covered by tabbar and navigationbar
         NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: buttonBarView.bottomAnchor),
             containerView.rightAnchor.constraint(equalTo: view.rightAnchor),
             containerView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-            ]
-        )
+            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
 
         buttonBarView.delegate = self
         buttonBarView.dataSource = self
