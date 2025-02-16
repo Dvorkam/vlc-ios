@@ -222,9 +222,19 @@ private enum RendererActionSheetContent: Int, CaseIterable {
         addArrangedSubview(queueButton)
 #if os(iOS)
         addArrangedSubview(deviceButton)
-        addArrangedSubview(pictureInPictureButton)
+        addPipButtonIfSupported()
 #else
         addArrangedSubview(airplayVolumeView)
+#endif
+    }
+
+    // MARK: - Pip Availability
+
+    private func addPipButtonIfSupported() {
+#if !targetEnvironment(simulator)
+        if #available(iOS 14.0, *) {
+            addArrangedSubview(pictureInPictureButton)
+        }
 #endif
     }
 
