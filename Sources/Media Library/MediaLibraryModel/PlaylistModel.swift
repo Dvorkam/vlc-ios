@@ -30,6 +30,10 @@ class PlaylistModel: MLBaseModel {
 
     var indicatorName: String = NSLocalizedString("PLAYLISTS", comment: "")
 
+    var intialPageSize = 12
+    var currentPage = 0
+    var firstTime = true
+
     required init(medialibrary: MediaLibraryService) {
         defer {
             fileArrayLock.unlock()
@@ -37,7 +41,7 @@ class PlaylistModel: MLBaseModel {
         self.medialibrary = medialibrary
         medialibrary.observable.addObserver(self)
         fileArrayLock.lock()
-        files = medialibrary.playlists()
+        getMedia()
     }
 
     func append(_ item: VLCMLPlaylist) {
@@ -93,6 +97,27 @@ class PlaylistModel: MLBaseModel {
             $0.value.observer?.mediaLibraryBaseModelReloadView()
         }
     }
+
+    func getMedia() {
+        currentPage += 1
+        var didAppend = false
+        let offset = (currentPage - 1) * intialPageSize
+        let mediaAtOffset = medialibrary.medialib.playlists(with: sortModel.currentSort, desc: sortModel.desc, UInt32(intialPageSize), UInt32(offset))
+        if let generes = mediaAtOffset {
+            for  genre in  generes {
+                files.append(genre)
+                didAppend = true
+            }
+        }
+        if didAppend {
+            intialPageSize = intialPageSize * 2
+        }
+        print(intialPageSize)
+
+        observable.observers.forEach() {
+            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        }
+    }
 }
 
 // MARK: - Sort
@@ -102,11 +127,16 @@ extension PlaylistModel {
             fileArrayLock.unlock()
         }
         fileArrayLock.lock()
-        files = medialibrary.playlists(sortingCriteria: criteria, desc: desc)
         sortModel.currentSort = criteria
         sortModel.desc = desc
-        observable.observers.forEach() {
-            $0.value.observer?.mediaLibraryBaseModelReloadView()
+        if firstTime {
+            getMedia()
+            firstTime = false
+        } else {
+            files.removeAll()
+            intialPageSize = 12
+            currentPage = 0
+            getMedia()
         }
     }
 }

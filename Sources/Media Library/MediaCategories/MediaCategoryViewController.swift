@@ -57,6 +57,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     private var toSize = CGSize.zero
     private var longPressGesture: UILongPressGestureRecognizer!
     weak var delegate: MediaCategoryViewControllerDelegate?
+    private var isScrolling = false
 
     private lazy var statusBarView: UIView = {
         let statusBarFrame: CGRect
@@ -451,6 +452,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     override func viewDidAppear(_ animated: Bool) {
         showGuideOnLaunch()
         updateCollectionViewForAlbum()
+        loadSort()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -574,6 +576,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         // This ensures that the search bar is always visible like a sticky while searching
+        isScrolling = true
         if searchDataSource.isSearching {
             searchBar.endEditing(true)
             delegate?.enableCategorySwitching(for: self, enable: true)
@@ -1297,6 +1300,29 @@ extension MediaCategoryViewController: UICollectionViewDelegateFlowLayout {
         return cachedCellSize
     }
 
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+
+        if model.anyfiles.count == indexPath.row + 1 {
+            if model is CollectionModel {
+                return
+            }
+            else if model is ShowEpisodeModel {
+                return
+            }
+            else if model is HistoryModel {
+                return
+            }
+            else {
+                if isScrolling {
+                    model.getMedia()
+                }
+            }
+        }
+    }
+
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        isScrolling = false
+    }
     override func viewSafeAreaInsetsDidChange() {
         cachedCellSize = .zero
         collectionView?.collectionViewLayout.invalidateLayout()

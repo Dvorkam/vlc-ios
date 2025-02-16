@@ -587,6 +587,8 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
         let titleHeight = UIFont.preferredFont(forTextStyle: .title3).lineHeight
         let subtitleHeight = UIFont.preferredFont(forTextStyle: .subheadline).lineHeight
 
-        return CGSize(width: cellWidth, height: titleHeight + subtitleHeight + edgePadding + interItemPadding * 2)
+        let finalHeight = titleHeight + subtitleHeight + edgePadding + interItemPadding * 2
+
+        return CGSize(width: cellWidth, height: finalHeight)
     }
 }
