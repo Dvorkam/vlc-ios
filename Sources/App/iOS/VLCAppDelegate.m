@@ -92,7 +92,6 @@
                                   kVLCSettingPlaybackSpeedDefaultValue: @(1.0),
                                   kVLCPlayerShowPlaybackSpeedShortcut: @(NO),
                                   kVLCSettingAlwaysPlayURLs: @(NO),
-                                  kVLCRestoreLastPlayedMedia: @(YES),
                                   kVLCSettingPlayerControlDuration: kVLCSettingPlayerControlDurationDefaultValue,
                                   kVLCSettingPauseWhenShowingControls: @(NO)
     };
@@ -325,7 +324,7 @@
 - (void)recoverLastPlayingMedia {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    if (![defaults boolForKey:kVLCRestoreLastPlayedMedia]) {
+    if (!VLCDefaults.shared.restoreLastPlayedMedia) {
         return;
     }
 

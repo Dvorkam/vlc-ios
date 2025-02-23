@@ -275,7 +275,7 @@ enum GenericOptions {
     static var restoreLastPlayedMedia: SettingsItem {
         .toggle(title: "SETTINGS_RESTORE_LAST_PLAYED_MEDIA",
                 subtitle: nil,
-                preferenceKey: kVLCRestoreLastPlayedMedia)
+                keyPath: \.restoreLastPlayedMedia)
     }
 
     static func section() -> SettingsSection? {

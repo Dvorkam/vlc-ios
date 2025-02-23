@@ -115,7 +115,6 @@
 #define kVLCAudioLibraryHideTrackNumbers @"kVLCAudioLibraryHideTrackNumbers"
 
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
-#define kVLCRestoreLastPlayedMedia @"RestoreLastPlayedMedia"
 
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
 #define KVLCPlayerBrightness @"playerbrightness"
