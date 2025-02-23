@@ -26,6 +26,7 @@
             Keys.hideLibraryInFilesApp: false,
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
+            Keys.playlistPlayNextItem: true,
             Keys.restoreLastPlayedMedia: true,
             Keys.showRemainingTime: false,
 
@@ -108,6 +109,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var playlistPlayNextItem: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playlistPlayNextItem)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playlistPlayNextItem)
+        }
+    }
+
     @objc var restoreLastPlayedMedia: Bool {
         get {
             userDefaults.bool(forKey: Keys.restoreLastPlayedMedia)
@@ -174,6 +184,7 @@ fileprivate enum Keys {
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
+    static let playlistPlayNextItem = "PlaylistPlayNextItem"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let showRemainingTime = "show-remaining-time"
 

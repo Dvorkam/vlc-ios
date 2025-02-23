@@ -1793,7 +1793,7 @@ extension MediaCategoryViewController {
 
         if let model = model as? CollectionModel,
            model.mediaCollection is VLCMLPlaylist {
-            autoPlayNextItem = userDefaults.bool(forKey: kVLCPlaylistPlayNextItem)
+            autoPlayNextItem = VLCDefaults.shared.playlistPlayNextItem
         }
 
         if !autoPlayNextItem {

@@ -20,7 +20,6 @@
 #define kVLCSettingAppThemeSystem 2
 #define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
 #define kVLCSettingAbout @"about"
-#define kVLCPlaylistPlayNextItem @"PlaylistPlayNextItem"
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
 #define kVLCCurrentPlaylistMediasQueue @"currentPlaylistMediasQueue"

@@ -148,7 +148,7 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             if isFirstRow {
                 cell.setToggleSwitch(state: VLCDefaults.shared.automaticallyPlayNextItem)
             } else {
-                cell.setToggleSwitch(state: userDefaults.bool(forKey: kVLCPlaylistPlayNextItem))
+                cell.setToggleSwitch(state: VLCDefaults.shared.playlistPlayNextItem)
             }
 
             let cellIdentifier: ActionSheetCellIdentifier = isFirstRow ? .playNextItem : .playlistPlayNextItem

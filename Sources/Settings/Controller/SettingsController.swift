@@ -515,7 +515,7 @@ extension SettingsController: ActionSheetSpecifierDelegate {
         case .playNextItem:
             VLCDefaults.shared.automaticallyPlayNextItem = state
         case .playlistPlayNextItem:
-            userDefaults.setValue(state, forKey: kVLCPlaylistPlayNextItem)
+            VLCDefaults.shared.playlistPlayNextItem = state
         default:
             break
         }
