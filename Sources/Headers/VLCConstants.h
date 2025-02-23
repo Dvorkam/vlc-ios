@@ -43,8 +43,6 @@
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingDeinterlace @"deinterlace"
 #define kVLCSettingDeinterlaceDefaultValue @(-1)
-#define kVLCSettingHardwareDecoding @"codec"
-#define kVLCSettingHardwareDecodingDefault @""
 #define kVLCSettingRotationLock @"kVLCSettingRotationLock"
 #define kVLCSettingNetworkCaching @"network-caching"
 #define kVLCSettingNetworkCachingDefaultValue @(999)

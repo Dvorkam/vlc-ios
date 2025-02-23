@@ -509,7 +509,7 @@ enum VideoOptions {
     }
 
     static var hardwareDecoding: SettingsItem {
-        let k = kVLCSettingHardwareDecoding
+        let k = VLCDefaults.Compat.hardwareDecodingKey
         return .init(title: "SETTINGS_HWDECODING",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_HWDECODING", preferenceKey: k, hasInfo: true))

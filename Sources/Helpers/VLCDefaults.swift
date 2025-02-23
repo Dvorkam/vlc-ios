@@ -31,7 +31,10 @@
             Keys.showRemainingTime: false,
 
             // numbers
-            Keys.defaultPreampLevel: Float(6)
+            Keys.defaultPreampLevel: Float(6),
+
+            // other
+            Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue
         ]
 
         [
@@ -80,6 +83,23 @@ extension VLCDefaults {
         set {
             userDefaults.set(newValue, forKey: Keys.enableMediaCellTextScrolling)
         }
+    }
+
+    var hardwareDecoding: HardwareDecoding {
+        get {
+            guard let v = userDefaults.string(forKey: Keys.hardwareDecoding) else {
+                return HardwareDecoding.hardware
+            }
+
+            return HardwareDecoding(rawValue: v) ?? .hardware
+        }
+        set {
+            userDefaults.set(newValue.rawValue, forKey: Keys.hardwareDecoding)
+        }
+    }
+
+    @objc var hardwareDecodingObjC: String {
+        hardwareDecoding.rawValue
     }
 
     @objc var hideLibraryInFilesApp: Bool {
@@ -165,12 +185,20 @@ extension VLCDefaults {
     @objc(VLCDefaultsCompat)
     final class Compat: NSObject {
         static let automaticallyPlayNextItemKey: String = Keys.automaticallyPlayNextItem
-        static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
+        @objc static let hardwareDecodingKey: String = Keys.hardwareDecoding
+        static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
 
         override init() {
             fatalError("compat struct not intended to be instantiated")
         }
+    }
+}
+
+extension VLCDefaults {
+    enum HardwareDecoding: String {
+        case software = "avcodec,all"
+        case hardware = ""
     }
 }
 
@@ -181,6 +209,7 @@ fileprivate enum Keys {
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let defaultPreampLevel = "pre-amp-level"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
+    static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
