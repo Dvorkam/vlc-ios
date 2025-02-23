@@ -23,6 +23,7 @@
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
             Keys.hideLibraryInFilesApp: false,
+            Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
             Keys.showRemainingTime: false,
 
@@ -72,6 +73,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.hideLibraryInFilesApp)
+        }
+    }
+
+    @objc var playerShouldRememberBrightness: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playerShouldRememberBrightness)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playerShouldRememberBrightness)
         }
     }
 
@@ -133,6 +143,7 @@ fileprivate enum Keys {
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
+    static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let defaultPreampLevel = "pre-amp-level"
     static let showRemainingTime = "show-remaining-time"

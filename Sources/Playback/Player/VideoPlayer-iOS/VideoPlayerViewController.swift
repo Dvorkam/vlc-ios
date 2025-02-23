@@ -402,7 +402,7 @@ class VideoPlayerViewController: PlayerViewController {
 
 #if os(iOS)
         let defaults = UserDefaults.standard
-        if defaults.bool(forKey: kVLCPlayerShouldRememberBrightness) {
+        if VLCDefaults.shared.playerShouldRememberBrightness {
             if let brightness = defaults.value(forKey: KVLCPlayerBrightness) as? CGFloat {
                 animateBrightness(to: brightness)
                 self.brightnessControl.value = Float(brightness)
@@ -469,7 +469,7 @@ class VideoPlayerViewController: PlayerViewController {
         deviceMotion.stopDeviceMotion()
 #if os(iOS)
         let defaults = UserDefaults.standard
-        if defaults.bool(forKey: kVLCPlayerShouldRememberBrightness) {
+        if VLCDefaults.shared.playerShouldRememberBrightness {
             let currentBrightness = UIScreen.main.brightness
             self.brightnessControl.value = Float(currentBrightness) // helper in indicating change in the system brightness
             defaults.set(currentBrightness, forKey: KVLCPlayerBrightness)

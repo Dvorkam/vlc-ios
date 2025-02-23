@@ -518,7 +518,7 @@ enum VideoOptions {
     static var rememberPlayerBrightness: SettingsItem {
         .toggle(title: "SETTINGS_REMEMBER_PLAYER_BRIGHTNESS",
                 subtitle: nil,
-                preferenceKey: kVLCPlayerShouldRememberBrightness)
+                keyPath: \.playerShouldRememberBrightness)
     }
 
     static var lockRotation: SettingsItem {

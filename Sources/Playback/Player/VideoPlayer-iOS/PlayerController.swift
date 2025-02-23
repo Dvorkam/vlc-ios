@@ -83,7 +83,7 @@ class PlayerController: NSObject {
     }
 
     var isRememberBrightnessEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCPlayerShouldRememberBrightness)
+        return VLCDefaults.shared.playerShouldRememberBrightness
     }
 
     @objc override init() {

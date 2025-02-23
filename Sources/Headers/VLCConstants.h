@@ -118,7 +118,6 @@
 #define kVLCRestoreLastPlayedMedia @"RestoreLastPlayedMedia"
 
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
-#define kVLCPlayerShouldRememberBrightness @"PlayerShouldRememberBrightness"
 #define KVLCPlayerBrightness @"playerbrightness"
 #define kVLCPlayerIsShuffleEnabled @"PlayerIsShuffleEnabled"
 #define kVLCPlayerIsShuffleEnabledDefaultValue @NO
