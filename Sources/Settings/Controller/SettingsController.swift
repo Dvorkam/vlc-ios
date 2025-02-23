@@ -256,7 +256,7 @@ class SettingsController: UITableViewController {
         actionSheet.numberOfColums = numberOfColumns
 
         present(actionSheet, animated: false) {
-            if preferenceKey != kVLCAutomaticallyPlayNextItem {
+            if preferenceKey != VLCDefaults.Compat.automaticallyPlayNextItemKey {
                 self.actionSheet.collectionView.selectItem(at: self.specifierManager.selectedIndex, animated: false, scrollPosition: .centeredVertically)
             }
         }
@@ -432,7 +432,7 @@ extension SettingsController: SettingsCellDelegate {
         switch preferenceKey {
         case kVLCSettingPasscodeOnKey:
             passcodeLockSwitchOn(state: isOn)
-        case kVLCSettingHideLibraryInFilesApp:
+        case VLCDefaults.Compat.hideLibraryInFilesAppKey:
             medialibraryHidingLockSwitchOn(state: isOn)
         case kVLCSettingBackupMediaLibrary:
             mediaLibraryBackupActivateSwitchOn(state: isOn)
@@ -510,10 +510,10 @@ extension SettingsController: ActionSheetSpecifierDelegate {
     func actionSheetSpecifierHandleToggleSwitch(for cell: ActionSheetCell, state: Bool) {
         switch cell.identifier {
         case .blackBackground:
-            userDefaults.setValue(state, forKey: kVLCSettingAppThemeBlack)
+            VLCDefaults.shared.appThemeBlack = state
             PresentationTheme.themeDidUpdate()
         case .playNextItem:
-            userDefaults.setValue(state, forKey: kVLCAutomaticallyPlayNextItem)
+            VLCDefaults.shared.automaticallyPlayNextItem = state
         case .playlistPlayNextItem:
             userDefaults.setValue(state, forKey: kVLCPlaylistPlayNextItem)
         default:

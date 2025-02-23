@@ -132,7 +132,7 @@
             NSInteger positionIndex = 0;
             VLCMedia *mediaToPlay = [VLCMedia mediaWithURL:url];
             mediaToPlay = [_oneDriveController setMediaNameMetadata:mediaToPlay withName:selectedItem.name];
-            if (![[NSUserDefaults standardUserDefaults] boolForKey:kVLCAutomaticallyPlayNextItem]) {
+            if (!VLCDefaults.shared.automaticallyPlayNextItem) {
                 mediaList = [[VLCMediaList alloc] initWithArray:@[mediaToPlay]];
                 subtitlePath = [_oneDriveController configureSubtitleWithFileName:selectedItem.name
                                                                       folderItems:items];

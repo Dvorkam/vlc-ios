@@ -41,6 +41,8 @@
         appThemeIndex = kVLCSettingAppThemeSystem;
     }
 
+    [VLCDefaults.shared registerDefaults];
+
     NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
                                   kVLCSettingPasscodeEnableBiometricAuth : @(1),
                                   kVLCSettingContinueAudioInBackgroundKey : @(YES),
@@ -78,7 +80,6 @@
                                   kVLCSettingPlaybackLockscreenSkip : @(NO),
                                   kVLCSettingPlaybackRemoteControlSkip : @(NO),
                                   kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
-                                  kVLCAutomaticallyPlayNextItem : @(YES),
                                   kVLCPlaylistPlayNextItem: @(YES),
                                   kVLCSettingEnableMediaCellTextScrolling : @(NO),
                                   kVLCSettingShowThumbnails : kVLCSettingShowThumbnailsDefaultValue,
@@ -87,12 +88,6 @@
                                   kVLCSettingCastingAudioPassthrough : @(NO),
                                   kVLCSettingCastingConversionQuality : @(2),
                                   kVLCForceSMBV1 : @(YES),
-                                  @"kVLCAudioLibraryGridLayoutALBUMS" : @(YES),
-                                  @"kVLCAudioLibraryGridLayoutARTISTS" : @(YES),
-                                  @"kVLCAudioLibraryGridLayoutGENRES" : @(YES),
-                                  @"kVLCVideoLibraryGridLayoutALL_VIDEOS" : @(YES),
-                                  @"kVLCVideoLibraryGridLayoutVIDEO_GROUPS" : @(YES),
-                                  @"kVLCVideoLibraryGridLayoutVLCMLMediaGroupCollections" : @(YES),
                                   kVLCPlayerShouldRememberState: @(YES),
                                   kVLCPlayerIsShuffleEnabled: kVLCPlayerIsShuffleEnabledDefaultValue,
                                   kVLCPlayerIsRepeatEnabled: kVLCPlayerIsRepeatEnabledDefaultValue,

@@ -48,6 +48,10 @@ struct SettingsItem: Equatable {
         return Self(title: title, subtitle: subtitle, action: .toggle(Toggle(preferenceKey: preferenceKey)))
     }
 
+    static func toggle(title: String, subtitle: String?, keyPath: WritableKeyPath<VLCDefaults, Bool>) -> Self {
+        return Self(title: title, subtitle: subtitle, action: .toggle(Toggle(keyPath: keyPath)))
+    }
+
     enum Action: Equatable {
         case isLoading
         case toggle(Toggle)
@@ -62,10 +66,17 @@ struct SettingsItem: Equatable {
     final class Toggle: Equatable {
         typealias Observer = (Bool) -> Void
 
-        let preferenceKey: String
+        let preferenceKey: String?
+        let keyPath: WritableKeyPath<VLCDefaults, Bool>?
 
         var isOn: Bool {
-            UserDefaults.standard.bool(forKey: preferenceKey)
+            if let keyPath = keyPath {
+                VLCDefaults.shared[keyPath: keyPath]
+            } else if let preferenceKey = preferenceKey {
+                UserDefaults.standard.bool(forKey: preferenceKey)
+            } else {
+                fatalError()
+            }
         }
 
         private var observers: [Int: Observer] = [:]
@@ -79,11 +90,25 @@ struct SettingsItem: Equatable {
 
         init(preferenceKey: String) {
             self.preferenceKey = preferenceKey
+            self.keyPath = nil
+            NotificationCenter.default.addObserver(self, selector: #selector(didChange), name: UserDefaults.didChangeNotification, object: nil)
+        }
+
+        init(keyPath: WritableKeyPath<VLCDefaults, Bool>) {
+            self.preferenceKey = nil
+            self.keyPath = keyPath
             NotificationCenter.default.addObserver(self, selector: #selector(didChange), name: UserDefaults.didChangeNotification, object: nil)
         }
 
         func set(isOn: Bool) {
-            UserDefaults.standard.set(isOn, forKey: preferenceKey)
+            if let keyPath = keyPath {
+                var defaults = VLCDefaults.shared
+                defaults[keyPath: keyPath] = isOn
+            } else if let preferenceKey = preferenceKey {
+                UserDefaults.standard.set(isOn, forKey: preferenceKey)
+            } else {
+                fatalError()
+            }
         }
 
         // does not call out initially.
@@ -229,7 +254,7 @@ enum GenericOptions {
     }
 
     static var automaticallyPlayNextItem: SettingsItem {
-        let k = kVLCAutomaticallyPlayNextItem
+        let k = VLCDefaults.Compat.automaticallyPlayNextItemKey
         return .init(title: "SETTINGS_NETWORK_PLAY_ALL",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_NETWORK_PLAY_ALL", preferenceKey: k, hasInfo: false))
@@ -306,7 +331,7 @@ enum PrivacyOptions {
     static var hideLibraryInFilesApp: SettingsItem {
         .toggle(title: "SETTINGS_HIDE_LIBRARY_IN_FILES_APP",
                 subtitle: "SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE",
-                preferenceKey: kVLCSettingHideLibraryInFilesApp)
+                keyPath: \.hideLibraryInFilesApp)
     }
 
     static func section() -> SettingsSection? {

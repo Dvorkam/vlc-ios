@@ -284,7 +284,7 @@
 
     // would make sence if item came from search which isn't
     // currently the case on the TV
-    const BOOL singlePlayback = ![[NSUserDefaults standardUserDefaults] boolForKey:kVLCAutomaticallyPlayNextItem];
+    const BOOL singlePlayback = !VLCDefaults.shared.automaticallyPlayNextItem;
     [self didSelectItem:item index:row singlePlayback:singlePlayback];
 }
 

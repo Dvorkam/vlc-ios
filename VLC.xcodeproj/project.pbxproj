@@ -95,6 +95,8 @@
 		4342C3C327474CA000E52334 /* SortedMediaFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4342C3C227474CA000E52334 /* SortedMediaFiles.swift */; };
 		444E5BFA24C6081B0003B69C /* PasscodeLockController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444E5BF924C6081A0003B69C /* PasscodeLockController.swift */; };
 		444E5C0024C719480003B69C /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444E5BFF24C719480003B69C /* AboutController.swift */; };
+		446AA2322D6A91620026F3C8 /* VLCDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446AA2312D6A91520026F3C8 /* VLCDefaults.swift */; };
+		446AA2332D6A91620026F3C8 /* VLCDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446AA2312D6A91520026F3C8 /* VLCDefaults.swift */; };
 		44B5822024E434FD001A2583 /* MediaGridCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B5821F24E434FD001A2583 /* MediaGridCollectionCell.swift */; };
 		44C8BBA324AF2B5C003F8940 /* FeedbackGenerators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C8BBA224AF2B5C003F8940 /* FeedbackGenerators.swift */; };
 		44C8BBAE24AF36F4003F8940 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C8BBA624AF36F4003F8940 /* SettingsController.swift */; };
@@ -1012,6 +1014,7 @@
 		4342C3C227474CA000E52334 /* SortedMediaFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortedMediaFiles.swift; sourceTree = "<group>"; };
 		444E5BF924C6081A0003B69C /* PasscodeLockController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasscodeLockController.swift; sourceTree = "<group>"; };
 		444E5BFF24C719480003B69C /* AboutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutController.swift; sourceTree = "<group>"; };
+		446AA2312D6A91520026F3C8 /* VLCDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCDefaults.swift; sourceTree = "<group>"; };
 		44B5821F24E434FD001A2583 /* MediaGridCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaGridCollectionCell.swift; sourceTree = "<group>"; };
 		44C8BBA224AF2B5C003F8940 /* FeedbackGenerators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackGenerators.swift; sourceTree = "<group>"; };
 		44C8BBA624AF36F4003F8940 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
@@ -1898,6 +1901,7 @@
 		44C8BBA124AF2B5C003F8940 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				446AA2312D6A91520026F3C8 /* VLCDefaults.swift */,
 				419A2C651F37A4B70069D224 /* VLCStringsForLocalization.m */,
 				4152F1611FEF19BD00F1908B /* KeychainCoordinator.swift */,
 				7D0C209A28C89F5400CCFFEF /* Network */,
@@ -4462,6 +4466,7 @@
 				7D50C6A42BBD20DF00B9F1A0 /* VLCDownloadController.m in Sources */,
 				7D50C6A52BBD20DF00B9F1A0 /* RemoteNetworkCell.swift in Sources */,
 				7D50C6A62BBD20DF00B9F1A0 /* VLCNetworkLoginDataSourceLogin.m in Sources */,
+				446AA2332D6A91620026F3C8 /* VLCDefaults.swift in Sources */,
 				7D50C6A72BBD20DF00B9F1A0 /* VLCAccessibilityIdentifier.swift in Sources */,
 				7D50C6A82BBD20DF00B9F1A0 /* VLCPagingViewController.swift in Sources */,
 				7D50C6A92BBD20DF00B9F1A0 /* VLCLocalNetworkServiceBrowserBonjour.m in Sources */,
@@ -4563,6 +4568,7 @@
 				7DBF605C2B5D652900F16BB4 /* VLCFirstStepsDonateViewController.m in Sources */,
 				7D1471752B88A7BA00AB642B /* VLCCharge.m in Sources */,
 				DD3EFF451BDEBCE500B68579 /* VLCLocalNetworkServiceBrowserManualConnect.m in Sources */,
+				446AA2322D6A91620026F3C8 /* VLCDefaults.swift in Sources */,
 				8DF966B121188BDB00D0FCD6 /* EditController.swift in Sources */,
 				8D144D6322298E8E00984C46 /* AudioMiniPlayer.swift in Sources */,
 				7DC7BAB528C8958900109F28 /* UIColor+Presets.m in Sources */,

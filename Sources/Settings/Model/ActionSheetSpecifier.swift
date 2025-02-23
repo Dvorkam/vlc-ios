@@ -66,7 +66,7 @@ extension ActionSheetSpecifier: ActionSheetDelegate {
             return
         }
 
-        guard preferenceKey != kVLCAutomaticallyPlayNextItem else {
+        guard preferenceKey != VLCDefaults.Compat.automaticallyPlayNextItemKey else {
             // Disable the selection for the automatically play next item options
             return
         }
@@ -132,7 +132,7 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             PresentationTheme.current.isDark && indexPath.row == numberOfRows() - 1 {
             // Update the black background option cell
             cell.setAccessoryType(to: .toggleSwitch)
-            cell.setToggleSwitch(state: UserDefaults.standard.bool(forKey: kVLCSettingAppThemeBlack))
+            cell.setToggleSwitch(state: VLCDefaults.shared.appThemeBlack)
             cell.name.text = settingsBundle.localizedString(forKey: "SETTINGS_THEME_BLACK", value: "", table: "Root")
             let cellIdentifier = ActionSheetCellIdentifier.blackBackground
             cell.identifier = cellIdentifier
@@ -141,12 +141,12 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             cell.delegate = self
 
             return cell
-        } else if preferenceKey == kVLCAutomaticallyPlayNextItem {
+        } else if preferenceKey == VLCDefaults.Compat.automaticallyPlayNextItemKey {
             cell.setAccessoryType(to: .toggleSwitch)
             let isFirstRow: Bool = indexPath.row == 0
 
             if isFirstRow {
-                cell.setToggleSwitch(state: userDefaults.bool(forKey: kVLCAutomaticallyPlayNextItem))
+                cell.setToggleSwitch(state: VLCDefaults.shared.automaticallyPlayNextItem)
             } else {
                 cell.setToggleSwitch(state: userDefaults.bool(forKey: kVLCPlaylistPlayNextItem))
             }
@@ -166,7 +166,7 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
 
 extension ActionSheetSpecifier: ActionSheetCellDelegate {
     func actionSheetCellShouldUpdateColors() -> Bool {
-        guard preferenceKey != kVLCAutomaticallyPlayNextItem else {
+        guard preferenceKey != VLCDefaults.Compat.automaticallyPlayNextItemKey else {
             return false
         }
 

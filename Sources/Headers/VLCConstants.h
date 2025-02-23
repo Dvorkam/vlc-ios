@@ -13,16 +13,13 @@
 
 #define kVLCSettingPasscodeOnKey @"PasscodeProtection"
 #define kVLCSettingPasscodeEnableBiometricAuth @"EnableBiometricAuth"
-#define kVLCSettingHideLibraryInFilesApp @"HideLibraryInFilesApp"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
 #define kVLCSettingAppTheme @"darkMode"
 #define kVLCSettingAppThemeBright 0
 #define kVLCSettingAppThemeDark 1
 #define kVLCSettingAppThemeSystem 2
-#define kVLCSettingAppThemeBlack @"blackTheme"
 #define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
 #define kVLCSettingAbout @"about"
-#define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
 #define kVLCPlaylistPlayNextItem @"PlaylistPlayNextItem"
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
@@ -118,7 +115,6 @@
 #define kVLCAudioLibraryGridLayout @"kVLCAudioLibraryGridLayout"
 #define kVLCAudioLibraryHideFeatArtists @"kVLCAudioLibraryHideFeatArtists"
 #define kVLCAudioLibraryHideTrackNumbers @"kVLCAudioLibraryHideTrackNumbers"
-#define kVLCVideoLibraryGridLayout @"kVLCVideoLibraryGridLayout"
 
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
 #define kVLCRestoreLastPlayedMedia @"RestoreLastPlayedMedia"

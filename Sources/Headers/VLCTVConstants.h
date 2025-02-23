@@ -68,7 +68,6 @@
 #define kVLCSettingPlaybackLockscreenSkip @"playback-lockscreen-skip"
 #define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
-#define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
 #define kVLCPlayerUIShouldHide @"PlayerUIShouldHide"
 #define kVLCSettingDownloadArtwork @"download-artwork"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"

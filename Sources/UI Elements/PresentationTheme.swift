@@ -117,7 +117,7 @@ enum PresentationThemeType: Int {
     }
 
     var isBlack: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingAppThemeBlack)
+        VLCDefaults.shared.appThemeBlack
     }
 
     static var current: PresentationTheme = {
@@ -157,7 +157,7 @@ enum PresentationThemeType: Int {
         var presentationTheme = PresentationTheme.brightTheme
         var darkTheme: PresentationTheme
 
-        if UserDefaults.standard.bool(forKey: kVLCSettingAppThemeBlack) {
+        if VLCDefaults.shared.appThemeBlack {
             darkTheme = PresentationTheme.blackTheme
         } else {
             darkTheme = PresentationTheme.darkTheme

@@ -288,7 +288,10 @@ class SettingsCell: UITableViewCell {
         switch settingsItem.action {
         case let .toggle(toggle):
             toggle.set(isOn: sender.isOn)
-            delegate?.settingsCellDidChangeSwitchState(cell: self, preferenceKey: toggle.preferenceKey, isOn: sender.isOn)
+            // TODO: we should get rid of the delegate entirely, and perform side effects within SettingSection
+            if let preferenceKey = toggle.preferenceKey {
+                delegate?.settingsCellDidChangeSwitchState(cell: self, preferenceKey: preferenceKey, isOn: sender.isOn)
+            }
 
         default:
             // we should never get here; only toggles have a switch

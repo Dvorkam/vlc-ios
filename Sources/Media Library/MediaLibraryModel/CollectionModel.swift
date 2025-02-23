@@ -28,8 +28,9 @@ class CollectionModel: MLBaseModel {
 
     var cellType: BaseCollectionViewCell.Type {
         if mediaCollection is VLCMLMediaGroup {
-            return UserDefaults.standard.bool(forKey: "\(kVLCVideoLibraryGridLayout)\(String(describing: type(of: mediaCollection)) + name)") ?
-                                              MovieCollectionViewCell.self : MediaCollectionViewCell.self
+            return VLCDefaults.shared
+                .videoLibraryGridLayout(collectionModelName: String(describing: type(of: mediaCollection)), name: name) ?
+            MovieCollectionViewCell.self : MediaCollectionViewCell.self
         } else {
             return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(String(describing: type(of: mediaCollection)) + name)") ?
                                               MediaGridCollectionCell.self : MediaCollectionViewCell.self

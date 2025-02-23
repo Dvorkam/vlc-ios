@@ -190,7 +190,7 @@ private extension MediaLibraryService {
 
     private func startMediaLibrary(on path: String) {
         let excludeMediaLibrary = !UserDefaults.standard.bool(forKey: kVLCSettingBackupMediaLibrary)
-        let hideML = UserDefaults.standard.bool(forKey: kVLCSettingHideLibraryInFilesApp)
+        let hideML = VLCDefaults.shared.hideLibraryInFilesApp
         excludeFromDeviceBackup(excludeMediaLibrary)
         hideMediaLibrary(hideML)
 

@@ -21,7 +21,7 @@ class MediaGroupViewModel: MLBaseModel {
     var files: [VLCMLMediaGroup]
 
     var cellType: BaseCollectionViewCell.Type {
-        return UserDefaults.standard.bool(forKey: "\(kVLCVideoLibraryGridLayout)\(name)") ? MovieCollectionViewCell.self : MediaCollectionViewCell.self
+        return VLCDefaults.shared.videoLibraryGridLayout(name: name) ? MovieCollectionViewCell.self : MediaCollectionViewCell.self
     }
 
     var medialibrary: MediaLibraryService

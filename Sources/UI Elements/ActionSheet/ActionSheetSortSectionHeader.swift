@@ -251,8 +251,12 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
     }
 
     private func setSwitchIsOnFromUserDefaults() {
-        let key = isVideoModel ? kVLCVideoLibraryGridLayout : kVLCAudioLibraryGridLayout
-        layoutChangeSwitch.isOn = UserDefaults.standard.bool(forKey: key + modelType)
+        switch isVideoModel {
+        case true:
+            layoutChangeSwitch.isOn = VLCDefaults.shared.videoLibraryGridLayout(name: modelType)
+        case false:
+            layoutChangeSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCAudioLibraryGridLayout + modelType)
+        }
     }
 
     private func setupStackView() {

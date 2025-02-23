@@ -1538,9 +1538,17 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
             isVideoModel = true
         }
 
-        prefix = isVideoModel ? kVLCVideoLibraryGridLayout : kVLCAudioLibraryGridLayout
-        suffix = collectionModelName + model.name
-        userDefaults.set(gridLayout, forKey: "\(prefix)\(suffix)")
+        switch isVideoModel {
+        case true:
+            VLCDefaults.shared.setVideoLibraryGridLayout(collectionModelName: collectionModelName,
+                                                         name: model.name,
+                                                         isGrid: gridLayout)
+        case false:
+            prefix = kVLCAudioLibraryGridLayout
+            suffix = collectionModelName + model.name
+            userDefaults.set(gridLayout, forKey: "\(prefix)\(suffix)")
+        }
+
         setupCollectionView()
         cachedCellSize = .zero
         collectionView?.collectionViewLayout.invalidateLayout()
@@ -1779,7 +1787,7 @@ extension MediaCategoryViewController: MediaLibraryBaseModelObserver {
 extension MediaCategoryViewController {
     func play(media: VLCMLMedia, at indexPath: IndexPath) {
         let playbackController = PlaybackService.sharedInstance()
-        var autoPlayNextItem: Bool = userDefaults.bool(forKey: kVLCAutomaticallyPlayNextItem)
+        var autoPlayNextItem: Bool = VLCDefaults.shared.automaticallyPlayNextItem
 
         playbackController.fullscreenSessionRequested = media.type() != .audio
 
