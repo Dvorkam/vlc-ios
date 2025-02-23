@@ -50,6 +50,9 @@
 // MARK: - Defaults
 
 extension VLCDefaults {
+
+    // Bools
+
     @objc var appThemeBlack: Bool {
         get {
             userDefaults.bool(forKey: Keys.appThemeBlack)
@@ -104,6 +107,17 @@ extension VLCDefaults {
         }
     }
 
+    @objc var showRemainingTime: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.showRemainingTime)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.showRemainingTime)
+        }
+    }
+
+    // Numbers
+
     @objc var defaultPreampLevel: Float {
         get {
             userDefaults.float(forKey: Keys.defaultPreampLevel)
@@ -113,14 +127,7 @@ extension VLCDefaults {
         }
     }
 
-    @objc var showRemainingTime: Bool {
-        get {
-            userDefaults.bool(forKey: Keys.showRemainingTime)
-        }
-        set {
-            userDefaults.set(newValue, forKey: Keys.showRemainingTime)
-        }
-    }
+    // Other
 
     func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
         userDefaults.bool(forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
@@ -152,18 +159,16 @@ extension VLCDefaults {
 fileprivate enum Keys {
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
+    static let defaultPreampLevel = "pre-amp-level"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
-    static let defaultPreampLevel = "pre-amp-level"
     static let showRemainingTime = "show-remaining-time"
-
-    static let videoLibraryGridLayoutPrefix = "kVLCVideoLibraryGridLayout"
 
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {
         [
-            Self.videoLibraryGridLayoutPrefix, collectionModelName, name
+            "kVLCVideoLibraryGridLayout", collectionModelName, name
         ].compactMap { $0 }.joined()
     }
 }
