@@ -56,7 +56,6 @@
 #define kVLCSettingStretchAudioOnValue @"1"
 #define kVLCSettingStretchAudioOffValue @"0"
 #define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
-#define kVLCSettingDefaultPreampLevel @"pre-amp-level"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingEqualizerProfile @"EqualizerProfile"
 #define kVLCSettingEqualizerProfileDisabled @"EqualizerDisabled"

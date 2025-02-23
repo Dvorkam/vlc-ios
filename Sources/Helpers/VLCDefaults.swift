@@ -18,10 +18,15 @@
     private override init() {}
 
     @objc func registerDefaults() {
-        var dict = [
+        var dict: [String: Any] = [
+            // bools
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
-            Keys.playerShouldRememberState: true
+            Keys.hideLibraryInFilesApp: false,
+            Keys.playerShouldRememberState: true,
+
+            // numbers
+            Keys.defaultPreampLevel: Float(6)
         ]
 
         [
@@ -78,6 +83,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var defaultPreampLevel: Float {
+        get {
+            userDefaults.float(forKey: Keys.defaultPreampLevel)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.defaultPreampLevel)
+        }
+    }
+
     func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
         userDefaults.bool(forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
@@ -95,6 +109,7 @@ extension VLCDefaults {
     final class Compat: NSObject {
         static let automaticallyPlayNextItemKey: String = Keys.automaticallyPlayNextItem
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
+        static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
 
         override init() {
             fatalError("compat struct not intended to be instantiated")
@@ -109,6 +124,8 @@ fileprivate enum Keys {
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let playerShouldRememberState = "PlayerShouldRememberState"
+    static let defaultPreampLevel = "pre-amp-level"
+
     static let videoLibraryGridLayoutPrefix = "kVLCVideoLibraryGridLayout"
 
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {

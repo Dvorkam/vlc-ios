@@ -350,7 +350,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         unsigned int profile = (unsigned int)[userDefaults integerForKey:kVLCSettingEqualizerProfile];
         equalizer = [[VLCAudioEqualizer alloc] initWithPreset:presets[profile]];
     } else {
-        float preampValue = [userDefaults floatForKey:kVLCSettingDefaultPreampLevel];
+        float preampValue = VLCDefaults.shared.defaultPreampLevel;
         equalizer = [[VLCAudioEqualizer alloc] init];
         equalizer.preAmplification = preampValue;
     }
@@ -1405,7 +1405,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         _mediaPlayer.equalizer = nil;
         [userDefaults setBool:YES forKey:kVLCSettingEqualizerProfileDisabled];
 
-        float preampValue = [userDefaults floatForKey:kVLCSettingDefaultPreampLevel];
+        float preampValue = VLCDefaults.shared.defaultPreampLevel;
         if (preampValue != 6.0) {
             APLog(@"Enforcing presumbly disabled equalizer due to custom preamp value of %f2.0", preampValue);
             VLCAudioEqualizer *eq = [[VLCAudioEqualizer alloc] init];
@@ -1442,7 +1442,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return equalizer.preAmplification;
     }
 
-    return [[NSUserDefaults standardUserDefaults] floatForKey:kVLCSettingDefaultPreampLevel];
+    return VLCDefaults.shared.defaultPreampLevel;
 }
 
 - (unsigned int)numberOfBands

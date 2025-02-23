@@ -621,7 +621,7 @@ enum CastingOptions {
 
 enum AudioOptions {
     static var preampLevel: SettingsItem {
-        let k = kVLCSettingDefaultPreampLevel
+        let k = VLCDefaults.Compat.defaultPreampLevelKey
         return .init(title: "SETTINGS_AUDIO_PREAMP_LEVEL",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_AUDIO_PREAMP_LEVEL", preferenceKey: k, hasInfo: false))
