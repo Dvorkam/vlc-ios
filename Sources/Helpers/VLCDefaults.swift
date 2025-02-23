@@ -20,7 +20,8 @@
     @objc func registerDefaults() {
         var dict = [
             Keys.appThemeBlack: false,
-            Keys.automaticallyPlayNextItem: true
+            Keys.automaticallyPlayNextItem: true,
+            Keys.playerShouldRememberState: true
         ]
 
         [
@@ -68,6 +69,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var playerShouldRememberState: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playerShouldRememberState)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playerShouldRememberState)
+        }
+    }
+
     func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
         userDefaults.bool(forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
@@ -98,6 +108,7 @@ fileprivate enum Keys {
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
+    static let playerShouldRememberState = "PlayerShouldRememberState"
     static let videoLibraryGridLayoutPrefix = "kVLCVideoLibraryGridLayout"
 
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {

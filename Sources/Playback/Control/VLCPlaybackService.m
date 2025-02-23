@@ -322,7 +322,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     [_mediaPlayer setDeinterlace:deinterlace withFilter:@"blend"];
 
     [_listPlayer setMediaList:self.mediaList];
-    if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
+    if (VLCDefaults.shared.playerShouldRememberState) {
         VLCRepeatMode repeatMode = [defaults integerForKey:kVLCPlayerIsRepeatEnabled];
         [_listPlayer setRepeatMode:repeatMode];
     }
@@ -581,7 +581,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackModeUpdated object:self];
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
+    if (VLCDefaults.shared.playerShouldRememberState) {
         [defaults setInteger:repeatMode forKey:kVLCPlayerIsRepeatEnabled];
     }
 }
@@ -1019,7 +1019,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServiceShuffleModeUpdated object:self];
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([[defaults valueForKey:kVLCPlayerShouldRememberState] boolValue]) {
+    if (VLCDefaults.shared.playerShouldRememberState) {
         [defaults setBool:shuffleMode forKey:kVLCPlayerIsShuffleEnabled];
     }
 }

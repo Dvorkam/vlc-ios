@@ -79,7 +79,7 @@ class PlayerController: NSObject {
     }
 
     var isRememberStateEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCPlayerShouldRememberState)
+        return VLCDefaults.shared.playerShouldRememberState
     }
 
     var isRememberBrightnessEnabled: Bool {

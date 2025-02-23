@@ -269,7 +269,7 @@ enum GenericOptions {
     static var rememberPlayerState: SettingsItem {
         .toggle(title: "SETTINGS_REMEMBER_PLAYER_STATE",
                 subtitle: nil,
-                preferenceKey: kVLCPlayerShouldRememberState)
+                keyPath: \.playerShouldRememberState)
     }
 
     static var restoreLastPlayedMedia: SettingsItem {
