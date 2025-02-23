@@ -41,7 +41,7 @@ class PlayerController: NSObject {
     // MARK: - UserDefaults computed properties getters
 
     var displayRemainingTime: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCShowRemainingTime)
+        return VLCDefaults.shared.showRemainingTime
     }
 
     var isVolumeGestureEnabled: Bool {

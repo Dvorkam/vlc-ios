@@ -24,6 +24,7 @@
             Keys.automaticallyPlayNextItem: true,
             Keys.hideLibraryInFilesApp: false,
             Keys.playerShouldRememberState: true,
+            Keys.showRemainingTime: false,
 
             // numbers
             Keys.defaultPreampLevel: Float(6)
@@ -92,6 +93,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var showRemainingTime: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.showRemainingTime)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.showRemainingTime)
+        }
+    }
+
     func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
         userDefaults.bool(forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
@@ -125,6 +135,7 @@ fileprivate enum Keys {
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let defaultPreampLevel = "pre-amp-level"
+    static let showRemainingTime = "show-remaining-time"
 
     static let videoLibraryGridLayoutPrefix = "kVLCVideoLibraryGridLayout"
 

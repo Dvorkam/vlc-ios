@@ -417,8 +417,7 @@ fileprivate enum RemainingTimeMode {
     case remaining
 
     static var current: RemainingTimeMode {
-        let userDefault = UserDefaults.standard
-        let currentSetting = userDefault.bool(forKey: kVLCShowRemainingTime)
+        let currentSetting = VLCDefaults.shared.showRemainingTime
 
         switch currentSetting {
             case true: return .remaining
@@ -428,8 +427,7 @@ fileprivate enum RemainingTimeMode {
 
     @discardableResult
     static func toggle() -> RemainingTimeMode {
-        let userDefault = UserDefaults.standard
-        userDefault.set(!userDefault.bool(forKey: kVLCShowRemainingTime), forKey: kVLCShowRemainingTime)
+        VLCDefaults.shared.showRemainingTime.toggle()
         return current
     }
 }

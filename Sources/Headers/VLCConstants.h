@@ -105,7 +105,6 @@
 
 #define kVLCForceSMBV1 @"smb-force-v1"
 
-#define kVLCShowRemainingTime @"show-remaining-time"
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"
 #define kVLCPrivateWebStreaming @"private-streaming"
