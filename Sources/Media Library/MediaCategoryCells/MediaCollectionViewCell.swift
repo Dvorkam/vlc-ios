@@ -106,7 +106,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
     }
 
     private var enableMarquee: Bool {
-        return !UserDefaults.standard.bool(forKey: kVLCSettingEnableMediaCellTextScrolling)
+        return !VLCDefaults.shared.enableMediaCellTextScrolling
     }
 
     // MARK: - Init

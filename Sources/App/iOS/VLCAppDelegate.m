@@ -80,7 +80,6 @@
                                   kVLCSettingPlaybackRemoteControlSkip : @(NO),
                                   kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
                                   kVLCPlaylistPlayNextItem: @(YES),
-                                  kVLCSettingEnableMediaCellTextScrolling : @(NO),
                                   kVLCSettingShowThumbnails : kVLCSettingShowThumbnailsDefaultValue,
                                   kVLCSettingShowArtworks : kVLCSettingShowArtworksDefaultValue,
                                   kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,

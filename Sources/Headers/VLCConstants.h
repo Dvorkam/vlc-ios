@@ -24,7 +24,6 @@
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
 #define kVLCCurrentPlaylistMediasQueue @"currentPlaylistMediasQueue"
-#define kVLCSettingEnableMediaCellTextScrolling @"EnableMediaCellTextScrolling"
 #define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
 #define kVLCSettingStretchAudio @"audio-time-stretch"
 #define kVLCSettingTextEncoding @"subsdec-encoding"

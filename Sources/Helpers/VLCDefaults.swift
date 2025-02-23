@@ -22,6 +22,7 @@
             // bools
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
+            Keys.enableMediaCellTextScrolling: false,
             Keys.hideLibraryInFilesApp: false,
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
@@ -68,6 +69,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.automaticallyPlayNextItem)
+        }
+    }
+
+    @objc var enableMediaCellTextScrolling: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.enableMediaCellTextScrolling)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.enableMediaCellTextScrolling)
         }
     }
 
@@ -160,6 +170,7 @@ fileprivate enum Keys {
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let defaultPreampLevel = "pre-amp-level"
+    static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"

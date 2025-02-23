@@ -146,7 +146,7 @@ class MediaGridCollectionCell: BaseCollectionViewCell {
     }
 
     private var enableMarquee: Bool {
-       return !userDefaults.bool(forKey: kVLCSettingEnableMediaCellTextScrolling)
+        return !VLCDefaults.shared.enableMediaCellTextScrolling
     }
 
     override init(frame: CGRect) {
