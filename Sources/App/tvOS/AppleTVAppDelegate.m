@@ -47,7 +47,6 @@
                                   kVLCSettingSubtitlesFontSize : kVLCSettingSubtitlesFontSizeDefaultValue,
                                   kVLCSettingSubtitlesBoldFont: kVLCSettingSubtitlesBoldFontDefaultValue,
                                   kVLCSettingDeinterlace : kVLCSettingDeinterlaceDefaultValue,
-                                  kVLCSettingNetworkRTSPTCP : @(NO),
                                   kVLCSettingNetworkSatIPChannelListUrl : @"",
                                   kVLCSettingEqualizerProfileDisabled : @(YES),
                                   kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,

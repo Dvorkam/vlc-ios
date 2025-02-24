@@ -736,7 +736,7 @@ enum NetworkOptions {
     static var rtspctp: SettingsItem {
         .toggle(title: "SETTINGS_RTSP_TCP",
                 subtitle: nil,
-                preferenceKey: kVLCSettingNetworkRTSPTCP)
+                keyPath: \.networkRTSPTCP)
     }
 
     static func section() -> SettingsSection? {

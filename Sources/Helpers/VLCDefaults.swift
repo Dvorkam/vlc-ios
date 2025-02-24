@@ -29,6 +29,7 @@
             Keys.enableMediaCellTextScrolling: false,
             Keys.forceSMBV1: true,
             Keys.hideLibraryInFilesApp: false,
+            Keys.networkRTSPTCP: false,
             Keys.passcodeEnableBiometricAuth: true,
             Keys.pauseWhenShowingControls: false,
             Keys.playbackLongTouchSpeedUp: true,
@@ -152,6 +153,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.hideLibraryInFilesApp)
+        }
+    }
+
+    @objc var networkRTSPTCP: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.networkRTSPTCP)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.networkRTSPTCP)
         }
     }
 
@@ -360,10 +370,9 @@ extension VLCDefaults {
     final class Compat: NSObject {
         static let automaticallyPlayNextItemKey: String = Keys.automaticallyPlayNextItem
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
-        @objc static let hardwareDecodingKey: String = Keys.hardwareDecoding
+        static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
-        @objc static let networkCachingKey: String = Keys.networkCaching
-        @objc static let stretchAudioKey: String = Keys.stretchAudio
+        static let networkCachingKey: String = Keys.networkCaching
 
         override init() {
             fatalError("compat struct not intended to be instantiated")
@@ -407,6 +416,7 @@ fileprivate enum Keys {
     static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let networkCaching = "network-caching"
+    static let networkRTSPTCP = "rtsp-tcp"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"

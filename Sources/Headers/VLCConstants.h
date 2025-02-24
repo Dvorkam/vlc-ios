@@ -41,7 +41,6 @@
 #define kVLCSettingDeinterlace @"deinterlace"
 #define kVLCSettingDeinterlaceDefaultValue @(-1)
 #define kVLCSettingRotationLock @"kVLCSettingRotationLock"
-#define kVLCSettingNetworkRTSPTCP @"rtsp-tcp"
 #define kVLCSaveDebugLogs @"kVLCSaveDebugLogs"
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
