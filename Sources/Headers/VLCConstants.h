@@ -12,7 +12,6 @@
  *****************************************************************************/
 
 #define kVLCSettingPasscodeOnKey @"PasscodeProtection"
-#define kVLCSettingPasscodeEnableBiometricAuth @"EnableBiometricAuth"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
 #define kVLCSettingAppTheme @"darkMode"
 #define kVLCSettingAppThemeBright 0

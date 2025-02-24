@@ -25,6 +25,7 @@
             Keys.enableMediaCellTextScrolling: false,
             Keys.forceSMBV1: true,
             Keys.hideLibraryInFilesApp: false,
+            Keys.passcodeEnableBiometricAuth: true,
             Keys.pauseWhenShowingControls: false,
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
@@ -132,6 +133,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.playerShouldRememberState)
+        }
+    }
+
+    @objc var passcodeEnableBiometricAuth: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.passcodeEnableBiometricAuth)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.passcodeEnableBiometricAuth)
         }
     }
 
@@ -284,6 +294,7 @@ fileprivate enum Keys {
     static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let networkCaching = "network-caching"
+    static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"

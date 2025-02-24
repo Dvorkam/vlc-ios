@@ -44,7 +44,6 @@
     [VLCDefaults.shared registerDefaults];
 
     NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
-                                  kVLCSettingPasscodeEnableBiometricAuth : @(1),
                                   kVLCSettingContinueAudioInBackgroundKey : @(YES),
                                   kVLCSettingTextEncoding : kVLCSettingTextEncodingDefaultValue,
                                   kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
@@ -261,7 +260,7 @@
 {
     if ([[VLCKeychainCoordinator passcodeService] hasSecret]) {
         //TODO: Dismiss playback
-        BOOL allowBiometricAuthentication = [[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingPasscodeEnableBiometricAuth];
+        BOOL allowBiometricAuthentication = VLCDefaults.shared.passcodeEnableBiometricAuth;
 
         [[VLCKeychainCoordinator passcodeService]
          validateSecretWithAllowBiometricAuthentication:allowBiometricAuthentication

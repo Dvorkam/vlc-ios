@@ -309,15 +309,15 @@ enum PrivacyOptions {
             case .touchID:
                 return .toggle(title: "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID",
                                subtitle: nil,
-                               preferenceKey: kVLCSettingPasscodeEnableBiometricAuth)
+                               keyPath: \.passcodeEnableBiometricAuth)
             case .faceID:
                 return .toggle(title: "SETTINGS_PASSCODE_LOCK_ALLOWFACEID",
                                subtitle: nil,
-                               preferenceKey: kVLCSettingPasscodeEnableBiometricAuth)
+                               keyPath: \.passcodeEnableBiometricAuth)
             case .opticID:
                 return .toggle(title: "SETTINGS_PASSCODE_LOCK_ALLOWOPTICID",
                                subtitle: nil,
-                               preferenceKey: kVLCSettingPasscodeEnableBiometricAuth)
+                               keyPath: \.passcodeEnableBiometricAuth)
             case .none:
                 fallthrough
             @unknown default:
