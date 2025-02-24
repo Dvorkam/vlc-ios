@@ -53,7 +53,7 @@ class PlayerController: NSObject {
     }
 
     var isBrightnessGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingBrightnessGesture)
+        return VLCDefaults.shared.brightnessGesture
     }
 
     var isSwipeSeekGestureEnabled: Bool {

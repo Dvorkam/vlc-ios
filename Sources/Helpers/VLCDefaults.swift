@@ -22,6 +22,7 @@
             // bools
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
+            Keys.brightnessGesture: true,
             Keys.continueAudioInBackground: true,
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
@@ -83,6 +84,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.automaticallyPlayNextItem)
+        }
+    }
+
+    @objc var brightnessGesture: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.brightnessGesture)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.brightnessGesture)
         }
     }
 
@@ -328,6 +338,7 @@ fileprivate enum Keys {
     // Changing a value also causes the locally stored value to become unreachable.
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
+    static let brightnessGesture = "EnableBrightnessGesture"
     static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let defaultPreampLevel = "pre-amp-level"
     static let downloadArtwork = "download-artwork"

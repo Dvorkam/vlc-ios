@@ -361,7 +361,7 @@ enum GestureControlOptions {
     static var swipeUpDownForBrightness: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_BRIGHTNESS",
                 subtitle: nil,
-                preferenceKey: kVLCSettingBrightnessGesture)
+                keyPath: \.brightnessGesture)
     }
 
     static var swipeRightLeftToSeek: SettingsItem {
