@@ -61,7 +61,7 @@ class PlayerController: NSObject {
     }
 
     var isCloseGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingCloseGesture)
+        return VLCDefaults.shared.closeGesture
     }
 
     var isSpeedUpGestureEnabled: Bool {

@@ -23,6 +23,7 @@
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
             Keys.brightnessGesture: true,
+            Keys.closeGesture: true,
             Keys.continueAudioInBackground: true,
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
@@ -94,6 +95,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.brightnessGesture)
+        }
+    }
+
+    @objc var closeGesture: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.closeGesture)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.closeGesture)
         }
     }
 
@@ -349,6 +359,7 @@ fileprivate enum Keys {
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let brightnessGesture = "EnableBrightnessGesture"
+    static let closeGesture = "EnableCloseGesture"
     static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let defaultPreampLevel = "pre-amp-level"
     static let downloadArtwork = "download-artwork"

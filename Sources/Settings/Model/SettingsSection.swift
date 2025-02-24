@@ -373,7 +373,7 @@ enum GestureControlOptions {
     static var pinchToClose: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_CLOSE",
                 subtitle: nil,
-                preferenceKey: kVLCSettingCloseGesture)
+                keyPath: \.closeGesture)
     }
 
     static var forwardBackwardEqual: SettingsItem {
