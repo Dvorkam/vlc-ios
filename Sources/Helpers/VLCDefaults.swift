@@ -23,6 +23,7 @@
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
             Keys.continueAudioInBackground: true,
+            Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.forceSMBV1: true,
             Keys.hideLibraryInFilesApp: false,
@@ -82,6 +83,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.automaticallyPlayNextItem)
+        }
+    }
+
+    @objc var downloadArtwork: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.downloadArtwork)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.downloadArtwork)
         }
     }
 
@@ -320,6 +330,7 @@ fileprivate enum Keys {
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let defaultPreampLevel = "pre-amp-level"
+    static let downloadArtwork = "download-artwork"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"

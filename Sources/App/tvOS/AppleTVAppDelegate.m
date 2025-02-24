@@ -57,7 +57,6 @@
                                   kVLCSettingPlaybackRemoteControlSkip : @(NO),
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCPlayerUIShouldHide : @(NO),
-                                  kVLCSettingDownloadArtwork : @(YES),
                                   kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
                                   kVLCSettingPlaybackSpeedDefaultValue: @(1.0)};
     [defaults registerDefaults:appDefaults];

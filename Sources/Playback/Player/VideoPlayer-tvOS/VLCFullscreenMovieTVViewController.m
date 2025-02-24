@@ -18,6 +18,7 @@
 #import "VLCNetworkImageView.h"
 #import "VLCMetaData.h"
 #import "VLCActivityManager.h"
+#import "VLC-Swift.h"
 
 typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 {

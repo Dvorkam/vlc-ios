@@ -18,6 +18,7 @@
 #import "GRKArrayDiff+UICollectionView.h"
 #import "VLCFavoriteService.h"
 #import "VLCAppCoordinator.h"
+#import "VLC-Swift.h"
 
 @interface VLCServerBrowsingTVViewController ()
 {
@@ -47,7 +48,7 @@
         
         self.title = serverBrowser.title;
 
-        self.downloadArtwork = [[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDownloadArtwork];
+        self.downloadArtwork = VLCDefaults.shared.downloadArtwork;
     }
     return self;
 }

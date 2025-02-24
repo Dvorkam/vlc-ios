@@ -97,6 +97,7 @@
 		444E5C0024C719480003B69C /* AboutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444E5BFF24C719480003B69C /* AboutController.swift */; };
 		446AA2322D6A91620026F3C8 /* VLCDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446AA2312D6A91520026F3C8 /* VLCDefaults.swift */; };
 		446AA2332D6A91620026F3C8 /* VLCDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446AA2312D6A91520026F3C8 /* VLCDefaults.swift */; };
+		446AA2342D6C08C50026F3C8 /* VLCDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446AA2312D6A91520026F3C8 /* VLCDefaults.swift */; };
 		44B5822024E434FD001A2583 /* MediaGridCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B5821F24E434FD001A2583 /* MediaGridCollectionCell.swift */; };
 		44C8BBA324AF2B5C003F8940 /* FeedbackGenerators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C8BBA224AF2B5C003F8940 /* FeedbackGenerators.swift */; };
 		44C8BBAE24AF36F4003F8940 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44C8BBA624AF36F4003F8940 /* SettingsController.swift */; };
@@ -4244,6 +4245,7 @@
 				6C5B0C9E27A43098005AE25B /* PlaybackServiceAdjustFilter.swift in Sources */,
 				7DC869B828CB794A00EE99F8 /* VLCDeletionCapableViewController.m in Sources */,
 				DD4089F21BF6467E0022745E /* VLCPlaybackInfoTVCollectionViewCell.m in Sources */,
+				446AA2342D6C08C50026F3C8 /* VLCDefaults.swift in Sources */,
 				4342C3C327474CA000E52334 /* SortedMediaFiles.swift in Sources */,
 				DD3EAC0A1BE2192A003668DA /* VLCServerBrowsingController.m in Sources */,
 				D9B36AF62AF4020000A10C99 /* AspectRatio.swift in Sources */,
