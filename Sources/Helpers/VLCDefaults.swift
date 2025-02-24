@@ -34,7 +34,8 @@
             Keys.defaultPreampLevel: Float(6),
 
             // other
-            Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue
+            Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
+            Keys.networkCaching: NetworkCaching.normal.rawValue,
         ]
 
         [
@@ -83,23 +84,6 @@ extension VLCDefaults {
         set {
             userDefaults.set(newValue, forKey: Keys.enableMediaCellTextScrolling)
         }
-    }
-
-    var hardwareDecoding: HardwareDecoding {
-        get {
-            guard let v = userDefaults.string(forKey: Keys.hardwareDecoding) else {
-                return HardwareDecoding.hardware
-            }
-
-            return HardwareDecoding(rawValue: v) ?? .hardware
-        }
-        set {
-            userDefaults.set(newValue.rawValue, forKey: Keys.hardwareDecoding)
-        }
-    }
-
-    @objc var hardwareDecodingObjC: String {
-        hardwareDecoding.rawValue
     }
 
     @objc var hideLibraryInFilesApp: Bool {
@@ -169,6 +153,37 @@ extension VLCDefaults {
 
     // Other
 
+    var hardwareDecoding: HardwareDecoding {
+        get {
+            guard let v = userDefaults.string(forKey: Keys.hardwareDecoding) else {
+                return HardwareDecoding.hardware
+            }
+
+            return HardwareDecoding(rawValue: v) ?? .hardware
+        }
+        set {
+            userDefaults.set(newValue.rawValue, forKey: Keys.hardwareDecoding)
+        }
+    }
+
+    @objc var hardwareDecodingObjC: String {
+        hardwareDecoding.rawValue
+    }
+
+    var networkCaching: NetworkCaching {
+        get {
+            let v = userDefaults.integer(forKey: Keys.networkCaching)
+            return NetworkCaching(rawValue: v) ?? .normal
+        }
+        set {
+            userDefaults.set(newValue.rawValue, forKey: Keys.networkCaching)
+        }
+    }
+
+    @objc var networkCachingObjC: Int {
+        networkCaching.rawValue
+    }
+
     func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
         userDefaults.bool(forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
@@ -188,6 +203,7 @@ extension VLCDefaults {
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
         @objc static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
+        @objc static let networkCachingKey: String = Keys.networkCaching
 
         override init() {
             fatalError("compat struct not intended to be instantiated")
@@ -195,10 +211,22 @@ extension VLCDefaults {
     }
 }
 
+// MARK: - Value Types
+
 extension VLCDefaults {
     enum HardwareDecoding: String {
         case software = "avcodec,all"
         case hardware = ""
+    }
+}
+
+extension VLCDefaults {
+    enum NetworkCaching: Int {
+        case lowest = 333
+        case low = 666
+        case normal = 999
+        case high = 1667
+        case highest = 3333
     }
 }
 
@@ -211,6 +239,7 @@ fileprivate enum Keys {
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
+    static let networkCaching = "network-caching"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let playlistPlayNextItem = "PlaylistPlayNextItem"

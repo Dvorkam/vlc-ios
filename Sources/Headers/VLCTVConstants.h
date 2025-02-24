@@ -26,8 +26,6 @@
 #define kSupportedProtocolSchemes @"(rtsp|mms|mmsh|udp|rtp|rtmp|sftp|ftp|smb)$"
 
 #define kVLCSettingPlaybackSpeedDefaultValue @"playback-speed"
-#define kVLCSettingNetworkCaching @"network-caching"
-#define kVLCSettingNetworkCachingDefaultValue @(999)
 #define kVLCSettingNetworkRTSPTCP @"rtsp-tcp"
 #define kVLCSaveDebugLogs @"kVLCSaveDebugLogs"
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"

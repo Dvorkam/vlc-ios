@@ -192,8 +192,8 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
                                        locale.regionCode!,
                                        bundleShortVersionString,
                                        VLCLibrary.shared().changeset,
-                                       VLCDefaults.shared.hardwareDecoding == .hardware ? 0 : 1,
-                                       defaults.integer(forKey: kVLCSettingNetworkCaching),
+                                       VLCDefaults.shared.hardwareDecoding == .hardware ? 0 : 1, // TODO: unsure
+                                       VLCDefaults.shared.networkCaching.rawValue,
                                        defaults.integer(forKey: kVLCSettingSkipLoopFilter),
                                        defaults.integer(forKey: kVLCSettingNetworkRTSPTCP),
                                        defaults.integer(forKey: kVLCSettingStretchAudio))

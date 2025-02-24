@@ -54,7 +54,6 @@
                                   kVLCSettingSubtitlesFontSize : kVLCSettingSubtitlesFontSizeDefaultValue,
                                   kVLCSettingSubtitlesBoldFont: kVLCSettingSubtitlesBoldFontDefaultValue,
                                   kVLCSettingDeinterlace : kVLCSettingDeinterlaceDefaultValue,
-                                  kVLCSettingNetworkCaching : kVLCSettingNetworkCachingDefaultValue,
                                   kVLCSettingVolumeGesture : @(YES),
                                   kVLCSettingPlayPauseGesture : @(YES),
                                   kVLCSettingBrightnessGesture : @(YES),

@@ -715,7 +715,7 @@ enum MediaLibraryOptions {
 
 enum NetworkOptions {
     static var networkCachingLevel: SettingsItem {
-        let k = kVLCSettingNetworkCaching
+        let k = VLCDefaults.Compat.networkCachingKey
         return .init(title: "SETTINGS_NETWORK_CACHING_TITLE",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_NETWORK_CACHING_TITLE", preferenceKey: k, hasInfo: true))
