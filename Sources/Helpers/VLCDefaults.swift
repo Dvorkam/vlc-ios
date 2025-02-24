@@ -36,6 +36,7 @@
             Keys.playlistPlayNextItem: true,
             Keys.playPauseGesture: true,
             Keys.restoreLastPlayedMedia: true,
+            Keys.seekGesture: true,
             Keys.showRemainingTime: false,
             Keys.stretchAudio: true,
             Keys.volumeGesture: true,
@@ -213,6 +214,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var seekGesture: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.seekGesture)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.seekGesture)
+        }
+    }
+
     @objc var showRemainingTime: Bool {
         get {
             userDefaults.bool(forKey: Keys.showRemainingTime)
@@ -355,6 +365,7 @@ fileprivate enum Keys {
     static let playlistPlayNextItem = "PlaylistPlayNextItem"
     static let playPauseGesture = "EnablePlayPauseGesture"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
+    static let seekGesture = "EnableSeekGesture"
     static let showRemainingTime = "show-remaining-time"
     static let stretchAudio = "audio-time-stretch"
     static let volumeGesture = "EnableVolumeGesture"

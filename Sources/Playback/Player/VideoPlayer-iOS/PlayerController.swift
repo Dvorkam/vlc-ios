@@ -57,7 +57,7 @@ class PlayerController: NSObject {
     }
 
     var isSwipeSeekGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingSeekGesture)
+        return VLCDefaults.shared.seekGesture
     }
 
     var isCloseGestureEnabled: Bool {

@@ -367,7 +367,7 @@ enum GestureControlOptions {
     static var swipeRightLeftToSeek: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_SEEK",
                 subtitle: nil,
-                preferenceKey: kVLCSettingSeekGesture)
+                keyPath: \.seekGesture)
     }
 
     static var pinchToClose: SettingsItem {
