@@ -243,7 +243,7 @@ enum GenericOptions {
     static var playVideoInFullScreen: SettingsItem {
         .toggle(title: "SETTINGS_VIDEO_FULLSCREEN",
                 subtitle: nil,
-                preferenceKey: kVLCSettingVideoFullscreenPlayback)
+                keyPath: \.videoFullscreenPlayback)
     }
 
     static var continueVideoPlayback: SettingsItem {

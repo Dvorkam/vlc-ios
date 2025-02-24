@@ -47,7 +47,6 @@
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
 #define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
-#define kVLCSettingVideoFullscreenPlayback @"AlwaysUseFullscreenForVideo"
 #define kVLCSettingContinuePlayback @"ContinuePlayback"
 #define kVLCSettingContinueAudioPlayback @"ContinueAudioPlayback"
 #define kVLCSettingPlaybackSpeedDefaultValue @"playback-speed"

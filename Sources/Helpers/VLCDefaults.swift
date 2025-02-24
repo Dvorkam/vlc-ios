@@ -42,6 +42,7 @@
             Keys.showRemainingTime: false,
             Keys.showThumbnails: true,
             Keys.stretchAudio: true,
+            Keys.videoFullscreenPlayback: true,
             Keys.volumeGesture: true,
 
             // numbers
@@ -280,6 +281,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var videoFullscreenPlayback: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.videoFullscreenPlayback)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.videoFullscreenPlayback)
+        }
+    }
+
     @objc var volumeGesture: Bool {
         get {
             userDefaults.bool(forKey: Keys.volumeGesture)
@@ -411,6 +421,7 @@ fileprivate enum Keys {
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
+    static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
     static let volumeGesture = "EnableVolumeGesture"
 
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {

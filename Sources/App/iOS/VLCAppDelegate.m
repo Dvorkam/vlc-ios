@@ -51,7 +51,6 @@
                                   kVLCSettingSubtitlesFontSize : kVLCSettingSubtitlesFontSizeDefaultValue,
                                   kVLCSettingSubtitlesBoldFont: kVLCSettingSubtitlesBoldFontDefaultValue,
                                   kVLCSettingDeinterlace : kVLCSettingDeinterlaceDefaultValue,
-                                  kVLCSettingVideoFullscreenPlayback : @(YES),
                                   kVLCSettingContinuePlayback : @(1),
                                   kVLCSettingContinueAudioPlayback : @(1),
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
