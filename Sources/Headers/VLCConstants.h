@@ -71,8 +71,6 @@
 #define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"
 #define kVLCSettingOpenAppForPlayback @"open-app-for-playback"
 #define kVLCSettingOpenAppForPlaybackDefaultValue @YES
-#define kVLCSettingShowArtworks @"ShowArtworks"
-#define kVLCSettingShowArtworksDefaultValue @YES
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
 #define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
 #define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"

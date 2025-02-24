@@ -679,7 +679,7 @@ enum MediaLibraryOptions {
     static var showAudioArtworks: SettingsItem {
         .toggle(title: "SETTINGS_SHOW_ARTWORKS",
                 subtitle: nil,
-                preferenceKey: kVLCSettingShowArtworks)
+                keyPath: \.showArtworks)
     }
 
     static var includeMediaLibInDeviceBackup: SettingsItem {

@@ -234,6 +234,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var showArtworks: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.showArtworks)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.showArtworks)
+        }
+    }
+
     @objc var showRemainingTime: Bool {
         get {
             userDefaults.bool(forKey: Keys.showRemainingTime)
@@ -387,6 +396,7 @@ fileprivate enum Keys {
     static let playPauseGesture = "EnablePlayPauseGesture"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let seekGesture = "EnableSeekGesture"
+    static let showArtworks = "ShowArtworks"
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
