@@ -41,7 +41,6 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     NSDictionary *appDefaults = @{kVLCSettingContinueAudioInBackgroundKey : @(YES),
-                                  kVLCSettingStretchAudio : @(YES),
                                   kVLCSettingTextEncoding : kVLCSettingTextEncodingDefaultValue,
                                   kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
                                   kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,

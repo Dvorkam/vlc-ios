@@ -630,7 +630,7 @@ enum AudioOptions {
     static var timeStretchingAudio: SettingsItem {
         .toggle(title: "SETTINGS_TIME_STRETCH_AUDIO",
                 subtitle: "SETTINGS_TIME_STRETCH_AUDIO_LONG",
-                preferenceKey: kVLCSettingStretchAudio)
+                keyPath: \.stretchAudio)
     }
 
     static var audioPlaybackInBackground: SettingsItem {

@@ -246,7 +246,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
      * media player instance however, potentially initialising an additional library instance
      * for this is costly, so this should be done only if needed */
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    BOOL audioTimeStretch = [[userDefaults objectForKey:kVLCSettingStretchAudio] boolValue];
+    BOOL audioTimeStretch = VLCDefaults.shared.stretchAudio;
     NSMutableArray *libVLCOptions = [NSMutableArray array];
 #if TARGET_OS_IOS
     BOOL chromecastPassthrough = [[userDefaults objectForKey:kVLCSettingCastingAudioPassthrough] boolValue];
@@ -259,7 +259,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     }
 #endif
     if (!audioTimeStretch) {
-        [libVLCOptions addObject:[NSString stringWithFormat:@"--no-%@", kVLCSettingStretchAudio]];
+        [libVLCOptions addObject:@"--no-audio-time-stretch"];
     }
     if (libVLCOptions.count > 0) {
         _listPlayer = [[VLCMediaListPlayer alloc] initWithOptions:libVLCOptions

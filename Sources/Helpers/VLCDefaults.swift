@@ -29,6 +29,7 @@
             Keys.playlistPlayNextItem: true,
             Keys.restoreLastPlayedMedia: true,
             Keys.showRemainingTime: false,
+            Keys.stretchAudio: true,
 
             // numbers
             Keys.defaultPreampLevel: Float(6),
@@ -140,6 +141,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var stretchAudio: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.stretchAudio)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.stretchAudio)
+        }
+    }
+
     // Numbers
 
     @objc var defaultPreampLevel: Float {
@@ -204,6 +214,7 @@ extension VLCDefaults {
         @objc static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         @objc static let networkCachingKey: String = Keys.networkCaching
+        @objc static let stretchAudioKey: String = Keys.stretchAudio
 
         override init() {
             fatalError("compat struct not intended to be instantiated")
@@ -245,6 +256,7 @@ fileprivate enum Keys {
     static let playlistPlayNextItem = "PlaylistPlayNextItem"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let showRemainingTime = "show-remaining-time"
+    static let stretchAudio = "audio-time-stretch"
 
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {
         [

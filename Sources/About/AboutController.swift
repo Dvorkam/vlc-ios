@@ -196,7 +196,7 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
                                        VLCDefaults.shared.networkCaching.rawValue,
                                        defaults.integer(forKey: kVLCSettingSkipLoopFilter),
                                        defaults.integer(forKey: kVLCSettingNetworkRTSPTCP),
-                                       defaults.integer(forKey: kVLCSettingStretchAudio))
+                                       VLCDefaults.shared.stretchAudio ? 1 : 0) // TODO: unsure
         return prefilledFeedback
     }
 
