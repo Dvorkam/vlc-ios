@@ -419,7 +419,7 @@ enum GestureControlOptions {
     static var longTouchToSpeedUp: SettingsItem {
         .toggle(title: "SETINGS_LONG_TOUCH_SPEED_UP",
                 subtitle: nil,
-                preferenceKey: kVLCSettingPlaybackLongTouchSpeedUp)
+                keyPath: \.playbackLongTouchSpeedUp)
     }
 
     static var lockScreenSkip: SettingsItem {

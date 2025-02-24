@@ -31,6 +31,7 @@
             Keys.hideLibraryInFilesApp: false,
             Keys.passcodeEnableBiometricAuth: true,
             Keys.pauseWhenShowingControls: false,
+            Keys.playbackLongTouchSpeedUp: true,
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
             Keys.playerShowPlaybackSpeedShortcut: false,
@@ -159,6 +160,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.pauseWhenShowingControls)
+        }
+    }
+
+    @objc var playbackLongTouchSpeedUp: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playbackLongTouchSpeedUp)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playbackLongTouchSpeedUp)
         }
     }
 
@@ -389,6 +399,7 @@ fileprivate enum Keys {
     static let networkCaching = "network-caching"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
+    static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let playerShowPlaybackSpeedShortcut = "kVLCPlayerShowPlaybackSpeedShortcut"

@@ -65,7 +65,6 @@
 #define kVLCSettingPlaybackForwardSkipLengthSwipe @"playback-forward-skip-length-swipe"
 #define kVLCSettingPlaybackForwardSkipLengthSwipeDefaultValue @(10)
 #define kVLCSettingPlaybackBackwardSkipLengthSwipe @"playback-backward-skip-length-swipe"
-#define kVLCSettingPlaybackLongTouchSpeedUp @"LongTouchSpeedUp"
 #define kVLCSettingPlaybackBackwardSkipLengthSwipeDefaultValue @(10)
 #define kVLCSettingPlaybackLockscreenSkip @"playback-lockscreen-skip"
 #define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"

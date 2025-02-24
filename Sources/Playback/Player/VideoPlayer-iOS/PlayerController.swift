@@ -65,7 +65,7 @@ class PlayerController: NSObject {
     }
 
     var isSpeedUpGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingPlaybackLongTouchSpeedUp)
+        return VLCDefaults.shared.playbackLongTouchSpeedUp
     }
 
     var isShuffleEnabled: Bool {
