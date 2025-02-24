@@ -349,7 +349,7 @@ enum GestureControlOptions {
     static var swipeUpDownForVolume: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_VOLUME",
                 subtitle: nil,
-                preferenceKey: kVLCSettingVolumeGesture)
+                keyPath: \.volumeGesture)
     }
 
     static var twoFingerTap: SettingsItem {

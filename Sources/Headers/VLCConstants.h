@@ -47,7 +47,6 @@
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
 #define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
-#define kVLCSettingVolumeGesture @"EnableVolumeGesture"
 #define kVLCSettingPlayPauseGesture @"EnablePlayPauseGesture"
 #define kVLCSettingBrightnessGesture @"EnableBrightnessGesture"
 #define kVLCSettingSeekGesture @"EnableSeekGesture"

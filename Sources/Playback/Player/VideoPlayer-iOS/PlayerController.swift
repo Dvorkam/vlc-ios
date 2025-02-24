@@ -45,7 +45,7 @@ class PlayerController: NSObject {
     }
 
     var isVolumeGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingVolumeGesture)
+        return VLCDefaults.shared.volumeGesture
     }
 
     var isPlayPauseGestureEnabled: Bool {

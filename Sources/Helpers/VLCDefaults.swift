@@ -35,6 +35,7 @@
             Keys.restoreLastPlayedMedia: true,
             Keys.showRemainingTime: false,
             Keys.stretchAudio: true,
+            Keys.volumeGesture: true,
 
             // numbers
             Keys.defaultPreampLevel: Float(6),
@@ -200,6 +201,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var volumeGesture: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.volumeGesture)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.volumeGesture)
+        }
+    }
+
     // Numbers
 
     @objc var defaultPreampLevel: Float {
@@ -314,6 +324,7 @@ fileprivate enum Keys {
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let showRemainingTime = "show-remaining-time"
     static let stretchAudio = "audio-time-stretch"
+    static let volumeGesture = "EnableVolumeGesture"
 
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {
         [
