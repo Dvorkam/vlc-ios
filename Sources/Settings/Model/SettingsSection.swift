@@ -730,7 +730,7 @@ enum NetworkOptions {
     static var forceSMBv1: SettingsItem {
         .toggle(title: "SETTINGS_FORCE_SMBV1",
                 subtitle: "SETTINGS_FORCE_SMBV1_LONG",
-                preferenceKey: kVLCForceSMBV1)
+                keyPath: \.forceSMBV1)
     }
 
     static var rtspctp: SettingsItem {

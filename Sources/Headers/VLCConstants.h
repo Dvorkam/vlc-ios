@@ -95,8 +95,6 @@
 #define kVLCSettingPlayerControlDuration @"kVLCSettingPlayerControlDuration"
 #define kVLCSettingPlayerControlDurationDefaultValue @(4)
 
-#define kVLCForceSMBV1 @"smb-force-v1"
-
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"
 #define kVLCPrivateWebStreaming @"private-streaming"

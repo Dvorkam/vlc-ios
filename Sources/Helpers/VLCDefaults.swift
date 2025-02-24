@@ -23,6 +23,7 @@
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
             Keys.enableMediaCellTextScrolling: false,
+            Keys.forceSMBV1: true,
             Keys.hideLibraryInFilesApp: false,
             Keys.pauseWhenShowingControls: false,
             Keys.playerShouldRememberBrightness: false,
@@ -85,6 +86,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.enableMediaCellTextScrolling)
+        }
+    }
+
+    @objc var forceSMBV1: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.forceSMBV1)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.forceSMBV1)
         }
     }
 
@@ -260,6 +270,7 @@ fileprivate enum Keys {
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let defaultPreampLevel = "pre-amp-level"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
+    static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let networkCaching = "network-caching"

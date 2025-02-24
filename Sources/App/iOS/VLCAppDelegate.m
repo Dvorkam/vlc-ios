@@ -81,7 +81,6 @@
                                   kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
                                   kVLCSettingCastingAudioPassthrough : @(NO),
                                   kVLCSettingCastingConversionQuality : @(2),
-                                  kVLCForceSMBV1 : @(YES),
                                   kVLCPlayerIsShuffleEnabled: kVLCPlayerIsShuffleEnabledDefaultValue,
                                   kVLCPlayerIsRepeatEnabled: kVLCPlayerIsRepeatEnabledDefaultValue,
                                   kVLCSettingPlaybackSpeedDefaultValue: @(1.0),
