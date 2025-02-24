@@ -71,8 +71,6 @@
 #define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"
 #define kVLCSettingOpenAppForPlayback @"open-app-for-playback"
 #define kVLCSettingOpenAppForPlaybackDefaultValue @YES
-#define kVLCSettingShowThumbnails @"ShowThumbnails"
-#define kVLCSettingShowThumbnailsDefaultValue @YES
 #define kVLCSettingShowArtworks @"ShowArtworks"
 #define kVLCSettingShowArtworksDefaultValue @YES
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"

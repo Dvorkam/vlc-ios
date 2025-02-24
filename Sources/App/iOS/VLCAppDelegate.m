@@ -69,7 +69,6 @@
                                   kVLCSettingPlaybackLockscreenSkip : @(NO),
                                   kVLCSettingPlaybackRemoteControlSkip : @(NO),
                                   kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
-                                  kVLCSettingShowThumbnails : kVLCSettingShowThumbnailsDefaultValue,
                                   kVLCSettingShowArtworks : kVLCSettingShowArtworksDefaultValue,
                                   kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
                                   kVLCSettingCastingAudioPassthrough : @(NO),

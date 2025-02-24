@@ -673,7 +673,7 @@ enum MediaLibraryOptions {
     static var showVideoThumbnails: SettingsItem {
         .toggle(title: "SETTINGS_SHOW_THUMBNAILS",
                 subtitle: nil,
-                preferenceKey: kVLCSettingShowThumbnails)
+                keyPath: \.showThumbnails)
     }
 
     static var showAudioArtworks: SettingsItem {

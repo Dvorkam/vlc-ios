@@ -39,6 +39,7 @@
             Keys.restoreLastPlayedMedia: true,
             Keys.seekGesture: true,
             Keys.showRemainingTime: false,
+            Keys.showThumbnails: true,
             Keys.stretchAudio: true,
             Keys.volumeGesture: true,
 
@@ -242,6 +243,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var showThumbnails: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.showThumbnails)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.showThumbnails)
+        }
+    }
+
     @objc var stretchAudio: Bool {
         get {
             userDefaults.bool(forKey: Keys.stretchAudio)
@@ -378,6 +388,7 @@ fileprivate enum Keys {
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let seekGesture = "EnableSeekGesture"
     static let showRemainingTime = "show-remaining-time"
+    static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
     static let volumeGesture = "EnableVolumeGesture"
 
