@@ -1721,8 +1721,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 #if !TARGET_OS_TV
     [self savePlaybackState];
 #endif
-    if (![self isPlayingOnExternalScreen]
-        && ![[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioInBackgroundKey] boolValue]) {
+    if (![self isPlayingOnExternalScreen] && !VLCDefaults.shared.continueAudioInBackgroundKey) {
         if ([_mediaPlayer isPlaying]) {
             [_mediaPlayer pause];
             _shouldResumePlaying = YES;

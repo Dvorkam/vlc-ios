@@ -48,7 +48,6 @@
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingTextEncoding @"subsdec-encoding"
 #define kVLCSettingTextEncodingDefaultValue @"Windows-1252"
-#define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingEqualizerProfile @"EqualizerProfile"
 #define kVLCSettingEqualizerProfileDisabled @"EqualizerDisabled"

@@ -44,7 +44,6 @@
     [VLCDefaults.shared registerDefaults];
 
     NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
-                                  kVLCSettingContinueAudioInBackgroundKey : @(YES),
                                   kVLCSettingTextEncoding : kVLCSettingTextEncodingDefaultValue,
                                   kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
                                   kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,

@@ -636,7 +636,7 @@ enum AudioOptions {
     static var audioPlaybackInBackground: SettingsItem {
         .toggle(title: "SETTINGS_BACKGROUND_AUDIO",
                 subtitle: nil,
-                preferenceKey: kVLCSettingContinueAudioInBackgroundKey)
+                keyPath: \.continueAudioInBackgroundKey)
     }
 
     static func section() -> SettingsSection? {

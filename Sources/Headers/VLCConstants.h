@@ -22,7 +22,6 @@
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
 #define kVLCCurrentPlaylistMediasQueue @"currentPlaylistMediasQueue"
-#define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
 #define kVLCSettingTextEncoding @"subsdec-encoding"
 #define kVLCSettingTextEncodingDefaultValue @"Windows-1252"
 #define kVLCSettingSkipLoopFilter @"avcodec-skiploopfilter"

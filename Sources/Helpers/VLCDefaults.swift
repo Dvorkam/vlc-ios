@@ -22,6 +22,7 @@
             // bools
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
+            Keys.continueAudioInBackground: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.forceSMBV1: true,
             Keys.hideLibraryInFilesApp: false,
@@ -79,6 +80,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.automaticallyPlayNextItem)
+        }
+    }
+
+    @objc var continueAudioInBackgroundKey: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.continueAudioInBackground)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.continueAudioInBackground)
         }
     }
 
@@ -288,6 +298,7 @@ fileprivate enum Keys {
     // Changing a value also causes the locally stored value to become unreachable.
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
+    static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let defaultPreampLevel = "pre-amp-level"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let forceSMBV1 = "smb-force-v1"
