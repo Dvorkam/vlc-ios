@@ -49,7 +49,7 @@ class PlayerController: NSObject {
     }
 
     var isPlayPauseGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingPlayPauseGesture)
+        return VLCDefaults.shared.playPauseGesture
     }
 
     var isBrightnessGestureEnabled: Bool {

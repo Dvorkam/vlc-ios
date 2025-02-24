@@ -355,7 +355,7 @@ enum GestureControlOptions {
     static var twoFingerTap: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_PLAYPAUSE",
                 subtitle: nil,
-                preferenceKey: kVLCSettingPlayPauseGesture)
+                keyPath: \.playPauseGesture)
     }
 
     static var swipeUpDownForBrightness: SettingsItem {

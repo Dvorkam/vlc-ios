@@ -32,6 +32,7 @@
             Keys.playerShouldRememberState: true,
             Keys.playerShowPlaybackSpeedShortcut: false,
             Keys.playlistPlayNextItem: true,
+            Keys.playPauseGesture: true,
             Keys.restoreLastPlayedMedia: true,
             Keys.showRemainingTime: false,
             Keys.stretchAudio: true,
@@ -171,6 +172,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.playlistPlayNextItem)
+        }
+    }
+
+    @objc var playPauseGesture: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playPauseGesture)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playPauseGesture)
         }
     }
 
@@ -321,6 +331,7 @@ fileprivate enum Keys {
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let playerShowPlaybackSpeedShortcut = "kVLCPlayerShowPlaybackSpeedShortcut"
     static let playlistPlayNextItem = "PlaylistPlayNextItem"
+    static let playPauseGesture = "EnablePlayPauseGesture"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let showRemainingTime = "show-remaining-time"
     static let stretchAudio = "audio-time-stretch"
