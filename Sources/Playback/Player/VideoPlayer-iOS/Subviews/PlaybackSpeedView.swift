@@ -164,7 +164,7 @@ class PlaybackSpeedView: UIView {
         shortcutLabel.text = NSLocalizedString("DISPLAY_PLAYBACK_SPEED_SHORTCUT", comment: "")
         shortcutLabel.accessibilityLabel = NSLocalizedString("DISPLAY_PLAYBACK_SPEED_SHORTCUT", comment: "")
         shortcutLabel.accessibilityHint = NSLocalizedString("DISPLAY_PLAYBACK_SPEED_SHORTCUT_HINT", comment: "")
-        shortcutSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCPlayerShowPlaybackSpeedShortcut)
+        shortcutSwitch.isOn = VLCDefaults.shared.playerShowPlaybackSpeedShortcut
     }
 
     @objc func playbackSpeedHasChanged(_ notification: NSNotification) {
@@ -345,7 +345,7 @@ class PlaybackSpeedView: UIView {
 
     @IBAction func handleShortcutSwitch(_ sender: Any) {
         let isSwitchOn: Bool = shortcutSwitch.isOn
-        UserDefaults.standard.setValue(isSwitchOn, forKey: kVLCPlayerShowPlaybackSpeedShortcut)
+        VLCDefaults.shared.playerShowPlaybackSpeedShortcut = isSwitchOn
         delegate?.playbackSpeedViewHandleShortcutSwitchChange(displayView: isSwitchOn)
     }
 }

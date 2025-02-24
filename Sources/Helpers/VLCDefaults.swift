@@ -28,6 +28,7 @@
             Keys.pauseWhenShowingControls: false,
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
+            Keys.playerShowPlaybackSpeedShortcut: false,
             Keys.playlistPlayNextItem: true,
             Keys.restoreLastPlayedMedia: true,
             Keys.showRemainingTime: false,
@@ -131,6 +132,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.playerShouldRememberState)
+        }
+    }
+
+    @objc var playerShowPlaybackSpeedShortcut: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playerShowPlaybackSpeedShortcut)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playerShowPlaybackSpeedShortcut)
         }
     }
 
@@ -277,6 +287,7 @@ fileprivate enum Keys {
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
+    static let playerShowPlaybackSpeedShortcut = "kVLCPlayerShowPlaybackSpeedShortcut"
     static let playlistPlayNextItem = "PlaylistPlayNextItem"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let showRemainingTime = "show-remaining-time"
