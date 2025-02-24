@@ -24,6 +24,7 @@
             Keys.automaticallyPlayNextItem: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.hideLibraryInFilesApp: false,
+            Keys.pauseWhenShowingControls: false,
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
             Keys.playlistPlayNextItem: true,
@@ -93,6 +94,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.hideLibraryInFilesApp)
+        }
+    }
+
+    @objc var pauseWhenShowingControls: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.pauseWhenShowingControls)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.pauseWhenShowingControls)
         }
     }
 
@@ -244,6 +254,8 @@ extension VLCDefaults {
 // MARK: - Keys
 
 fileprivate enum Keys {
+    // Avoid ever changing these values. Some are used as parameters in functions.
+    // Changing a value also causes the locally stored value to become unreachable.
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let defaultPreampLevel = "pre-amp-level"
@@ -251,6 +263,7 @@ fileprivate enum Keys {
     static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let networkCaching = "network-caching"
+    static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let playlistPlayNextItem = "PlaylistPlayNextItem"

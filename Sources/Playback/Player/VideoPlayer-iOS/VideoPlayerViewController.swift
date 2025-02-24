@@ -992,7 +992,7 @@ class VideoPlayerViewController: PlayerViewController {
     }
 
     @objc func handleTapOnVideo() {
-        if UserDefaults.standard.bool(forKey: kVLCSettingPauseWhenShowingControls) && playbackService.isPlaying {
+        if VLCDefaults.shared.pauseWhenShowingControls && playbackService.isPlaying {
             playbackService.pause()
         }
 

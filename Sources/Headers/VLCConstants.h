@@ -94,7 +94,6 @@
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 #define kVLCSettingPlayerControlDuration @"kVLCSettingPlayerControlDuration"
 #define kVLCSettingPlayerControlDurationDefaultValue @(4)
-#define kVLCSettingPauseWhenShowingControls @"kVLCSettingPauseWhenShowingControls"
 
 #define kVLCForceSMBV1 @"smb-force-v1"
 

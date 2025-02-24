@@ -762,7 +762,7 @@ enum Accessibility {
     static var pauseWhenShowingControls: SettingsItem {
         .toggle(title: "SETTINGS_PAUSE_WHEN_SHOWING_CONTROLS",
                 subtitle: nil,
-                preferenceKey: kVLCSettingPauseWhenShowingControls)
+                keyPath: \.pauseWhenShowingControls)
     }
 
     static func section() -> SettingsSection? {
