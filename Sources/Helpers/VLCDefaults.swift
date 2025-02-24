@@ -52,6 +52,7 @@
             // other
             Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
             Keys.networkCaching: NetworkCaching.normal.rawValue,
+            Keys.textEncoding: DefaultValues.textEncoding,
         ]
 
         [
@@ -353,6 +354,15 @@ extension VLCDefaults {
         networkCaching.rawValue
     }
 
+    @objc var textEncoding: String {
+        get {
+            userDefaults.string(forKey: Keys.textEncoding) ?? DefaultValues.textEncoding
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.textEncoding)
+        }
+    }
+
     func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
         userDefaults.bool(forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
@@ -373,6 +383,7 @@ extension VLCDefaults {
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let networkCachingKey: String = Keys.networkCaching
+        static let textEncodingKey: String = Keys.textEncoding
 
         override init() {
             fatalError("compat struct not intended to be instantiated")
@@ -431,6 +442,7 @@ fileprivate enum Keys {
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
+    static let textEncoding = "subsdec-encoding"
     static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
     static let volumeGesture = "EnableVolumeGesture"
 
@@ -439,4 +451,10 @@ fileprivate enum Keys {
             "kVLCVideoLibraryGridLayout", collectionModelName, name
         ].compactMap { $0 }.joined()
     }
+}
+
+// MARK: - Default Values
+
+fileprivate enum DefaultValues {
+    static let textEncoding = "Windows-1252"
 }

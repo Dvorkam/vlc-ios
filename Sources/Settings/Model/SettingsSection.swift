@@ -575,7 +575,7 @@ enum SubtitlesOptions {
     }
 
     static var textEncoding: SettingsItem {
-        let k = kVLCSettingTextEncoding
+        let k = VLCDefaults.Compat.textEncodingKey
         return .init(title: "SETTINGS_SUBTITLES_TEXT_ENCODING",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_SUBTITLES_TEXT_ENCODING", preferenceKey: k, hasInfo: true))

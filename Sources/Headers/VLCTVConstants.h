@@ -45,8 +45,6 @@
 #define kVLCSettingSubtitlesFontColor @"quartztext-color"
 #define kVLCSettingSubtitlesFontColorDefaultValue @"16777215"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
-#define kVLCSettingTextEncoding @"subsdec-encoding"
-#define kVLCSettingTextEncodingDefaultValue @"Windows-1252"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingEqualizerProfile @"EqualizerProfile"
 #define kVLCSettingEqualizerProfileDisabled @"EqualizerDisabled"
