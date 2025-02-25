@@ -15,13 +15,10 @@
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
 #define kVLCSettingAppTheme @"darkMode"
 #define kVLCSettingAppThemeBright 0
-#define kVLCSettingAppThemeDark 1
 #define kVLCSettingAppThemeSystem 2
 #define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
-#define kVLCSettingAbout @"about"
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
-#define kVLCCurrentPlaylistMediasQueue @"currentPlaylistMediasQueue"
 #define kVLCSettingSkipLoopFilter @"avcodec-skiploopfilter"
 #define kVLCSettingSkipLoopFilterNone @(0)
 #define kVLCSettingSkipLoopFilterNonRef @(1)
@@ -69,7 +66,6 @@
 #define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
 #define kVLCSettingBackupMediaLibraryDefaultValue @NO
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
-#define kVLCResetSettings @"kVLCResetSettings"
 #define kVLCSettingAlwaysPlayURLs @"kVLCSettingAlwaysPlayURLs"
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 #define kVLCSettingPlayerControlDuration @"kVLCSettingPlayerControlDuration"
