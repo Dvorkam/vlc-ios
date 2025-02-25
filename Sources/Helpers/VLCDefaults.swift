@@ -20,6 +20,7 @@
     @objc func registerDefaults() {
         var dict: [String: Any] = [
             // bools
+            Keys.alwaysPlayURLs: false,
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
             Keys.brightnessGesture: true,
@@ -84,6 +85,15 @@
 extension VLCDefaults {
 
     // Bools
+
+    @objc var alwaysPlayURLs: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.alwaysPlayURLs)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.alwaysPlayURLs)
+        }
+    }
 
     @objc var appThemeBlack: Bool {
         get {
@@ -508,6 +518,7 @@ extension VLCDefaults {
 fileprivate enum Keys {
     // Avoid ever changing these values. Some are used as parameters in functions.
     // Changing a value also causes the locally stored value to become unreachable.
+    static let alwaysPlayURLs = "kVLCSettingAlwaysPlayURLs"
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let brightnessGesture = "EnableBrightnessGesture"
