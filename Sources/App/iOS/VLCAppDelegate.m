@@ -57,8 +57,7 @@
                                   kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
                                   kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
                                   kVLCSettingCastingConversionQuality : @(2),
-                                  kVLCSettingPlaybackSpeedDefaultValue: @(1.0),
-                                  kVLCSettingPlayerControlDuration: kVLCSettingPlayerControlDurationDefaultValue
+                                  kVLCSettingPlaybackSpeedDefaultValue: @(1.0)
     };
     [defaults registerDefaults:appDefaults];
 }

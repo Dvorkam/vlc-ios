@@ -1349,8 +1349,7 @@ class VideoPlayerViewController: PlayerViewController {
     }
 
     private func resetIdleTimer() {
-        let intervalSetting = UserDefaults.standard
-            .integer(forKey: kVLCSettingPlayerControlDuration)
+        let intervalSetting = VLCDefaults.shared.playerControlDuration
 
         let interval = TimeInterval(max(intervalSetting, 4))
 

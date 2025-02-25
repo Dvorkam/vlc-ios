@@ -58,8 +58,6 @@
 #define kVLCSettingBackupMediaLibraryDefaultValue @NO
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
-#define kVLCSettingPlayerControlDuration @"kVLCSettingPlayerControlDuration"
-#define kVLCSettingPlayerControlDurationDefaultValue @(4)
 
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"

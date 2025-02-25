@@ -753,10 +753,10 @@ enum NetworkOptions {
 
 enum Accessibility {
     static var playerControlDuration: SettingsItem {
-        let k = kVLCSettingPlayerControlDuration
+        let k = VLCDefaults.Compat.playerControlDurationKey
         return .init(title: "SETTINGS_PLAYER_CONTROL_DURATION",
                      subtitle: Localizer.getSubtitle(for: k),
-                     action: .showActionSheet(title: "SETTINGS_PLAYER_CONTROL_DURATION", preferenceKey: kVLCSettingPlayerControlDuration, hasInfo: false))
+                     action: .showActionSheet(title: "SETTINGS_PLAYER_CONTROL_DURATION", preferenceKey: k, hasInfo: false))
     }
 
     static var pauseWhenShowingControls: SettingsItem {
