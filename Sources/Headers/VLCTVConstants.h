@@ -47,7 +47,6 @@
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingEqualizerProfile @"EqualizerProfile"
-#define kVLCSettingEqualizerProfileDisabled @"EqualizerDisabled"
 #define kVLCSettingEqualizerProfileDefaultValue @(0)
 #define kVLCSettingPlaybackForwardSkipLength @"playback-forward-skip-length"
 #define kVLCSettingPlaybackForwardSkipLengthDefaultValue @(10)

@@ -27,6 +27,7 @@
             Keys.continueAudioInBackground: true,
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
+            Keys.equalizerProfileDisabled: true,
             Keys.forceSMBV1: true,
             Keys.hideLibraryInFilesApp: false,
             Keys.networkRTSPTCP: false,
@@ -136,6 +137,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.enableMediaCellTextScrolling)
+        }
+    }
+
+    @objc var equalizerProfileDisabled: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.equalizerProfileDisabled)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.equalizerProfileDisabled)
         }
     }
 
@@ -423,6 +433,7 @@ fileprivate enum Keys {
     static let defaultPreampLevel = "pre-amp-level"
     static let downloadArtwork = "download-artwork"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
+    static let equalizerProfileDisabled = "EqualizerDisabled"
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"

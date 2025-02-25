@@ -341,7 +341,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     }
 
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    BOOL equalizerEnabled = ![userDefaults boolForKey:kVLCSettingEqualizerProfileDisabled];
+    BOOL equalizerEnabled = !VLCDefaults.shared.equalizerProfileDisabled;
 
     VLCAudioEqualizer *equalizer;
 
@@ -1403,7 +1403,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (profile == 0) {
         _mediaPlayer.equalizer = nil;
-        [userDefaults setBool:YES forKey:kVLCSettingEqualizerProfileDisabled];
+        VLCDefaults.shared.equalizerProfileDisabled = YES;
 
         float preampValue = VLCDefaults.shared.defaultPreampLevel;
         if (preampValue != 6.0) {
@@ -1415,7 +1415,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return;
     }
 
-    [userDefaults setBool:NO forKey:kVLCSettingEqualizerProfileDisabled];
+    VLCDefaults.shared.equalizerProfileDisabled = NO;
 
     unsigned int actualProfile = profile - 1;
     [userDefaults setInteger:actualProfile forKey:kVLCSettingEqualizerProfile];
@@ -1472,7 +1472,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     /* this is a bit complex, if the eq is off, we need to return 0
      * if it is on, we need to provide the profile + 1 as the UI fakes a "Off" profile in its list */
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults boolForKey:kVLCSettingEqualizerProfileDisabled]) {
+    if (VLCDefaults.shared.equalizerProfileDisabled) {
         return [NSIndexPath indexPathForRow:0 inSection:0];
     }
 

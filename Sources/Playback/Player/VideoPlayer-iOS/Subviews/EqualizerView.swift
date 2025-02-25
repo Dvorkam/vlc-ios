@@ -462,7 +462,7 @@ extension EqualizerView {
             let userDefaults = UserDefaults.standard
             userDefaults.setValue(NSKeyedArchiver.archivedData(withRootObject: customProfiles), forKey: kVLCCustomEqualizerProfiles)
             userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
-            userDefaults.setValue(false, forKey: kVLCSettingEqualizerProfileDisabled)
+            VLCDefaults.shared.equalizerProfileDisabled = false
             userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
 
             self.presetSelectorView?.presetsTableView.reloadData()
@@ -480,7 +480,7 @@ extension EqualizerView {
 
     @objc func resetEqualizer() {
         let userDefaults = UserDefaults.standard
-        let isEqualizerDisabled = userDefaults.bool(forKey: kVLCSettingEqualizerProfileDisabled)
+        let isEqualizerDisabled = VLCDefaults.shared.equalizerProfileDisabled
         let isCustomProfile = userDefaults.bool(forKey: kVLCCustomProfileEnabled)
 
         let profile: Int
@@ -519,7 +519,7 @@ extension EqualizerView {
         }
 
         userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
-        userDefaults.setValue(false, forKey: kVLCSettingEqualizerProfileDisabled)
+        VLCDefaults.shared.equalizerProfileDisabled = false
         userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
     }
 

@@ -55,7 +55,6 @@
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCSettingNetworkSatIPChannelListUrl : @"",
                                   kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,
-                                  kVLCSettingEqualizerProfileDisabled : @(YES),
                                   kVLCSettingPlaybackForwardBackwardEqual: @(YES),
                                   kVLCSettingPlaybackTapSwipeEqual:  @(YES),
                                   kVLCSettingPlaybackForwardSkipLength : kVLCSettingPlaybackForwardSkipLengthDefaultValue,
