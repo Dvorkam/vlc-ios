@@ -200,7 +200,7 @@ const float MediaTimerInterval = 2.f;
                     }
                 }
             }
-            BOOL backupMediaLibrary = [NSUserDefaults.standardUserDefaults boolForKey:kVLCSettingBackupMediaLibrary];
+            BOOL backupMediaLibrary = VLCDefaults.shared.backupMediaLibrary;
             NSURL *fileURL = [NSURL fileURLWithPath:filePath];
             [fileURL setExcludedFromBackup:!backupMediaLibrary recursive:NO onlyFirstLevel:NO :nil];
 

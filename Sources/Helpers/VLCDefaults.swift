@@ -23,6 +23,7 @@
             Keys.alwaysPlayURLs: false,
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
+            Keys.backupMediaLibrary: false,
             Keys.brightnessGesture: true,
             Keys.castingAudioPassthrough: false,
             Keys.closeGesture: true,
@@ -113,6 +114,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.automaticallyPlayNextItem)
+        }
+    }
+
+    @objc var backupMediaLibrary: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.backupMediaLibrary)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.backupMediaLibrary)
         }
     }
 
@@ -519,6 +529,7 @@ extension VLCDefaults {
     @objc(VLCDefaultsCompat)
     final class Compat: NSObject {
         static let automaticallyPlayNextItemKey: String = Keys.automaticallyPlayNextItem
+        static let backupMediaLibraryKey: String = Keys.backupMediaLibrary
         static let continueAudioPlaybackKey: String = Keys.continueAudioPlayback
         static let continuePlaybackKey: String = Keys.continuePlayback
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
@@ -564,6 +575,7 @@ fileprivate enum Keys {
     static let alwaysPlayURLs = "kVLCSettingAlwaysPlayURLs"
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
+    static let backupMediaLibrary = "BackupMediaLibrary"
     static let brightnessGesture = "EnableBrightnessGesture"
     static let castingAudioPassthrough = "sout-chromecast-audio-passthrough"
     static let closeGesture = "EnableCloseGesture"

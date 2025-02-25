@@ -434,7 +434,7 @@ extension SettingsController: SettingsCellDelegate {
             passcodeLockSwitchOn(state: isOn)
         case VLCDefaults.Compat.hideLibraryInFilesAppKey:
             medialibraryHidingLockSwitchOn(state: isOn)
-        case kVLCSettingBackupMediaLibrary:
+        case VLCDefaults.Compat.backupMediaLibraryKey:
             mediaLibraryBackupActivateSwitchOn(state: isOn)
         case kVLCSettingsDisableGrouping:
             medialibraryDisableGroupingSwitchOn(state: isOn)

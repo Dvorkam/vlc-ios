@@ -685,7 +685,7 @@ enum MediaLibraryOptions {
     static var includeMediaLibInDeviceBackup: SettingsItem {
         .toggle(title: "SETTINGS_BACKUP_MEDIA_LIBRARY",
                 subtitle: nil,
-                preferenceKey: kVLCSettingBackupMediaLibrary)
+                keyPath: \.backupMediaLibrary)
     }
 
     static var includeMediaLibInDeviceBackupWhenBackingUp: SettingsItem {

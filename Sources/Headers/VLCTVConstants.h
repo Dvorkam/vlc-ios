@@ -59,8 +59,6 @@
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCPlayerUIShouldHide @"PlayerUIShouldHide"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"
-#define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
-#define kVLCSettingBackupMediaLibraryDefaultValue @NO
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"

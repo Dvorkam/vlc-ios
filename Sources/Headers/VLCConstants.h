@@ -53,8 +53,6 @@
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
 #define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
 #define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
-#define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
-#define kVLCSettingBackupMediaLibraryDefaultValue @NO
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 
