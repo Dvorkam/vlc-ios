@@ -49,8 +49,6 @@
 #define kVLCSettingPlaybackForwardSkipLengthDefaultValue @(10)
 #define kVLCSettingPlaybackBackwardSkipLength @"playback-backward-skip-length"
 #define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
-#define kVLCSettingPlaybackForwardSkipLengthSwipe @"playback-forward-skip-length-swipe"
-#define kVLCSettingPlaybackForwardSkipLengthSwipeDefaultValue @(10)
 #define kVLCSettingPlaybackBackwardSkipLengthSwipe @"playback-backward-skip-length-swipe"
 #define kVLCSettingPlaybackBackwardSkipLengthSwipeDefaultValue @(10)
 #define kVLCSettingPlaybackLockscreenSkip @"playback-lockscreen-skip"

@@ -403,7 +403,7 @@ enum GestureControlOptions {
     }
 
     static var forwardSkipLengthSwipe: SettingsItem {
-        let k = kVLCSettingPlaybackForwardSkipLengthSwipe
+        let k = VLCDefaults.Compat.playbackForwardSkipLengthSwipeKey
         return .init(title: dynamicForwardSwipeDescription(),
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: dynamicForwardSwipeDescription(), preferenceKey: k, hasInfo: false))

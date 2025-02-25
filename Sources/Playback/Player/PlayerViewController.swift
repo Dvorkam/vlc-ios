@@ -742,7 +742,7 @@ class PlayerViewController: UIViewController {
         forwardBackwardEqual = VLCDefaults.shared.playbackForwardBackwardEqual
         seekForwardBy = defaults.integer(forKey: kVLCSettingPlaybackForwardSkipLength)
         seekBackwardBy = forwardBackwardEqual ? seekForwardBy : defaults.integer(forKey: kVLCSettingPlaybackBackwardSkipLength)
-        seekForwardBySwipe = tapSwipeEqual ? seekForwardBy : defaults.integer(forKey: kVLCSettingPlaybackForwardSkipLengthSwipe)
+        seekForwardBySwipe = tapSwipeEqual ? seekForwardBy : VLCDefaults.shared.playbackForwardSkipLengthSwipe
 
         if tapSwipeEqual, forwardBackwardEqual {
             // if tap = swipe, and backward = forward, then backward swipe = forward tap

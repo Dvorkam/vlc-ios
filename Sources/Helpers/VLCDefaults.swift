@@ -56,6 +56,7 @@
             Keys.continueAudioPlayback: 1,
             Keys.continuePlayback: 1,
             Keys.defaultPreampLevel: Float(6),
+            Keys.playbackForwardSkipLengthSwipe: 10,
 
             // other
             Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
@@ -403,6 +404,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var playbackForwardSkipLengthSwipe: Int {
+        get {
+            userDefaults.integer(forKey: Keys.playbackForwardSkipLengthSwipe)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playbackForwardSkipLengthSwipe)
+        }
+    }
+
     // Other
 
     var hardwareDecoding: HardwareDecoding {
@@ -486,6 +496,7 @@ extension VLCDefaults {
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let networkCachingKey: String = Keys.networkCaching
+        static let playbackForwardSkipLengthSwipeKey: String = Keys.playbackForwardSkipLengthSwipe
         static let textEncodingKey: String = Keys.textEncoding
 
         override init() {
@@ -540,6 +551,7 @@ fileprivate enum Keys {
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackForwardBackwardEqual = "playback-forward-backward-equal"
+    static let playbackForwardSkipLengthSwipe = "playback-forward-skip-length-swipe"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
     static let playbackTapSwipeEqual = "playback-tap-swipe-equal"
     static let playerIsRepeatEnabled = "PlayerIsRepeatEnabled"
@@ -571,5 +583,6 @@ fileprivate enum Keys {
 fileprivate enum DefaultValues {
     static let textEncoding = "Windows-1252"
     static let networkSatIPChannelListUrl = ""
+    static let playbackForwardSkipLengthSwipe = 10
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
 }
