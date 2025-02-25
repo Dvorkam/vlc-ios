@@ -65,7 +65,6 @@
 #define kVLCSettingOpenAppForPlaybackDefaultValue @YES
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
 #define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
-#define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
 #define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
 #define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
 #define kVLCSettingBackupMediaLibraryDefaultValue @NO

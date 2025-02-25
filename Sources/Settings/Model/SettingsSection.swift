@@ -599,7 +599,7 @@ enum CastingOptions {
     static var audioPassThrough: SettingsItem {
         .toggle(title: "SETTINGS_PTCASTING",
                 subtitle: "SETTINGS_PTCASTINGLONG",
-                preferenceKey: kVLCSettingCastingAudioPassthrough)
+                keyPath: \.castingAudioPassthrough)
     }
 
     static var conversionQuality: SettingsItem {

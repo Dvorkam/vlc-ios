@@ -23,6 +23,7 @@
             Keys.appThemeBlack: false,
             Keys.automaticallyPlayNextItem: true,
             Keys.brightnessGesture: true,
+            Keys.castingAudioPassthrough: false,
             Keys.closeGesture: true,
             Keys.continueAudioInBackground: true,
             Keys.downloadArtwork: true,
@@ -103,6 +104,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.brightnessGesture)
+        }
+    }
+
+    @objc var castingAudioPassthrough: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.castingAudioPassthrough)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.castingAudioPassthrough)
         }
     }
 
@@ -450,6 +460,7 @@ fileprivate enum Keys {
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let brightnessGesture = "EnableBrightnessGesture"
+    static let castingAudioPassthrough = "sout-chromecast-audio-passthrough"
     static let closeGesture = "EnableCloseGesture"
     static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let continueAudioPlayback = "ContinueAudioPlayback"
