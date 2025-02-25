@@ -48,8 +48,6 @@
 #define kVLCSettingPlaybackForwardSkipLengthDefaultValue @(10)
 #define kVLCSettingPlaybackBackwardSkipLength @"playback-backward-skip-length"
 #define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
-#define kVLCSettingOpenAppForPlayback @"open-app-for-playback"
-#define kVLCSettingOpenAppForPlaybackDefaultValue @YES
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
 #define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
 #define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
