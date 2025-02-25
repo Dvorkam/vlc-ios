@@ -36,6 +36,7 @@
             Keys.pauseWhenShowingControls: false,
             Keys.playbackForwardBackwardEqual: true,
             Keys.playbackLongTouchSpeedUp: true,
+            Keys.playbackTapSwipeEqual: true,
             Keys.playerIsShuffleEnabled: false,
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
@@ -216,6 +217,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.playbackLongTouchSpeedUp)
+        }
+    }
+
+    @objc var playbackTapSwipeEqual: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playbackTapSwipeEqual)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playbackTapSwipeEqual)
         }
     }
 
@@ -520,6 +530,7 @@ fileprivate enum Keys {
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackForwardBackwardEqual = "playback-forward-backward-equal"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
+    static let playbackTapSwipeEqual = "playback-tap-swipe-equal"
     static let playerIsRepeatEnabled = "PlayerIsRepeatEnabled"
     static let playerIsShuffleEnabled = "PlayerIsShuffleEnabled"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"

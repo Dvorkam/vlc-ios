@@ -867,7 +867,7 @@ class VideoPlayerViewController: PlayerViewController {
     private func setupSeekDurations() {
         let defaults = UserDefaults.standard
 
-        tapSwipeEqual = defaults.bool(forKey: kVLCSettingPlaybackTapSwipeEqual)
+        tapSwipeEqual = VLCDefaults.shared.playbackTapSwipeEqual
         forwardBackwardEqual = VLCDefaults.shared.playbackForwardBackwardEqual
         seekForwardBy = defaults.integer(forKey: kVLCSettingPlaybackForwardSkipLength)
         seekBackwardBy = forwardBackwardEqual ? seekForwardBy : defaults.integer(forKey: kVLCSettingPlaybackBackwardSkipLength)

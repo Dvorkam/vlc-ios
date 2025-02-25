@@ -52,7 +52,6 @@
                                   kVLCSettingDeinterlace : kVLCSettingDeinterlaceDefaultValue,
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,
-                                  kVLCSettingPlaybackTapSwipeEqual:  @(YES),
                                   kVLCSettingPlaybackForwardSkipLength : kVLCSettingPlaybackForwardSkipLengthDefaultValue,
                                   kVLCSettingPlaybackBackwardSkipLength : kVLCSettingPlaybackBackwardSkipLengthDefaultValue,
                                   kVLCSettingPlaybackForwardSkipLengthSwipe : kVLCSettingPlaybackForwardSkipLengthSwipeDefaultValue,

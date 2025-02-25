@@ -308,7 +308,7 @@ extension SettingsController {
             .sections(isLabActivated: isLabActivated,
                       isBackingUp: isBackingUp,
                       isForwardBackwardEqual: VLCDefaults.shared.playbackForwardBackwardEqual,
-                      isTapSwipeEqual: userDefaults.bool(forKey: kVLCSettingPlaybackTapSwipeEqual))
+                      isTapSwipeEqual: VLCDefaults.shared.playbackTapSwipeEqual)
     }
 
     override func numberOfSections(in _: UITableView) -> Int {
