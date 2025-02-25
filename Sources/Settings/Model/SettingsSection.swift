@@ -227,7 +227,7 @@ enum DonationOptions {
 
 enum GenericOptions {
     static var defaultPlaybackSpeed: SettingsItem {
-        let k = kVLCSettingPlaybackSpeedDefaultValue
+        let k = VLCDefaults.Compat.playbackSpeedDefaultValueKey
         return .init(title: "SETTINGS_PLAYBACK_SPEED_DEFAULT",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_PLAYBACK_SPEED_DEFAULT", preferenceKey: k, hasInfo: false))

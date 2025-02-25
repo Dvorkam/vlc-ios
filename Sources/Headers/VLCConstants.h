@@ -40,7 +40,6 @@
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
-#define kVLCSettingPlaybackSpeedDefaultValue @"playback-speed"
 #define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
 #define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
 #define kVLCSettingEqualizerProfile @"EqualizerProfile"

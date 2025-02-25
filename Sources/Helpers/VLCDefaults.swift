@@ -424,6 +424,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var playbackSpeedDefaultValue: Float {
+        get {
+            userDefaults.float(forKey: Keys.playbackSpeedDefaultValue)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playbackSpeedDefaultValue)
+        }
+    }
+
     @objc var playerControlDuration: Int {
         get {
             userDefaults.integer(forKey: Keys.playerControlDuration)
@@ -518,6 +527,7 @@ extension VLCDefaults {
         static let networkCachingKey: String = Keys.networkCaching
         static let playbackBackwardSkipLengthSwipeKey: String = Keys.playbackBackwardSkipLengthSwipe
         static let playbackForwardSkipLengthSwipeKey: String = Keys.playbackForwardSkipLengthSwipe
+        static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
         static let textEncodingKey: String = Keys.textEncoding
 
@@ -576,6 +586,7 @@ fileprivate enum Keys {
     static let playbackBackwardSkipLengthSwipe = "playback-backward-skip-length-swipe"
     static let playbackForwardSkipLengthSwipe = "playback-forward-skip-length-swipe"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
+    static let playbackSpeedDefaultValue = "playback-speed"
     static let playbackTapSwipeEqual = "playback-tap-swipe-equal"
     static let playerControlDuration = "kVLCSettingPlayerControlDuration"
     static let playerIsRepeatEnabled = "PlayerIsRepeatEnabled"
@@ -609,6 +620,7 @@ fileprivate enum DefaultValues {
     static let networkSatIPChannelListUrl = ""
     static let playbackBackwardSkipLengthSwipe = 10
     static let playbackForwardSkipLengthSwipe = 10
+    static let playbackSpeedDefaultValue = Float(1)
     static let playerControlDuration = 4
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
 }
