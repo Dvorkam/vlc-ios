@@ -347,7 +347,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
     if (equalizerEnabled) {
         NSArray *presets = [VLCAudioEqualizer presets];
-        unsigned int profile = (unsigned int)[userDefaults integerForKey:kVLCSettingEqualizerProfile];
+        unsigned int profile = (unsigned int)VLCDefaults.shared.equalizerProfile;
         equalizer = [[VLCAudioEqualizer alloc] initWithPreset:presets[profile]];
     } else {
         float preampValue = VLCDefaults.shared.defaultPreampLevel;
@@ -1418,7 +1418,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     VLCDefaults.shared.equalizerProfileDisabled = NO;
 
     unsigned int actualProfile = profile - 1;
-    [userDefaults setInteger:actualProfile forKey:kVLCSettingEqualizerProfile];
+    VLCDefaults.shared.equalizerProfile = actualProfile;
 
     NSArray *presets = [VLCAudioEqualizer presets];
     VLCAudioEqualizer *equalizer = [[VLCAudioEqualizer alloc] initWithPreset:presets[actualProfile]];
@@ -1476,7 +1476,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return [NSIndexPath indexPathForRow:0 inSection:0];
     }
 
-    unsigned int actualProfile = (unsigned int)[userDefaults integerForKey:kVLCSettingEqualizerProfile];
+    unsigned int actualProfile = (unsigned int)VLCDefaults.shared.equalizerProfile;
     if (![userDefaults boolForKey:kVLCCustomProfileEnabled]) {
         return [NSIndexPath indexPathForRow:actualProfile + 1 inSection:0];
     } else {

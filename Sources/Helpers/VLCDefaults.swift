@@ -58,6 +58,7 @@
             Keys.continuePlayback: 1,
             Keys.defaultPreampLevel: Float(6),
             Keys.deinterlace: DefaultValues.deinterlace,
+            Keys.equalizerProfile: DefaultValues.equalizerProfile,
             Keys.playbackBackwardSkipLengthSwipe: DefaultValues.playbackBackwardSkipLengthSwipe,
             Keys.playbackForwardSkipLengthSwipe: DefaultValues.playbackForwardSkipLengthSwipe,
             Keys.playerControlDuration: DefaultValues.playerControlDuration,
@@ -426,6 +427,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var equalizerProfile: Int {
+        get {
+            userDefaults.integer(forKey: Keys.equalizerProfile)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.equalizerProfile)
+        }
+    }
+
     @objc var playbackBackwardSkipLengthSwipe: Int {
         get {
             userDefaults.integer(forKey: Keys.playbackBackwardSkipLengthSwipe)
@@ -597,6 +607,7 @@ fileprivate enum Keys {
     static let deinterlace = "deinterlace"
     static let downloadArtwork = "download-artwork"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
+    static let equalizerProfile = "EqualizerProfile"
     static let equalizerProfileDisabled = "EqualizerDisabled"
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
@@ -641,6 +652,7 @@ fileprivate enum Keys {
 
 fileprivate enum DefaultValues {
     static let deinterlace = Int(-1)
+    static let equalizerProfile = Int(0)
     static let textEncoding = "Windows-1252"
     static let networkSatIPChannelListUrl = ""
     static let playbackBackwardSkipLengthSwipe = 10

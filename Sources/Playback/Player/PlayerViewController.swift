@@ -765,7 +765,7 @@ class PlayerViewController: UIViewController {
             return
         }
 
-        let profileIndex = userDefaults.integer(forKey: kVLCSettingEqualizerProfile)
+        let profileIndex = VLCDefaults.shared.equalizerProfile
         let encodedData = userDefaults.data(forKey: kVLCCustomEqualizerProfiles)
 
         guard let encodedData = encodedData,

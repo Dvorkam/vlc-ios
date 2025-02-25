@@ -463,7 +463,7 @@ extension EqualizerView {
             userDefaults.setValue(NSKeyedArchiver.archivedData(withRootObject: customProfiles), forKey: kVLCCustomEqualizerProfiles)
             userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
             VLCDefaults.shared.equalizerProfileDisabled = false
-            userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
+            VLCDefaults.shared.equalizerProfile = index
 
             self.presetSelectorView?.presetsTableView.reloadData()
             self.shouldDisplaySaveButton(false)
@@ -485,10 +485,10 @@ extension EqualizerView {
 
         let profile: Int
         if !isCustomProfile {
-            profile = isEqualizerDisabled ? 0 : userDefaults.integer(forKey: kVLCSettingEqualizerProfile) + 1
+            profile = isEqualizerDisabled ? 0 : VLCDefaults.shared.equalizerProfile + 1
             delegate?.resetEqualizer(fromProfile: UInt32(profile))
         } else {
-            profile = userDefaults.integer(forKey: kVLCSettingEqualizerProfile)
+            profile = VLCDefaults.shared.equalizerProfile
             applyCustomProfile(profile)
         }
 
@@ -518,7 +518,7 @@ extension EqualizerView {
             playbackService.setAmplification(CGFloat(frequency), forBand: UInt32(bandIndex))
         }
 
-        userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
+        VLCDefaults.shared.equalizerProfile = index
         VLCDefaults.shared.equalizerProfileDisabled = false
         userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
     }
