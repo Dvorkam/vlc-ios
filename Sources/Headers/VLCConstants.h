@@ -90,8 +90,6 @@
 #define KVLCPlayerBrightness @"playerbrightness"
 #define kVLCPlayerIsShuffleEnabled @"PlayerIsShuffleEnabled"
 #define kVLCPlayerIsShuffleEnabledDefaultValue @NO
-#define kVLCPlayerIsRepeatEnabled @"PlayerIsRepeatEnabled"
-#define kVLCPlayerIsRepeatEnabledDefaultValue @(0)
 
 #define kVLCCustomProfileEnabled @"kVLCCustomProfileEnabled"
 #define kVLCCustomEqualizerProfiles @"kVLCCustomEqualizerProfiles"

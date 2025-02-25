@@ -486,8 +486,7 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         if (VLCDefaults.shared.playerShouldRememberState) {
             _playbackController.shuffleMode = [userDefaults boolForKey:kVLCPlayerIsShuffleEnabled];
-            NSInteger repeatMode = [userDefaults integerForKey:kVLCPlayerIsRepeatEnabled];
-            _playbackController.repeatMode = repeatMode;
+            _playbackController.repeatMode = VLCDefaults.shared.playerIsRepeatEnabled;
         }
 
         [self addPlayqueueToMiniPlayer];

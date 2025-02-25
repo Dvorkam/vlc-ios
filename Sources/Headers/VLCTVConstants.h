@@ -68,8 +68,6 @@
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
 #define kVLCPlayerIsShuffleEnabled @"PlayerIsShuffleEnabled"
 #define kVLCPlayerIsShuffleEnabledDefaultValue @NO
-#define kVLCPlayerIsRepeatEnabled @"PlayerIsRepeatEnabled"
-#define kVLCPlayerIsRepeatEnabledDefaultValue @(0)
 
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"

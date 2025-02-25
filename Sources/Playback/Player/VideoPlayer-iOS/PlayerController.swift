@@ -73,9 +73,7 @@ class PlayerController: NSObject {
     }
 
     var isRepeatEnabled: VLCRepeatMode {
-        let storedValue = UserDefaults.standard.integer(forKey: kVLCPlayerIsRepeatEnabled)
-
-        return VLCRepeatMode(rawValue: storedValue) ?? .doNotRepeat
+        return VLCDefaults.shared.playerIsRepeatEnabled
     }
 
     var isRememberStateEnabled: Bool {

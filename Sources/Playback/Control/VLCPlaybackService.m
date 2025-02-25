@@ -323,7 +323,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
     [_listPlayer setMediaList:self.mediaList];
     if (VLCDefaults.shared.playerShouldRememberState) {
-        VLCRepeatMode repeatMode = [defaults integerForKey:kVLCPlayerIsRepeatEnabled];
+        VLCRepeatMode repeatMode = VLCDefaults.shared.playerIsRepeatEnabled;
         [_listPlayer setRepeatMode:repeatMode];
     }
 
@@ -582,7 +582,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (VLCDefaults.shared.playerShouldRememberState) {
-        [defaults setInteger:repeatMode forKey:kVLCPlayerIsRepeatEnabled];
+        VLCDefaults.shared.playerIsRepeatEnabled = repeatMode;
     }
 }
 

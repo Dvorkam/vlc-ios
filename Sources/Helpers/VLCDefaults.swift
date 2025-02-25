@@ -56,6 +56,7 @@
             // other
             Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
             Keys.networkCaching: NetworkCaching.normal.rawValue,
+            Keys.playerIsRepeatEnabled: DefaultValues.playerRepeatMode,
             Keys.textEncoding: DefaultValues.textEncoding,
         ]
 
@@ -394,6 +395,16 @@ extension VLCDefaults {
         networkCaching.rawValue
     }
 
+    @objc var playerIsRepeatEnabled: VLCRepeatMode {
+        get {
+            let v = userDefaults.integer(forKey: Keys.playerIsRepeatEnabled)
+            return VLCRepeatMode(rawValue: v) ?? DefaultValues.playerRepeatMode
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playerIsRepeatEnabled)
+        }
+    }
+
     @objc var textEncoding: String {
         get {
             userDefaults.string(forKey: Keys.textEncoding) ?? DefaultValues.textEncoding
@@ -477,6 +488,7 @@ fileprivate enum Keys {
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
+    static let playerIsRepeatEnabled = "PlayerIsRepeatEnabled"
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let playerShowPlaybackSpeedShortcut = "kVLCPlayerShowPlaybackSpeedShortcut"
@@ -503,4 +515,5 @@ fileprivate enum Keys {
 
 fileprivate enum DefaultValues {
     static let textEncoding = "Windows-1252"
+    static let playerRepeatMode = VLCRepeatMode.doNotRepeat
 }
