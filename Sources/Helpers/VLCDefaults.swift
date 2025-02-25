@@ -48,6 +48,7 @@
             Keys.volumeGesture: true,
 
             // numbers
+            Keys.continueAudioPlayback: 1,
             Keys.continuePlayback: 1,
             Keys.defaultPreampLevel: Float(6),
 
@@ -323,6 +324,15 @@ extension VLCDefaults {
 
     // Numbers
 
+    @objc var continueAudioPlayback: Int {
+        get {
+            userDefaults.integer(forKey: Keys.continueAudioPlayback)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.continueAudioPlayback)
+        }
+    }
+
     @objc var continuePlayback: Int {
         get {
             userDefaults.integer(forKey: Keys.continuePlayback)
@@ -399,6 +409,7 @@ extension VLCDefaults {
     @objc(VLCDefaultsCompat)
     final class Compat: NSObject {
         static let automaticallyPlayNextItemKey: String = Keys.automaticallyPlayNextItem
+        static let continueAudioPlaybackKey: String = Keys.continueAudioPlayback
         static let continuePlaybackKey: String = Keys.continuePlayback
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
@@ -441,6 +452,7 @@ fileprivate enum Keys {
     static let brightnessGesture = "EnableBrightnessGesture"
     static let closeGesture = "EnableCloseGesture"
     static let continueAudioInBackground = "BackgroundAudioPlayback"
+    static let continueAudioPlayback = "ContinueAudioPlayback"
     static let continuePlayback = "ContinuePlayback"
     static let defaultPreampLevel = "pre-amp-level"
     static let downloadArtwork = "download-artwork"

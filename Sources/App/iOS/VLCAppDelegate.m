@@ -50,7 +50,6 @@
                                   kVLCSettingSubtitlesFontSize : kVLCSettingSubtitlesFontSizeDefaultValue,
                                   kVLCSettingSubtitlesBoldFont: kVLCSettingSubtitlesBoldFontDefaultValue,
                                   kVLCSettingDeinterlace : kVLCSettingDeinterlaceDefaultValue,
-                                  kVLCSettingContinueAudioPlayback : @(1),
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCSettingNetworkSatIPChannelListUrl : @"",
                                   kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,

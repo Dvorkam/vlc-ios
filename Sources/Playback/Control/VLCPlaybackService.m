@@ -1600,7 +1600,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             if (!libraryMedia.isPodcast) {
                 return;
             }
-            continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioPlayback] integerValue];
+            continuePlayback = VLCDefaults.shared.continueAudioPlayback;
         } else {
             continuePlayback = VLCDefaults.shared.continuePlayback;
         }

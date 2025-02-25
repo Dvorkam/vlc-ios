@@ -234,7 +234,7 @@ enum GenericOptions {
     }
 
     static var continueAudioPlayback: SettingsItem {
-        let k = kVLCSettingContinueAudioPlayback
+        let k = VLCDefaults.Compat.continueAudioPlaybackKey
         return .init(title: "SETTINGS_CONTINUE_AUDIO_PLAYBACK",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_CONTINUE_AUDIO_PLAYBACK", preferenceKey: k, hasInfo: true))
