@@ -57,6 +57,7 @@
             // other
             Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
             Keys.networkCaching: NetworkCaching.normal.rawValue,
+            Keys.networkSatIPChannelListUrl: DefaultValues.networkSatIPChannelListUrl,
             Keys.playerIsRepeatEnabled: DefaultValues.playerRepeatMode,
             Keys.textEncoding: DefaultValues.textEncoding,
         ]
@@ -405,6 +406,15 @@ extension VLCDefaults {
         networkCaching.rawValue
     }
 
+    @objc var networkSatIPChannelListUrl: String {
+        get {
+            userDefaults.string(forKey: Keys.networkSatIPChannelListUrl) ?? DefaultValues.networkSatIPChannelListUrl
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.networkSatIPChannelListUrl)
+        }
+    }
+
     @objc var playerIsRepeatEnabled: VLCRepeatMode {
         get {
             let v = userDefaults.integer(forKey: Keys.playerIsRepeatEnabled)
@@ -495,6 +505,7 @@ fileprivate enum Keys {
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let networkCaching = "network-caching"
     static let networkRTSPTCP = "rtsp-tcp"
+    static let networkSatIPChannelListUrl = "satip-channellist-url"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
@@ -526,5 +537,6 @@ fileprivate enum Keys {
 
 fileprivate enum DefaultValues {
     static let textEncoding = "Windows-1252"
+    static let networkSatIPChannelListUrl = ""
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
 }
