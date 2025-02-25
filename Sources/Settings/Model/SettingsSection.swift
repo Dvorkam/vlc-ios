@@ -379,7 +379,7 @@ enum GestureControlOptions {
     static var forwardBackwardEqual: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_FORWARD_BACKWARD_EQUAL",
                 subtitle: nil,
-                preferenceKey: kVLCSettingPlaybackForwardBackwardEqual)
+                keyPath: \.playbackForwardBackwardEqual)
     }
 
     static var tapSwipeEqual: SettingsItem {
@@ -456,7 +456,7 @@ enum GestureControlOptions {
     }
 
     private static func dynamicForwardSkipDescription() -> String {
-        let forwardBackwardEqual = UserDefaults.standard.bool(forKey: kVLCSettingPlaybackForwardBackwardEqual)
+        let forwardBackwardEqual = VLCDefaults.shared.playbackForwardBackwardEqual
         let tapSwipeEqual = UserDefaults.standard.bool(forKey: kVLCSettingPlaybackTapSwipeEqual)
 
         if forwardBackwardEqual && tapSwipeEqual {
@@ -481,7 +481,7 @@ enum GestureControlOptions {
     }
 
     private static func dynamicForwardSwipeDescription() -> String {
-        let forwardBackwardEqual = UserDefaults.standard.bool(forKey: kVLCSettingPlaybackForwardBackwardEqual)
+        let forwardBackwardEqual = VLCDefaults.shared.playbackForwardBackwardEqual
 
         if forwardBackwardEqual {
             return "SETTINGS_PLAYBACK_SKIP_SWIPE"

@@ -34,6 +34,7 @@
             Keys.networkRTSPTCP: false,
             Keys.passcodeEnableBiometricAuth: true,
             Keys.pauseWhenShowingControls: false,
+            Keys.playbackForwardBackwardEqual: true,
             Keys.playbackLongTouchSpeedUp: true,
             Keys.playerIsShuffleEnabled: false,
             Keys.playerShouldRememberBrightness: false,
@@ -197,6 +198,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.pauseWhenShowingControls)
+        }
+    }
+
+    var playbackForwardBackwardEqual: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playbackForwardBackwardEqual)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playbackForwardBackwardEqual)
         }
     }
 
@@ -508,6 +518,7 @@ fileprivate enum Keys {
     static let networkSatIPChannelListUrl = "satip-channellist-url"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
+    static let playbackForwardBackwardEqual = "playback-forward-backward-equal"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
     static let playerIsRepeatEnabled = "PlayerIsRepeatEnabled"
     static let playerIsShuffleEnabled = "PlayerIsShuffleEnabled"

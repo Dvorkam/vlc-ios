@@ -307,7 +307,7 @@ extension SettingsController {
         settingsSections = SettingsSection
             .sections(isLabActivated: isLabActivated,
                       isBackingUp: isBackingUp,
-                      isForwardBackwardEqual: userDefaults.bool(forKey: kVLCSettingPlaybackForwardBackwardEqual),
+                      isForwardBackwardEqual: VLCDefaults.shared.playbackForwardBackwardEqual,
                       isTapSwipeEqual: userDefaults.bool(forKey: kVLCSettingPlaybackTapSwipeEqual))
     }
 
