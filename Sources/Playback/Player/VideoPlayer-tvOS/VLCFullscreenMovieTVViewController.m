@@ -174,7 +174,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (VLCDefaults.shared.playerShouldRememberState) {
-        vpc.shuffleMode = [defaults boolForKey:kVLCPlayerIsShuffleEnabled];
+        vpc.shuffleMode = VLCDefaults.shared.playerIsShuffleEnabled;
         vpc.repeatMode = VLCDefaults.shared.playerIsRepeatEnabled;
     }
 

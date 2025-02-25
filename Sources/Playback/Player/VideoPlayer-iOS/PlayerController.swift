@@ -69,7 +69,7 @@ class PlayerController: NSObject {
     }
 
     var isShuffleEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCPlayerIsShuffleEnabled)
+        return VLCDefaults.shared.playerIsShuffleEnabled
     }
 
     var isRepeatEnabled: VLCRepeatMode {

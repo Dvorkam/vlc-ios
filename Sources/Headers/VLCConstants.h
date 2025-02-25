@@ -88,8 +88,6 @@
 
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
 #define KVLCPlayerBrightness @"playerbrightness"
-#define kVLCPlayerIsShuffleEnabled @"PlayerIsShuffleEnabled"
-#define kVLCPlayerIsShuffleEnabledDefaultValue @NO
 
 #define kVLCCustomProfileEnabled @"kVLCCustomProfileEnabled"
 #define kVLCCustomEqualizerProfiles @"kVLCCustomEqualizerProfiles"

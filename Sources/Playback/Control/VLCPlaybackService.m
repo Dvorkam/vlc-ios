@@ -1020,7 +1020,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (VLCDefaults.shared.playerShouldRememberState) {
-        [defaults setBool:shuffleMode forKey:kVLCPlayerIsShuffleEnabled];
+        VLCDefaults.shared.playerIsShuffleEnabled = shuffleMode;
     }
 }
 
