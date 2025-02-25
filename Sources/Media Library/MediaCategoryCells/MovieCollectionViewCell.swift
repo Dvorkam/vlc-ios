@@ -169,9 +169,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
         descriptionLabel.text = movie.mediaDuration()
         thumbnailView.image = movie.thumbnailImage()
         let progress = movie.progress
-        guard let value = UserDefaults.standard.value(forKey: kVLCSettingContinuePlayback) as? Int else {
-            return
-        }
+        let value = VLCDefaults.shared.continuePlayback
         if value <= 0 {
             progressView.isHidden = true
         } else {

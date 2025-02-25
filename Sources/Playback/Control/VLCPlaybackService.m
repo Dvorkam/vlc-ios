@@ -1602,7 +1602,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             }
             continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioPlayback] integerValue];
         } else {
-            continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinuePlayback] integerValue];
+            continuePlayback = VLCDefaults.shared.continuePlayback;
         }
 
         if (continuePlayback == 1) {

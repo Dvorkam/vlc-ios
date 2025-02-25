@@ -247,7 +247,7 @@ enum GenericOptions {
     }
 
     static var continueVideoPlayback: SettingsItem {
-        let k = kVLCSettingContinuePlayback
+        let k = VLCDefaults.Compat.continuePlaybackKey
         return .init(title: "SETTINGS_CONTINUE_VIDEO_PLAYBACK",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_CONTINUE_VIDEO_PLAYBACK", preferenceKey: k, hasInfo: true))
