@@ -502,7 +502,7 @@ enum VideoOptions {
     }
 
     static var deInterlace: SettingsItem {
-        let k = kVLCSettingDeinterlace
+        let k = VLCDefaults.Compat.deinterlaceKey
         return .init(title: "SETTINGS_DEINTERLACE",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_DEINTERLACE", preferenceKey: k, hasInfo: true))

@@ -33,8 +33,6 @@
 #define kVLCSettingSubtitlesFontColorDefaultValue @"16777215"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
-#define kVLCSettingDeinterlace @"deinterlace"
-#define kVLCSettingDeinterlaceDefaultValue @(-1)
 #define kVLCSettingRotationLock @"kVLCSettingRotationLock"
 #define kVLCSaveDebugLogs @"kVLCSaveDebugLogs"
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"

@@ -318,7 +318,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     CGFloat defaultPlaybackSpeed = VLCDefaults.shared.playbackSpeedDefaultValue;
     if (defaultPlaybackSpeed != 0.)
         [_mediaPlayer setRate: defaultPlaybackSpeed];
-    int deinterlace = [[defaults objectForKey:kVLCSettingDeinterlace] intValue];
+    int deinterlace = VLCDefaults.shared.deinterlace;
     [_mediaPlayer setDeinterlace:deinterlace withFilter:@"blend"];
 
     [_listPlayer setMediaList:self.mediaList];

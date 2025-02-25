@@ -57,6 +57,7 @@
             Keys.continueAudioPlayback: 1,
             Keys.continuePlayback: 1,
             Keys.defaultPreampLevel: Float(6),
+            Keys.deinterlace: DefaultValues.deinterlace,
             Keys.playbackBackwardSkipLengthSwipe: DefaultValues.playbackBackwardSkipLengthSwipe,
             Keys.playbackForwardSkipLengthSwipe: DefaultValues.playbackForwardSkipLengthSwipe,
             Keys.playerControlDuration: DefaultValues.playerControlDuration,
@@ -416,6 +417,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var deinterlace: Int {
+        get {
+            userDefaults.integer(forKey: Keys.deinterlace)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.deinterlace)
+        }
+    }
+
     @objc var playbackBackwardSkipLengthSwipe: Int {
         get {
             userDefaults.integer(forKey: Keys.playbackBackwardSkipLengthSwipe)
@@ -533,6 +543,7 @@ extension VLCDefaults {
         static let continueAudioPlaybackKey: String = Keys.continueAudioPlayback
         static let continuePlaybackKey: String = Keys.continuePlayback
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
+        static let deinterlaceKey: String = Keys.deinterlace
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let networkCachingKey: String = Keys.networkCaching
@@ -583,6 +594,7 @@ fileprivate enum Keys {
     static let continueAudioPlayback = "ContinueAudioPlayback"
     static let continuePlayback = "ContinuePlayback"
     static let defaultPreampLevel = "pre-amp-level"
+    static let deinterlace = "deinterlace"
     static let downloadArtwork = "download-artwork"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let equalizerProfileDisabled = "EqualizerDisabled"
@@ -628,6 +640,7 @@ fileprivate enum Keys {
 // MARK: - Default Values
 
 fileprivate enum DefaultValues {
+    static let deinterlace = Int(-1)
     static let textEncoding = "Windows-1252"
     static let networkSatIPChannelListUrl = ""
     static let playbackBackwardSkipLengthSwipe = 10

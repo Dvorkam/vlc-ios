@@ -36,8 +36,6 @@
 #define kVLCSettingSkipLoopFilterNone @(0)
 #define kVLCSettingSkipLoopFilterNonRef @(1)
 #define kVLCSettingSkipLoopFilterNonKey @(3)
-#define kVLCSettingDeinterlace @"deinterlace"
-#define kVLCSettingDeinterlaceDefaultValue @(-1)
 #define kVLCSettingSubtitlesFont @"quartztext-font"
 #define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"
 #define kVLCSettingSubtitlesFontSize @"quartztext-rel-fontsize"
