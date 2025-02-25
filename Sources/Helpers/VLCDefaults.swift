@@ -56,6 +56,7 @@
             Keys.continueAudioPlayback: 1,
             Keys.continuePlayback: 1,
             Keys.defaultPreampLevel: Float(6),
+            Keys.playbackBackwardSkipLengthSwipe: 10,
             Keys.playbackForwardSkipLengthSwipe: 10,
 
             // other
@@ -404,6 +405,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var playbackBackwardSkipLengthSwipe: Int {
+        get {
+            userDefaults.integer(forKey: Keys.playbackBackwardSkipLengthSwipe)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playbackBackwardSkipLengthSwipe)
+        }
+    }
+
     @objc var playbackForwardSkipLengthSwipe: Int {
         get {
             userDefaults.integer(forKey: Keys.playbackForwardSkipLengthSwipe)
@@ -496,6 +506,7 @@ extension VLCDefaults {
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let networkCachingKey: String = Keys.networkCaching
+        static let playbackBackwardSkipLengthSwipeKey: String = Keys.playbackBackwardSkipLengthSwipe
         static let playbackForwardSkipLengthSwipeKey: String = Keys.playbackForwardSkipLengthSwipe
         static let textEncodingKey: String = Keys.textEncoding
 
@@ -551,6 +562,7 @@ fileprivate enum Keys {
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackForwardBackwardEqual = "playback-forward-backward-equal"
+    static let playbackBackwardSkipLengthSwipe = "playback-backward-skip-length-swipe"
     static let playbackForwardSkipLengthSwipe = "playback-forward-skip-length-swipe"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
     static let playbackTapSwipeEqual = "playback-tap-swipe-equal"
@@ -583,6 +595,7 @@ fileprivate enum Keys {
 fileprivate enum DefaultValues {
     static let textEncoding = "Windows-1252"
     static let networkSatIPChannelListUrl = ""
+    static let playbackBackwardSkipLengthSwipe = 10
     static let playbackForwardSkipLengthSwipe = 10
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
 }

@@ -410,7 +410,7 @@ enum GestureControlOptions {
     }
 
     static var backwardSkipLengthSwipe: SettingsItem {
-        let k = kVLCSettingPlaybackBackwardSkipLengthSwipe
+        let k = VLCDefaults.Compat.playbackBackwardSkipLengthSwipeKey
         return .init(title: "SETTINGS_PLAYBACK_SKIP_BACKWARD_SWIPE",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_PLAYBACK_SKIP_BACKWARD_SWIPE", preferenceKey: k, hasInfo: false))

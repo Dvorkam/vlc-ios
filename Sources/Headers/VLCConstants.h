@@ -49,10 +49,6 @@
 #define kVLCSettingPlaybackForwardSkipLengthDefaultValue @(10)
 #define kVLCSettingPlaybackBackwardSkipLength @"playback-backward-skip-length"
 #define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
-#define kVLCSettingPlaybackBackwardSkipLengthSwipe @"playback-backward-skip-length-swipe"
-#define kVLCSettingPlaybackBackwardSkipLengthSwipeDefaultValue @(10)
-#define kVLCSettingPlaybackLockscreenSkip @"playback-lockscreen-skip"
-#define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"
 #define kVLCSettingOpenAppForPlayback @"open-app-for-playback"
 #define kVLCSettingOpenAppForPlaybackDefaultValue @YES
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
