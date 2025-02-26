@@ -524,7 +524,7 @@ enum VideoOptions {
     static var lockRotation: SettingsItem {
         .toggle(title: "SETTINGS_LOCK_ROTATION",
                 subtitle: nil,
-                preferenceKey: kVLCSettingRotationLock)
+                keyPath: \.rotationLock)
     }
 
     static func section() -> SettingsSection? {

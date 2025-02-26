@@ -165,7 +165,6 @@ private extension AudioMiniPlayer {
     }
 
     private func applyCustomEqualizerProfileIfNeeded() {
-        let userDefaults = UserDefaults.standard
         guard VLCDefaults.shared.customEqualizerProfileEnabled else {
             return
         }

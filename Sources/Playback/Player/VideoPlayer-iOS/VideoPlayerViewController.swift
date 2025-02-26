@@ -1527,7 +1527,7 @@ extension VideoPlayerViewController {
 
         if currentState == .opening {
             updateAudioInterface(with: playbackService.metadata)
-            if UserDefaults.standard.bool(forKey: kVLCSettingRotationLock) {
+            if VLCDefaults.shared.rotationLock {
                 videoPlayerControls.handleRotationLockButton(videoPlayerControls)
             }
         }
