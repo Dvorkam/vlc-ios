@@ -879,6 +879,16 @@ extension VLCDefaults {
     func setAudioLibraryGridLayout(collectionModelName: String? = nil, name: String, isGrid: Bool) {
         userDefaults.set(isGrid, forKey: Keys.audioLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
+
+    func sortDescendingDefault(name: String) -> Bool {
+        let k = Keys.sortDescendingDefault(name: name)
+        return userDefaults.bool(forKey: k)
+    }
+
+    func setSortDescendingDefault(name: String, isDescending: Bool) {
+        let k = Keys.sortDescendingDefault(name: name)
+        userDefaults.set(isDescending, forKey: k)
+    }
 }
 
 // MARK: - Compatibility
@@ -1042,6 +1052,12 @@ fileprivate enum Keys {
         [
             "kVLCAudioLibraryGridLayout", collectionModelName, name
         ].compactMap { $0 }.joined()
+    }
+
+    static func sortDescendingDefault(name: String) -> String {
+        [
+            "SortDescendingDefault", name
+        ].joined()
     }
 }
 

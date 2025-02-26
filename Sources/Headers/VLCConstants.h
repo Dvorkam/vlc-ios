@@ -68,8 +68,6 @@
 #define kVLCWifiAuthentificationBanned 2
 
 #define kVLCSortDefault @"SortDefault"
-#define kVLCSortDescendingDefault @"SortDescendingDefault"
-
 #define kVLCGroupLayout @"kVLCGroupLayout"
 
 #define kVLCDonationAnonymousCustomerID @"kVLCDonationAnonymousCustomerID"
