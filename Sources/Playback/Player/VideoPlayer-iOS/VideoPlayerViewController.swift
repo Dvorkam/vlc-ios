@@ -401,11 +401,10 @@ class VideoPlayerViewController: PlayerViewController {
         super.viewDidAppear(animated)
 
 #if os(iOS)
-        let defaults = UserDefaults.standard
         if VLCDefaults.shared.playerShouldRememberBrightness {
-            if let brightness = defaults.value(forKey: KVLCPlayerBrightness) as? CGFloat {
-                animateBrightness(to: brightness)
-                self.brightnessControl.value = Float(brightness)
+            if let brightness = VLCDefaults.shared.playerBrightness {
+                animateBrightness(to: CGFloat(brightness))
+                self.brightnessControl.value = brightness
             }
         }
 #endif
@@ -468,11 +467,10 @@ class VideoPlayerViewController: PlayerViewController {
         super.viewDidDisappear(animated)
         deviceMotion.stopDeviceMotion()
 #if os(iOS)
-        let defaults = UserDefaults.standard
         if VLCDefaults.shared.playerShouldRememberBrightness {
-            let currentBrightness = UIScreen.main.brightness
-            self.brightnessControl.value = Float(currentBrightness) // helper in indicating change in the system brightness
-            defaults.set(currentBrightness, forKey: KVLCPlayerBrightness)
+            let currentBrightness = Float(UIScreen.main.brightness)
+            self.brightnessControl.value = currentBrightness // helper in indicating change in the system brightness
+            VLCDefaults.shared.playerBrightness = currentBrightness
         }
 
         //set the value of system brightness after closing the app x
@@ -865,8 +863,6 @@ class VideoPlayerViewController: PlayerViewController {
     }
 
     private func setupSeekDurations() {
-        let defaults = UserDefaults.standard
-
         tapSwipeEqual = VLCDefaults.shared.playbackTapSwipeEqual
         forwardBackwardEqual = VLCDefaults.shared.playbackForwardBackwardEqual
         seekForwardBy = VLCDefaults.shared.playbackForwardSkipLength

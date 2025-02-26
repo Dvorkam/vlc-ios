@@ -314,8 +314,6 @@ class PlayerViewController: UIViewController {
 
     private let notificationCenter = NotificationCenter.default
 
-    private let userDefaults = UserDefaults.standard
-
     // MARK: - Gestures
 
     lazy var panRecognizer: UIPanGestureRecognizer = {
@@ -436,8 +434,8 @@ class PlayerViewController: UIViewController {
         super.viewDidAppear(animated)
 
         if playerController.isRememberBrightnessEnabled && self is VideoPlayerViewController {
-            if let brightness = userDefaults.value(forKey: KVLCPlayerBrightness) as? CGFloat {
-                animateBrightness(to: brightness)
+            if let brightness = VLCDefaults.shared.playerBrightness {
+                animateBrightness(to: CGFloat(brightness))
                 self.brightnessControl.value = Float(brightness)
             }
         }
@@ -458,9 +456,9 @@ class PlayerViewController: UIViewController {
         super.viewDidDisappear(animated)
 
         if playerController.isRememberBrightnessEnabled && self is VideoPlayerViewController {
-            let currentBrightness = UIScreen.main.brightness
-            self.brightnessControl.value = Float(currentBrightness) // helper in indicating change in the system brightness
-            userDefaults.set(currentBrightness, forKey: KVLCPlayerBrightness)
+            let currentBrightness = Float(UIScreen.main.brightness)
+            self.brightnessControl.value = currentBrightness // helper in indicating change in the system brightness
+            VLCDefaults.shared.playerBrightness = currentBrightness
         }
         //set the value of system brightness after closing the app
         //even if the Player Should Remember Brightness option is disabled
@@ -736,8 +734,6 @@ class PlayerViewController: UIViewController {
     }
 
     private func setupSeekDurations() {
-        let defaults = UserDefaults.standard
-
         tapSwipeEqual = VLCDefaults.shared.playbackTapSwipeEqual
         forwardBackwardEqual = VLCDefaults.shared.playbackForwardBackwardEqual
         seekForwardBy = VLCDefaults.shared.playbackForwardSkipLength

@@ -585,6 +585,22 @@ extension VLCDefaults {
         }
     }
 
+    var playerBrightness: Float? {
+        get {
+            // Use data(forKey:) to determine if a value has been set at all
+            userDefaults.data(forKey: Keys.playerBrightness).flatMap { _ in
+                userDefaults.float(forKey: Keys.playerBrightness)
+            }
+        }
+        set {
+            if let newValue = newValue {
+                userDefaults.set(newValue, forKey: Keys.playerBrightness)
+            } else {
+                userDefaults.removeObject(forKey: Keys.playerBrightness)
+            }
+        }
+    }
+
     @objc var playerControlDuration: Int {
         get {
             userDefaults.integer(forKey: Keys.playerControlDuration)
@@ -852,6 +868,7 @@ fileprivate enum Keys {
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
     static let playbackSpeedDefaultValue = "playback-speed"
     static let playbackTapSwipeEqual = "playback-tap-swipe-equal"
+    static let playerBrightness = "playerbrightness"
     static let playerControlDuration = "kVLCSettingPlayerControlDuration"
     static let playerIsRepeatEnabled = "PlayerIsRepeatEnabled"
     static let playerIsShuffleEnabled = "PlayerIsShuffleEnabled"

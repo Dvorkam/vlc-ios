@@ -89,10 +89,6 @@ class PlayerController: NSObject {
         setupObservers()
     }
 
-    func updateUserDefaults() {
-
-    }
-
     private func setupObservers() {
         let notificationCenter = NotificationCenter.default
 

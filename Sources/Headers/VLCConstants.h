@@ -36,7 +36,6 @@
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
 
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
-#define KVLCPlayerBrightness @"playerbrightness"
 
 #define kVLCCustomProfileEnabled @"kVLCCustomProfileEnabled"
 #define kVLCCustomEqualizerProfiles @"kVLCCustomEqualizerProfiles"
