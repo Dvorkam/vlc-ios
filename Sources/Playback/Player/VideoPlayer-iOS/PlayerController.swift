@@ -38,7 +38,7 @@ class PlayerController: NSObject {
 
     var isTapSeeking: Bool = false
 
-    // MARK: - UserDefaults computed properties getters
+    // MARK: - Defaults computed properties getters
 
     var displayRemainingTime: Bool {
         return VLCDefaults.shared.showRemainingTime

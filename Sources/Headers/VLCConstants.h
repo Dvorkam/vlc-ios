@@ -76,7 +76,6 @@
 
 #define kVLCSortDefault @"SortDefault"
 #define kVLCSortDescendingDefault @"SortDescendingDefault"
-#define kVLCHasNaggedThisMonth @"kVLCHasNaggedThisMonth"
 #define kVLCNumberOfLaunches @"kVLCNumberOfLaunches"
 #define kVLCHasActiveSubscription @"kVLCHasActiveSubscription"
 

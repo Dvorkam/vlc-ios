@@ -610,7 +610,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
                 return
             }
 
-            var lastNagMonth = userDefaults.integer(forKey: kVLCHasNaggedThisMonth)
+            var lastNagMonth = VLCDefaults.shared.hasNaggedThisMonth
             let numberOfLaunches = userDefaults.integer(forKey: kVLCNumberOfLaunches)
             let currentMonth = NSCalendar.current.component(.month, from: Date())
 
@@ -619,7 +619,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             }
 
             if lastNagMonth < currentMonth && numberOfLaunches >= 5 {
-                userDefaults.setValue(currentMonth, forKey: kVLCHasNaggedThisMonth)
+                VLCDefaults.shared.hasNaggedThisMonth = currentMonth
                 userDefaults.setValue(0, forKey: kVLCNumberOfLaunches)
                 let donationVC = VLCDonationNagScreenViewController(nibName: "VLCDonationNagScreenViewController", bundle: nil)
                 let donationNC = UINavigationController(rootViewController: donationVC)

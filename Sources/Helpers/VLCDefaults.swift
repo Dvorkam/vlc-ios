@@ -68,6 +68,7 @@
             Keys.defaultPreampLevel: Float(6),
             Keys.deinterlace: DefaultValues.deinterlace,
             Keys.equalizerProfile: DefaultValues.equalizerProfile,
+            Keys.hasNaggedThisMonth: 0,
             Keys.playbackBackwardSkipLength: DefaultValues.playbackBackwardSkipLength,
             Keys.playbackBackwardSkipLengthSwipe: DefaultValues.playbackBackwardSkipLengthSwipe,
             Keys.playbackForwardSkipLength: DefaultValues.playbackForwardSkipLength,
@@ -540,6 +541,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var hasNaggedThisMonth: Int {
+        get {
+            userDefaults.integer(forKey: Keys.hasNaggedThisMonth)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.hasNaggedThisMonth)
+        }
+    }
+
     @objc var playbackBackwardSkipLength: Int {
         get {
             userDefaults.integer(forKey: Keys.playbackBackwardSkipLength)
@@ -853,6 +863,7 @@ fileprivate enum Keys {
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
     static let hasLaunchedBefore = "hasLaunchedBefore"
+    static let hasNaggedThisMonth = "kVLCHasNaggedThisMonth"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let mediaLibraryServiceDidForceRescan = "MediaLibraryDidForceRescan"
     static let networkCaching = "network-caching"
