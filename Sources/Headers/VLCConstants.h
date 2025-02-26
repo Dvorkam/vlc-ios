@@ -67,7 +67,6 @@
 #define kVLCWifiAuthentificationFailure 1
 #define kVLCWifiAuthentificationBanned 2
 
-#define kVLCSortDefault @"SortDefault"
 #define kVLCGroupLayout @"kVLCGroupLayout"
 
 #define kVLCDonationAnonymousCustomerID @"kVLCDonationAnonymousCustomerID"

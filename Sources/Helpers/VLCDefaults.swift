@@ -880,6 +880,21 @@ extension VLCDefaults {
         userDefaults.set(isGrid, forKey: Keys.audioLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
 
+    func sortDefault(name: String) -> VLCMLSortingCriteria? {
+        let k = Keys.sortDefault(name: name)
+
+        // Use data(forKey:) to determine if a value has been set at all
+        return userDefaults.data(forKey: k).flatMap { _ in
+            let v = userDefaults.integer(forKey: k)
+            return VLCMLSortingCriteria(rawValue: UInt(v))
+        }
+    }
+
+    func setSortDefault(name: String, criteria: VLCMLSortingCriteria) {
+        let k = Keys.sortDefault(name: name)
+        userDefaults.set(criteria.rawValue, forKey: k)
+    }
+
     func sortDescendingDefault(name: String) -> Bool {
         let k = Keys.sortDescendingDefault(name: name)
         return userDefaults.bool(forKey: k)
@@ -1052,6 +1067,12 @@ fileprivate enum Keys {
         [
             "kVLCAudioLibraryGridLayout", collectionModelName, name
         ].compactMap { $0 }.joined()
+    }
+
+    static func sortDefault(name: String) -> String {
+        [
+            "SortDefault", name
+        ].joined()
     }
 
     static func sortDescendingDefault(name: String) -> String {

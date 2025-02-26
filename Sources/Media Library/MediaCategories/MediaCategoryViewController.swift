@@ -40,7 +40,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     private var searchBarConstraint: NSLayoutConstraint?
     private var searchDataSource: LibrarySearchDataSource
     private let searchBarSize: CGFloat = 50.0
-    private let userDefaults = UserDefaults.standard
 #if os(iOS)
     private var rendererButton: UIButton
 #endif
@@ -562,12 +561,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     }
 
     func loadSort() {
-        let sortingCriteria: VLCMLSortingCriteria
-        if let sortingCriteriaDefault = UserDefaults.standard.value(forKey: "\(kVLCSortDefault)\(model.name)") as? UInt {
-            sortingCriteria = VLCMLSortingCriteria(rawValue: sortingCriteriaDefault) ?? model.sortModel.currentSort
-        } else {
-            sortingCriteria = model.sortModel.currentSort
-        }
+        let sortingCriteria = VLCDefaults.shared.sortDefault(name: model.name) ?? model.sortModel.currentSort
         let desc = VLCDefaults.shared.sortDescendingDefault(name: model.name)
         self.model.sort(by: sortingCriteria, desc: desc)
     }
@@ -933,8 +927,7 @@ extension MediaCategoryViewController {
     @objc func executeSortAction(with sortingCriteria: VLCMLSortingCriteria, desc: Bool) {
         model.sort(by: sortingCriteria, desc: desc)
         VLCDefaults.shared.setSortDescendingDefault(name: model.name, isDescending: desc)
-        userDefaults.set(sortingCriteria.rawValue,
-                         forKey: "\(kVLCSortDefault)\(model.name)")
+        VLCDefaults.shared.setSortDefault(name: model.name, criteria: sortingCriteria)
         sortActionSheet.removeActionSheet()
         reloadData()
     }
@@ -1564,7 +1557,8 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
     }
 
     func actionSheetSortSectionHeader(_ header: ActionSheetSortSectionHeader, onSwitchIsOnChange: Bool, type: ActionSheetSortHeaderOptions) {
-        if type == .descendingOrder {
+        switch type {
+        case .descendingOrder:
             model.sort(by: model.sortModel.currentSort, desc: onSwitchIsOnChange)
             let name = model is VideoModel ? secondModel.name : model.name
             VLCDefaults.shared.setSortDescendingDefault(name: name, isDescending: onSwitchIsOnChange)
@@ -1572,7 +1566,8 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
             cachedCellSize = .zero
             collectionView?.collectionViewLayout.invalidateLayout()
             reloadData()
-        } else if type == .layoutChange {
+
+        case .layoutChange:
             handleLayoutChange(gridLayout: onSwitchIsOnChange)
         }
     }
