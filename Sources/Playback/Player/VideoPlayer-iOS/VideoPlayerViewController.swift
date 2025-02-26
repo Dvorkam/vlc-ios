@@ -1386,10 +1386,8 @@ class VideoPlayerViewController: PlayerViewController {
         }
 
         let profileIndex = VLCDefaults.shared.equalizerProfile
-        let encodedData = userDefaults.data(forKey: kVLCCustomEqualizerProfiles)
 
-        guard let encodedData = encodedData,
-              let customProfiles = NSKeyedUnarchiver(forReadingWith: encodedData).decodeObject(forKey: "root") as? CustomEqualizerProfiles,
+        guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles,
               profileIndex < customProfiles.profiles.count else {
             return
         }

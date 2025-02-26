@@ -645,6 +645,33 @@ extension VLCDefaults {
         appTheme == .system
     }
 
+    var customEqualizerProfiles: CustomEqualizerProfiles? {
+        get {
+            guard let encodedData = userDefaults.data(forKey: Keys.customEqualizerProfiles) else {
+                return nil
+            }
+
+            guard let decoded = try? NSKeyedUnarchiver(forReadingFrom: encodedData)
+                .decodeObject(forKey: "root") as? CustomEqualizerProfiles else {
+                return nil
+            }
+
+            return decoded
+        }
+        set {
+            guard let newValue = newValue else {
+                return
+            }
+
+            guard let encoded = try? NSKeyedArchiver
+                .archivedData(withRootObject: newValue, requiringSecureCoding: false) else {
+                return
+            }
+
+            userDefaults.setValue(encoded, forKey: Keys.customEqualizerProfiles)
+        }
+    }
+
     var hardwareDecoding: HardwareDecoding {
         get {
             guard let v = userDefaults.string(forKey: Keys.hardwareDecoding) else {
@@ -854,6 +881,7 @@ fileprivate enum Keys {
     static let continueAudioPlayback = "ContinueAudioPlayback"
     static let continuePlayback = "ContinuePlayback"
     static let currentlyPlayingPlaylist = "isPlaylistCurrentlyPlaying"
+    static let customEqualizerProfiles = "kVLCCustomEqualizerProfiles"
     static let defaultPreampLevel = "pre-amp-level"
     static let deinterlace = "deinterlace"
     static let downloadArtwork = "download-artwork"

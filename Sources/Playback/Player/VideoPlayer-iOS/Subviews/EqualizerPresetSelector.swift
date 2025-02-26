@@ -102,9 +102,7 @@ class EqualizerPresetSelector: SpoilerButton, UITableViewDataSource, UITableView
 
     // MARK: - table view data source
     func numberOfSections(in tableView: UITableView) -> Int {
-        let profilesData = UserDefaults.standard.data(forKey: kVLCCustomEqualizerProfiles)
-        guard let profilesData = profilesData,
-              let customProfiles = NSKeyedUnarchiver(forReadingWith: profilesData).decodeObject(forKey: "root") as? CustomEqualizerProfiles else {
+        guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles else {
             return 1
         }
 
@@ -117,9 +115,7 @@ class EqualizerPresetSelector: SpoilerButton, UITableViewDataSource, UITableView
             return profiles.count + 1
         }
 
-        let profilesData = UserDefaults.standard.data(forKey: kVLCCustomEqualizerProfiles)
-        guard let profilesData = profilesData,
-              let customProfiles = NSKeyedUnarchiver(forReadingWith: profilesData).decodeObject(forKey: "root") as? CustomEqualizerProfiles else {
+        guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles else {
             return 0
         }
 
@@ -137,9 +133,7 @@ class EqualizerPresetSelector: SpoilerButton, UITableViewDataSource, UITableView
                 cell.textLabel?.text = profiles[indexPath.row - 1].name
             }
         } else {
-            let profilesData = UserDefaults.standard.data(forKey: kVLCCustomEqualizerProfiles)
-            guard let profilesData = profilesData,
-                  let customProfiles = NSKeyedUnarchiver(forReadingWith: profilesData).decodeObject(forKey: "root") as? CustomEqualizerProfiles else {
+            guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles else {
                 return cell
             }
 
@@ -232,10 +226,7 @@ class EqualizerPresetSelector: SpoilerButton, UITableViewDataSource, UITableView
     }
 
     func moveProfile(_ moveIdentifier: MoveEventIdentifier, at index: IndexPath) {
-        let userDefaults = UserDefaults.standard
-        let profilesData = userDefaults.data(forKey: kVLCCustomEqualizerProfiles)
-        guard let profilesData = profilesData,
-              let customProfiles = NSKeyedUnarchiver(forReadingWith: profilesData).decodeObject(forKey: "root") as? CustomEqualizerProfiles else {
+        guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles else {
             return
         }
 
@@ -245,7 +236,7 @@ class EqualizerPresetSelector: SpoilerButton, UITableViewDataSource, UITableView
             customProfiles.moveDown(index: index.row)
         }
 
-        userDefaults.setValue(NSKeyedArchiver.archivedData(withRootObject: customProfiles), forKey: kVLCCustomEqualizerProfiles)
+        VLCDefaults.shared.customEqualizerProfiles = customProfiles
     }
 }
 
