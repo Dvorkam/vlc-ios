@@ -229,8 +229,8 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         videoModel.secondName = model.name
 
         if model is MediaGroupViewModel {
-            self.model = userDefaults.bool(forKey: kVLCSettingsDisableGrouping) ? videoModel : model
-            self.secondModel = userDefaults.bool(forKey: kVLCSettingsDisableGrouping) ? model : videoModel
+            self.model = VLCDefaults.shared.disableGrouping ? videoModel : model
+            self.secondModel = VLCDefaults.shared.disableGrouping ? model : videoModel
         } else {
             self.model = model
             self.secondModel = videoModel

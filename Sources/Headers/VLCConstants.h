@@ -20,8 +20,6 @@
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
-#define kVLCSettingsDisableGrouping @"MLDisableGrouping"
-#define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 

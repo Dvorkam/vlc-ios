@@ -667,7 +667,7 @@ enum MediaLibraryOptions {
     static var disableGrouping: SettingsItem {
         .toggle(title: "SETTINGS_DISABLE_GROUPING",
                 subtitle: nil,
-                preferenceKey: kVLCSettingsDisableGrouping)
+                keyPath: \.disableGrouping)
     }
 
     static var showVideoThumbnails: SettingsItem {

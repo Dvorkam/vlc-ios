@@ -32,6 +32,7 @@
             Keys.continueAudioInBackground: true,
             Keys.currentlyPlayingPlaylist: false,
             Keys.customEqualizerProfileEnabled: false,
+            Keys.disableGrouping: false,
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.equalizerProfileDisabled: true,
@@ -222,6 +223,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.customEqualizerProfileEnabled)
+        }
+    }
+
+    @objc var disableGrouping: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.disableGrouping)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.disableGrouping)
         }
     }
 
@@ -862,6 +872,7 @@ extension VLCDefaults {
         static let continuePlaybackKey: String = Keys.continuePlayback
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
         static let deinterlaceKey: String = Keys.deinterlace
+        static let disableGroupingKey: String = Keys.disableGrouping
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let networkCachingKey: String = Keys.networkCaching
@@ -942,6 +953,7 @@ fileprivate enum Keys {
     static let customEqualizerProfiles = "kVLCCustomEqualizerProfiles"
     static let defaultPreampLevel = "pre-amp-level"
     static let deinterlace = "deinterlace"
+    static let disableGrouping = "MLDisableGrouping"
     static let downloadArtwork = "download-artwork"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let equalizerProfile = "EqualizerProfile"
