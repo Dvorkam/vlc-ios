@@ -14,7 +14,6 @@
 #define kVLCSettingPasscodeOnKey @"PasscodeProtection"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
-#define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"

@@ -193,7 +193,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
         let playbackService = PlaybackService.sharedInstance()
 
         if lastPlayed {
-            let isCurrentlyPlayingPlaylist = UserDefaults.standard.bool(forKey: kVLCIsCurrentlyPlayingPlaylist)
+            let isCurrentlyPlayingPlaylist = VLCDefaults.shared.currentlyPlayingPlaylist
             let shouldDisplayLastPlayedLabel = (!playbackService.isPlaying && playbackService.currentlyPlayingMedia == nil) || !isCurrentlyPlayingPlaylist
             groupLastPlayedLabel.isHidden = !shouldDisplayLastPlayedLabel
             groupLastPlayedLabel.text = NSLocalizedString("LAST_PLAYED_PLAYLIST_LABEL_TITLE", comment: "")

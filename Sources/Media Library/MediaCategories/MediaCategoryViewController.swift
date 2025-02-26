@@ -212,7 +212,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
 
     // Indicating that the current chosen collection to play is playlist, useful for handling Observer
     private var isPlaylistCurrentlyPlaying: Bool {
-        return userDefaults.bool(forKey: kVLCIsCurrentlyPlayingPlaylist)
+        return VLCDefaults.shared.currentlyPlayingPlaylist
     }
 
     // catch the selected index from collection view, helper for playbackDidStart
@@ -641,7 +641,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             saveCurrentPlaylistInfo(with: playlist.identifier(), playlistTitle: playlist.title(), media: playlist.media?[selectedIndex.row])
             addPlaybackWillStopObserver()
             reloadData()
-            userDefaults.set(true, forKey: kVLCIsCurrentlyPlayingPlaylist)
+            VLCDefaults.shared.currentlyPlayingPlaylist = true
         } else if let playlists = currentDataSet as? [VLCMLPlaylist], let selectedIndex = collectionSelectedIndex {
             let selectedPlaylist = playlists[selectedIndex.row]
             guard let media = PlaybackService.sharedInstance().currentlyPlayingMedia,
@@ -650,7 +650,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             saveCurrentPlaylistInfo(with: selectedPlaylist.identifier(), playlistTitle: selectedPlaylist.title(), media: mlMedia)
             addPlaybackWillStopObserver()
             reloadData()
-            userDefaults.set(true, forKey: kVLCIsCurrentlyPlayingPlaylist)
+            VLCDefaults.shared.currentlyPlayingPlaylist = true
         } else if isPlaylistCurrentlyPlaying {
             //if the playlist media is already being played and the current model is not Playlist or playlist collection media.
             //This will update the value of last played media, leading to right indication if the app is suddenly closed.
@@ -1865,7 +1865,7 @@ extension MediaCategoryViewController {
 
         reloadData()
         removePlaybackWillStopObserver()
-        userDefaults.setValue(false, forKey: kVLCIsCurrentlyPlayingPlaylist)
+        VLCDefaults.shared.currentlyPlayingPlaylist = false
         playbackCache.clearQueuePlaylistInfo()
     }
 

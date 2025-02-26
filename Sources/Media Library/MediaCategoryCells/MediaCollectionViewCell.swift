@@ -617,7 +617,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
     // MARK: - Handle  New label Text
 
     func handleLastPlayed() {
-        let isCurrentlyPlayingPlaylist = UserDefaults.standard.bool(forKey: kVLCIsCurrentlyPlayingPlaylist)
+        let isCurrentlyPlayingPlaylist = VLCDefaults.shared.currentlyPlayingPlaylist
         let shouldDisplayLastPlayedLabel = (!playbackService.isPlaying && playbackService.currentlyPlayingMedia == nil) || !isCurrentlyPlayingPlaylist
         newLabel.isHidden = !shouldDisplayLastPlayedLabel
 

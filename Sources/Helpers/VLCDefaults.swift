@@ -29,6 +29,7 @@
             Keys.castingAudioPassthrough: false,
             Keys.closeGesture: true,
             Keys.continueAudioInBackground: true,
+            Keys.currentlyPlayingPlaylist: false,
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.equalizerProfileDisabled: true,
@@ -176,21 +177,30 @@ extension VLCDefaults {
         }
     }
 
-    @objc var downloadArtwork: Bool {
-        get {
-            userDefaults.bool(forKey: Keys.downloadArtwork)
-        }
-        set {
-            userDefaults.set(newValue, forKey: Keys.downloadArtwork)
-        }
-    }
-
     @objc var continueAudioInBackgroundKey: Bool {
         get {
             userDefaults.bool(forKey: Keys.continueAudioInBackground)
         }
         set {
             userDefaults.set(newValue, forKey: Keys.continueAudioInBackground)
+        }
+    }
+
+    @objc var currentlyPlayingPlaylist: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.currentlyPlayingPlaylist)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.currentlyPlayingPlaylist)
+        }
+    }
+
+    @objc var downloadArtwork: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.downloadArtwork)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.downloadArtwork)
         }
     }
 
@@ -780,6 +790,7 @@ fileprivate enum Keys {
     static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let continueAudioPlayback = "ContinueAudioPlayback"
     static let continuePlayback = "ContinuePlayback"
+    static let currentlyPlayingPlaylist = "isPlaylistCurrentlyPlaying"
     static let defaultPreampLevel = "pre-amp-level"
     static let deinterlace = "deinterlace"
     static let downloadArtwork = "download-artwork"
