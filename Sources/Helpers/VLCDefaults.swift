@@ -38,6 +38,7 @@
             Keys.equalizerProfileDisabled: true,
             Keys.equalizerSnapBands: false,
             Keys.forceSMBV1: true,
+            Keys.hasActiveSubscription: false,
             Keys.hasLaunchedBefore: false,
             Keys.hideLibraryInFilesApp: false,
             Keys.mediaLibraryServiceDidForceRescan: false,
@@ -277,6 +278,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.forceSMBV1)
+        }
+    }
+
+    @objc var hasActiveSubscription: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.hasActiveSubscription)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.hasActiveSubscription)
         }
     }
 
@@ -961,6 +971,7 @@ fileprivate enum Keys {
     static let equalizerSnapBands = "EqualizerSnapBands"
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
+    static let hasActiveSubscription = "kVLCHasActiveSubscription"
     static let hasLaunchedBefore = "hasLaunchedBefore"
     static let hasNaggedThisMonth = "kVLCHasNaggedThisMonth"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"

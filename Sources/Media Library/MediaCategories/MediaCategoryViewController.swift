@@ -601,7 +601,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             self.present(navigationController, animated: true)
             VLCDefaults.shared.setHasLaunchedBeforeIfNeeded()
         } else {
-            if userDefaults.bool(forKey: kVLCHasActiveSubscription) {
+            if VLCDefaults.shared.hasActiveSubscription {
                 return
             }
 

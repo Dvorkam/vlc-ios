@@ -70,7 +70,6 @@
 #define kVLCSortDefault @"SortDefault"
 #define kVLCSortDescendingDefault @"SortDescendingDefault"
 #define kVLCNumberOfLaunches @"kVLCNumberOfLaunches"
-#define kVLCHasActiveSubscription @"kVLCHasActiveSubscription"
 
 #define kVLCGroupLayout @"kVLCGroupLayout"
 

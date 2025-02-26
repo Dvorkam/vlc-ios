@@ -714,7 +714,7 @@ NSString *callbackURLString = @"vlcpay://3ds";
 
 - (void)activeSubscription:(BOOL)bValue
 {
-    [[NSUserDefaults standardUserDefaults] setBool:bValue forKey:kVLCHasActiveSubscription];
+    VLCDefaults.shared.hasActiveSubscription = bValue;
 }
 
 @end
