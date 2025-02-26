@@ -52,6 +52,7 @@
             Keys.stretchAudio: true,
             Keys.videoFullscreenPlayback: true,
             Keys.volumeGesture: true,
+            Keys.wifiSharingIPv6: false,
 
             // numbers
             Keys.castingConversionQuality: DefaultValues.castingConversionQuality,
@@ -393,6 +394,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var wifiSharingIPv6: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.wifiSharingIPv6)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.wifiSharingIPv6)
+        }
+    }
+
     // Numbers
 
     @objc var castingConversionQuality: Int {
@@ -687,6 +697,7 @@ fileprivate enum Keys {
     static let textEncoding = "subsdec-encoding"
     static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
     static let volumeGesture = "EnableVolumeGesture"
+    static let wifiSharingIPv6 = "wifi-sharing-ipv6"
 
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {
         [

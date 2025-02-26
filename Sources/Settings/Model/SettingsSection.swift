@@ -724,7 +724,7 @@ enum NetworkOptions {
     static var ipv6SupportForWiFiSharing: SettingsItem {
         .toggle(title: "SETTINGS_WIFISHARING_IPv6",
                 subtitle: nil,
-                preferenceKey: kVLCSettingWiFiSharingIPv6)
+                keyPath: \.wifiSharingIPv6)
     }
 
     static var forceSMBv1: SettingsItem {

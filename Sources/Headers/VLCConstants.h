@@ -38,8 +38,6 @@
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
-#define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
-#define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
 #define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"

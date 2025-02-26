@@ -56,8 +56,6 @@
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
 
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
-#define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
-#define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
 
 #define kVLCfortvOSMovieDBKey @""
 
