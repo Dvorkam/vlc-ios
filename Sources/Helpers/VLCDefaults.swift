@@ -76,6 +76,7 @@
             Keys.networkSatIPChannelListUrl: DefaultValues.networkSatIPChannelListUrl,
             Keys.playerIsRepeatEnabled: DefaultValues.playerRepeatMode,
             Keys.skipLoopFilter: DefaultValues.skipLoopFilter,
+            Keys.subtitlesFontColor: DefaultValues.subtitlesFontColor,
             Keys.subtitlesFontSize: DefaultValues.subtitlesFontSize,
             Keys.textEncoding: DefaultValues.textEncoding,
         ]
@@ -622,6 +623,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var subtitlesFontColor: String {
+        get {
+            userDefaults.string(forKey: Keys.subtitlesFontColor) ?? DefaultValues.subtitlesFontColor
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.subtitlesFontColor)
+        }
+    }
+
     @objc var subtitlesFontSize: String {
         get {
             userDefaults.string(forKey: Keys.subtitlesFontSize) ?? DefaultValues.subtitlesFontSize
@@ -663,6 +673,7 @@ extension VLCDefaults {
         static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
         static let skipLoopFilterKey: String = Keys.skipLoopFilter
+        static let subtitlesFontColorKey: String = Keys.subtitlesFontColor
         static let subtitlesFontSizeKey: String = Keys.subtitlesFontSize
         static let textEncodingKey: String = Keys.textEncoding
 
@@ -755,6 +766,7 @@ fileprivate enum Keys {
     static let stretchAudio = "audio-time-stretch"
     static let subtitlesBoldFont = "quartztext-bold"
     static let subtitlesFontSize = "quartztext-rel-fontsize"
+    static let subtitlesFontColor = "quartztext-color"
     static let tabBarIndex = "TabBarIndex"
     static let textEncoding = "subsdec-encoding"
     static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
@@ -785,4 +797,5 @@ fileprivate enum DefaultValues {
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
     static let skipLoopFilter = VLCDefaults.SkipLoopFilter.nonRef
     static let subtitlesFontSize = "16"
+    static let subtitlesFontColor = "16777215"
 }

@@ -45,7 +45,6 @@
 
     NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
                                   kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
-                                  kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
     };
     [defaults registerDefaults:appDefaults];
 }

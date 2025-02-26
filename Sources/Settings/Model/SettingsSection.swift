@@ -568,7 +568,7 @@ enum SubtitlesOptions {
     }
 
     static var fontColor: SettingsItem {
-        let k = kVLCSettingSubtitlesFontColor
+        let k = VLCDefaults.Compat.subtitlesFontColorKey
         return .init(title: "SETTINGS_SUBTITLES_FONTCOLOR",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_SUBTITLES_FONTCOLOR", preferenceKey: k, hasInfo: true))

@@ -22,8 +22,6 @@
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCSettingSubtitlesFont @"quartztext-font"
 #define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"
-#define kVLCSettingSubtitlesFontColor @"quartztext-color"
-#define kVLCSettingSubtitlesFontColorDefaultValue @"16777215"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingRotationLock @"kVLCSettingRotationLock"

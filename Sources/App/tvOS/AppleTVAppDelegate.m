@@ -41,7 +41,6 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     NSDictionary *appDefaults = @{kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
-                                  kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
     };
     [defaults registerDefaults:appDefaults];
 }
