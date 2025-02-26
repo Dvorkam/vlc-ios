@@ -78,6 +78,11 @@ extension VLCMLMedia {
     }
 
     func title() -> String {
+        if VLCDefaults.shared.optimizeTitles
+            && ((subtype() == .albumTrack && title.isSupportedAudioMediaFormat())
+                || (subtype() != .albumTrack && title.isSupportedMediaFormat())) {
+            return (title as NSString).deletingPathExtension
+        }
         return title
     }
 }

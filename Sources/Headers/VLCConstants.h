@@ -18,7 +18,6 @@
 #define kVLCSaveDebugLogs @"kVLCSaveDebugLogs"
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
-#define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 
 #define kVLCRecentURLs @"recent-urls"

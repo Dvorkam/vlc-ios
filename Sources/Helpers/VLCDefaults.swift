@@ -32,6 +32,7 @@
             Keys.continueAudioInBackground: true,
             Keys.currentlyPlayingPlaylist: false,
             Keys.customEqualizerProfileEnabled: false,
+            Keys.optimizeTitles: false,
             Keys.disableGrouping: false,
             Keys.disableSubtitles: false,
             Keys.downloadArtwork: true,
@@ -227,6 +228,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.customEqualizerProfileEnabled)
+        }
+    }
+
+    @objc var optimizeTitles: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.optimizeTitles)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.optimizeTitles)
         }
     }
 
@@ -1020,6 +1030,7 @@ fileprivate enum Keys {
     static let currentlyPlayingPlaylist = "isPlaylistCurrentlyPlaying"
     static let customEqualizerProfileEnabled = "kVLCCustomProfileEnabled"
     static let customEqualizerProfiles = "kVLCCustomEqualizerProfiles"
+    static let optimizeTitles = "MLDecrapifyTitles"
     static let defaultPreampLevel = "pre-amp-level"
     static let deinterlace = "deinterlace"
     static let disableGrouping = "MLDisableGrouping"

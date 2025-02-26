@@ -661,7 +661,7 @@ enum MediaLibraryOptions {
     static var optimiseItemNamesForDisplay: SettingsItem {
         .toggle(title: "SETTINGS_DECRAPIFY",
                 subtitle: nil,
-                preferenceKey: kVLCSettingsDecrapifyTitles)
+                keyPath: \.optimizeTitles)
     }
 
     static var disableGrouping: SettingsItem {
