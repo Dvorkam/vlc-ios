@@ -603,7 +603,7 @@ enum CastingOptions {
     }
 
     static var conversionQuality: SettingsItem {
-        let k = kVLCSettingCastingConversionQuality
+        let k = VLCDefaults.Compat.castingConversionQualityKey
         return .init(title: "SETTINGS_CASTING_CONVERSION_QUALITY",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_CASTING_CONVERSION_QUALITY", preferenceKey: k, hasInfo: false))

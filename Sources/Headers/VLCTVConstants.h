@@ -65,6 +65,4 @@
 
 #define kVLCHTTPUploadDirectory @"Upload"
 
-#define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
-
 #define kVLCSettingReset @"kVLCSettingReset"

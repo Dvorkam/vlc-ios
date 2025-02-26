@@ -54,6 +54,7 @@
             Keys.volumeGesture: true,
 
             // numbers
+            Keys.castingConversionQuality: DefaultValues.castingConversionQuality,
             Keys.continueAudioPlayback: 1,
             Keys.continuePlayback: 1,
             Keys.defaultPreampLevel: Float(6),
@@ -394,6 +395,15 @@ extension VLCDefaults {
 
     // Numbers
 
+    @objc var castingConversionQuality: Int {
+        get {
+            userDefaults.integer(forKey: Keys.castingConversionQuality)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.castingConversionQuality)
+        }
+    }
+
     @objc var continueAudioPlayback: Int {
         get {
             userDefaults.integer(forKey: Keys.continueAudioPlayback)
@@ -580,6 +590,7 @@ extension VLCDefaults {
     final class Compat: NSObject {
         static let automaticallyPlayNextItemKey: String = Keys.automaticallyPlayNextItem
         static let backupMediaLibraryKey: String = Keys.backupMediaLibrary
+        static let castingConversionQualityKey: String = Keys.castingConversionQuality
         static let continueAudioPlaybackKey: String = Keys.continueAudioPlayback
         static let continuePlaybackKey: String = Keys.continuePlayback
         static let defaultPreampLevelKey: String = Keys.defaultPreampLevel
@@ -631,6 +642,7 @@ fileprivate enum Keys {
     static let backupMediaLibrary = "BackupMediaLibrary"
     static let brightnessGesture = "EnableBrightnessGesture"
     static let castingAudioPassthrough = "sout-chromecast-audio-passthrough"
+    static let castingConversionQuality = "sout-chromecast-conversion-quality"
     static let closeGesture = "EnableCloseGesture"
     static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let continueAudioPlayback = "ContinueAudioPlayback"
@@ -686,6 +698,7 @@ fileprivate enum Keys {
 // MARK: - Default Values
 
 fileprivate enum DefaultValues {
+    static let castingConversionQuality = 2
     static let deinterlace = Int(-1)
     static let equalizerProfile = Int(0)
     static let textEncoding = "Windows-1252"

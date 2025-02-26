@@ -42,7 +42,6 @@
 #define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
 #define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
-#define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 
