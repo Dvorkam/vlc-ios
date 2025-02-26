@@ -1464,16 +1464,16 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 {
     /* this is a bit complex, if the eq is off, we need to return 0
      * if it is on, we need to provide the profile + 1 as the UI fakes a "Off" profile in its list */
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (VLCDefaults.shared.equalizerProfileDisabled) {
         return [NSIndexPath indexPathForRow:0 inSection:0];
     }
 
     unsigned int actualProfile = (unsigned int)VLCDefaults.shared.equalizerProfile;
-    if (![userDefaults boolForKey:kVLCCustomProfileEnabled]) {
-        return [NSIndexPath indexPathForRow:actualProfile + 1 inSection:0];
-    } else {
+
+    if (VLCDefaults.shared.customEqualizerProfileEnabled) {
         return [NSIndexPath indexPathForRow:actualProfile inSection:1];
+    } else {
+        return [NSIndexPath indexPathForRow:actualProfile + 1 inSection:0];
     }
 }
 #endif

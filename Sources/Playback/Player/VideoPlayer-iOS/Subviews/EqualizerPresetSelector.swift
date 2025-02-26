@@ -173,7 +173,7 @@ class EqualizerPresetSelector: SpoilerButton, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         let isCustomProfile: Bool = indexPath.section == 0 ? false : true
-        UserDefaults.standard.setValue(isCustomProfile, forKey: kVLCCustomProfileEnabled)
+        VLCDefaults.shared.customEqualizerProfileEnabled = isCustomProfile
         delegate?.equalizerPresetSelector(self, didSelectPreset: indexPath.row, isCustom: isCustomProfile)
         presetsTableView.reloadData()
         toggleHiddenView()

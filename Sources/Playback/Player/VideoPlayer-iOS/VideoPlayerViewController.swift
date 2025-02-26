@@ -1380,8 +1380,7 @@ class VideoPlayerViewController: PlayerViewController {
     }
 
     private func applyCustomEqualizerProfileIfNeeded() {
-        let userDefaults = UserDefaults.standard
-        guard userDefaults.bool(forKey: kVLCCustomProfileEnabled) else {
+        guard VLCDefaults.shared.customEqualizerProfileEnabled else {
             return
         }
 

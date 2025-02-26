@@ -458,8 +458,7 @@ extension EqualizerView {
 
             let index = customProfiles.profiles.count - 1
             VLCDefaults.shared.customEqualizerProfiles = customProfiles
-            let userDefaults = UserDefaults.standard
-            userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
+            VLCDefaults.shared.customEqualizerProfileEnabled = true
             VLCDefaults.shared.equalizerProfileDisabled = false
             VLCDefaults.shared.equalizerProfile = index
 
@@ -479,7 +478,7 @@ extension EqualizerView {
     @objc func resetEqualizer() {
         let userDefaults = UserDefaults.standard
         let isEqualizerDisabled = VLCDefaults.shared.equalizerProfileDisabled
-        let isCustomProfile = userDefaults.bool(forKey: kVLCCustomProfileEnabled)
+        let isCustomProfile = VLCDefaults.shared.customEqualizerProfileEnabled
 
         let profile: Int
         if !isCustomProfile {
@@ -516,7 +515,7 @@ extension EqualizerView {
 
         VLCDefaults.shared.equalizerProfile = index
         VLCDefaults.shared.equalizerProfileDisabled = false
-        userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
+        VLCDefaults.shared.customEqualizerProfileEnabled = true
     }
 
     private func shouldDisplaySaveButton(_ display: Bool) {

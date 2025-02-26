@@ -87,8 +87,7 @@ class CustomEqualizerProfiles: NSObject, NSCoding {
 
         profiles.swapAt(index, index - 1)
 
-        let userDefaults = UserDefaults.standard
-        if userDefaults.bool(forKey: kVLCCustomProfileEnabled) {
+        if VLCDefaults.shared.customEqualizerProfileEnabled {
             let currentProfileIndex = VLCDefaults.shared.equalizerProfile
 
             if currentProfileIndex == index {
@@ -106,8 +105,7 @@ class CustomEqualizerProfiles: NSObject, NSCoding {
 
         profiles.swapAt(index, index + 1)
 
-        let userDefaults = UserDefaults.standard
-        if userDefaults.bool(forKey: kVLCCustomProfileEnabled) {
+        if VLCDefaults.shared.customEqualizerProfileEnabled {
             let currentProfileIndex = VLCDefaults.shared.equalizerProfile
 
             if currentProfileIndex == index {

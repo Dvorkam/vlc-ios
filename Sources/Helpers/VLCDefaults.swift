@@ -31,6 +31,7 @@
             Keys.closeGesture: true,
             Keys.continueAudioInBackground: true,
             Keys.currentlyPlayingPlaylist: false,
+            Keys.customEqualizerProfileEnabled: false,
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.equalizerProfileDisabled: true,
@@ -210,6 +211,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.currentlyPlayingPlaylist)
+        }
+    }
+
+    @objc var customEqualizerProfileEnabled: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.customEqualizerProfileEnabled)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.customEqualizerProfileEnabled)
         }
     }
 
@@ -881,6 +891,7 @@ fileprivate enum Keys {
     static let continueAudioPlayback = "ContinueAudioPlayback"
     static let continuePlayback = "ContinuePlayback"
     static let currentlyPlayingPlaylist = "isPlaylistCurrentlyPlaying"
+    static let customEqualizerProfileEnabled = "kVLCCustomProfileEnabled"
     static let customEqualizerProfiles = "kVLCCustomEqualizerProfiles"
     static let defaultPreampLevel = "pre-amp-level"
     static let deinterlace = "deinterlace"
