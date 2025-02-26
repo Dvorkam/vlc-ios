@@ -533,7 +533,7 @@ extension MediaViewController {
         var additionalMenuItems: [UIAction] = []
 
         if mediaCategoryViewController.model is ArtistModel {
-            let isIncludeAllArtistActive = UserDefaults.standard.bool(forKey: kVLCAudioLibraryHideFeatArtists)
+            let isIncludeAllArtistActive = VLCDefaults.shared.audioLibraryHideFeatArtists
             let includeAllArtist = UIAction(title: NSLocalizedString("HIDE_FEAT_ARTISTS", comment: ""),
                                             image: UIImage(systemName: "person.3"),
                                             state: isIncludeAllArtistActive ? .on : .off,

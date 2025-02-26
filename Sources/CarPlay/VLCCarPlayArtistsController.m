@@ -66,7 +66,7 @@
 
 - (NSArray *)listOfArtists
 {
-    BOOL hideFeatArtists = [[NSUserDefaults standardUserDefaults] boolForKey:kVLCAudioLibraryHideFeatArtists];
+    BOOL hideFeatArtists = VLCDefaults.shared.audioLibraryHideFeatArtists;
     NSArray *artists = [[VLCAppCoordinator sharedInstance].mediaLibraryService artistsWithSortingCriteria:VLCMLSortingCriteriaDefault
                                                                                                      desc:NO
                                                                                                   listAll:!hideFeatArtists];

@@ -299,7 +299,7 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
 
         secondaryStackView.addArrangedSubview(hideFeatArtistsStackView)
 
-        hideFeatArtistsSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCAudioLibraryHideFeatArtists)
+        hideFeatArtistsSwitch.isOn = VLCDefaults.shared.audioLibraryHideFeatArtists
     }
 
     func updateHeaderForAlbums() {

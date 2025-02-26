@@ -1554,7 +1554,7 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
     }
 
     func actionSheetSortSectionHeaderShouldHideFeatArtists(onSwitchIsOnChange: Bool) {
-        userDefaults.set(onSwitchIsOnChange, forKey: "\(kVLCAudioLibraryHideFeatArtists)")
+        VLCDefaults.shared.audioLibraryHideFeatArtists = onSwitchIsOnChange
         setupCollectionView()
         cachedCellSize = .zero
         model.sort(by: model.sortModel.currentSort, desc: model.sortModel.desc)

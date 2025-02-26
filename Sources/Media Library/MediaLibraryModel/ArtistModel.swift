@@ -30,7 +30,7 @@ class ArtistModel: AudioCollectionModel {
     var indicatorName: String = NSLocalizedString("ARTISTS", comment: "")
 
     var hideFeatArtists: Bool {
-        return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryHideFeatArtists)")
+        return VLCDefaults.shared.audioLibraryHideFeatArtists
     }
 
     required init(medialibrary: MediaLibraryService) {

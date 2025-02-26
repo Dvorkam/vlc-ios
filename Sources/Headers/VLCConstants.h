@@ -34,7 +34,6 @@
 #define kVLCPrivateWebStreaming @"private-streaming"
 #define kVLChttpScanSubtitle @"http-scan-subtitle"
 #define kVLCHTTPUploadDirectory @"Upload"
-#define kVLCAudioLibraryHideFeatArtists @"kVLCAudioLibraryHideFeatArtists"
 #define kVLCAudioLibraryHideTrackNumbers @"kVLCAudioLibraryHideTrackNumbers"
 
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
