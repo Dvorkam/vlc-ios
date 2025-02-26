@@ -71,12 +71,12 @@
             Keys.tabBarIndex: 0,
 
             // other
-            Keys.appTheme: DefaultValues.appTheme,
+            Keys.appTheme: DefaultValues.appTheme.rawValue,
             Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
             Keys.networkCaching: NetworkCaching.normal.rawValue,
             Keys.networkSatIPChannelListUrl: DefaultValues.networkSatIPChannelListUrl,
-            Keys.playerIsRepeatEnabled: DefaultValues.playerRepeatMode,
-            Keys.skipLoopFilter: DefaultValues.skipLoopFilter,
+            Keys.playerIsRepeatEnabled: DefaultValues.playerRepeatMode.rawValue,
+            Keys.skipLoopFilter: DefaultValues.skipLoopFilter.rawValue,
             Keys.subtitlesFontColor: DefaultValues.subtitlesFontColor,
             Keys.subtitlesFontSize: DefaultValues.subtitlesFontSize,
             Keys.textEncoding: DefaultValues.textEncoding,
@@ -698,8 +698,8 @@ extension VLCDefaults {
         static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
         static let skipLoopFilterKey: String = Keys.skipLoopFilter
-        static let subtitlesFontKey: String = Keys.subtitlesFont
         static let subtitlesFontColorKey: String = Keys.subtitlesFontColor
+        static let subtitlesFontKey: String = Keys.subtitlesFont
         static let subtitlesFontSizeKey: String = Keys.subtitlesFontSize
         static let textEncodingKey: String = Keys.textEncoding
 
@@ -775,10 +775,10 @@ fileprivate enum Keys {
     static let networkSatIPChannelListUrl = "satip-channellist-url"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
-    static let playbackForwardBackwardEqual = "playback-forward-backward-equal"
     static let playbackBackwardSkipLength = "playback-backward-skip-length"
-    static let playbackForwardSkipLength = "playback-forward-skip-length"
     static let playbackBackwardSkipLengthSwipe = "playback-backward-skip-length-swipe"
+    static let playbackForwardBackwardEqual = "playback-forward-backward-equal"
+    static let playbackForwardSkipLength = "playback-forward-skip-length"
     static let playbackForwardSkipLengthSwipe = "playback-forward-skip-length-swipe"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
     static let playbackSpeedDefaultValue = "playback-speed"
@@ -794,10 +794,10 @@ fileprivate enum Keys {
     static let playPauseGesture = "EnablePlayPauseGesture"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let seekGesture = "EnableSeekGesture"
-    static let skipLoopFilter = "avcodec-skiploopfilter"
     static let showArtworks = "ShowArtworks"
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
+    static let skipLoopFilter = "avcodec-skiploopfilter"
     static let stretchAudio = "audio-time-stretch"
     static let subtitlesBoldFont = "quartztext-bold"
     static let subtitlesFont = "quartztext-font"
