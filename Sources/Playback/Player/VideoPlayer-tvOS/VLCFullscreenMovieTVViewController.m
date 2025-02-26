@@ -178,7 +178,7 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
         vpc.repeatMode = VLCDefaults.shared.playerIsRepeatEnabled;
     }
 
-    self.playbackUIShouldHide = [defaults boolForKey:kVLCPlayerUIShouldHide];
+    self.playbackUIShouldHide = VLCDefaults.shared.playerUIShouldHide;
     if (self.playbackUIShouldHide) {
         self.activityIndicator.alpha = 0.;
         [self.activityIndicator stopAnimating];

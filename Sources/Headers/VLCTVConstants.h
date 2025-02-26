@@ -43,7 +43,6 @@
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
-#define kVLCPlayerUIShouldHide @"PlayerUIShouldHide"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"
 #define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 

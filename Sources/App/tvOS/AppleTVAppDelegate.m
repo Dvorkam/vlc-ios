@@ -43,7 +43,6 @@
     NSDictionary *appDefaults = @{kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
                                   kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
                                   kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
-                                  kVLCPlayerUIShouldHide : @(NO),
     };
     [defaults registerDefaults:appDefaults];
 }

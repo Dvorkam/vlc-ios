@@ -43,6 +43,7 @@
             Keys.playerShouldRememberBrightness: false,
             Keys.playerShouldRememberState: true,
             Keys.playerShowPlaybackSpeedShortcut: false,
+            Keys.playerUIShouldHide: false,
             Keys.playlistPlayNextItem: true,
             Keys.playPauseGesture: true,
             Keys.restoreLastPlayedMedia: true,
@@ -303,6 +304,16 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.playerShowPlaybackSpeedShortcut)
+        }
+    }
+
+    /// tvOS only
+    @objc var playerUIShouldHide: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.playerUIShouldHide)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playerUIShouldHide)
         }
     }
 
@@ -706,6 +717,7 @@ fileprivate enum Keys {
     static let playerShouldRememberBrightness = "PlayerShouldRememberBrightness"
     static let playerShouldRememberState = "PlayerShouldRememberState"
     static let playerShowPlaybackSpeedShortcut = "kVLCPlayerShowPlaybackSpeedShortcut"
+    static let playerUIShouldHide = "PlayerUIShouldHide"
     static let playlistPlayNextItem = "PlaylistPlayNextItem"
     static let playPauseGesture = "EnablePlayPauseGesture"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
