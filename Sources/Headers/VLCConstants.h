@@ -11,7 +11,6 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-#define kVLCSettingPasscodeOnKey @"PasscodeProtection"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCSettingSubtitlesFilePath @"sub-file"

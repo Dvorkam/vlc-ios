@@ -298,7 +298,7 @@ enum PrivacyOptions {
     static var passcodeLock: SettingsItem {
         .toggle(title: "SETTINGS_PASSCODE_LOCK",
                 subtitle: "SETTINGS_PASSCODE_LOCK_SUBTITLE",
-                preferenceKey: kVLCSettingPasscodeOnKey)
+                keyPath: \.passcodeOn)
     }
 
     static var enableBiometrics: SettingsItem? {

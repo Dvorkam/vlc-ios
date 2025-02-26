@@ -428,7 +428,7 @@ extension SettingsController: MediaLibraryHidingDelegate {
 extension SettingsController: SettingsCellDelegate {
     func settingsCellDidChangeSwitchState(cell _: SettingsCell, preferenceKey: String, isOn: Bool) {
         switch preferenceKey {
-        case kVLCSettingPasscodeOnKey:
+        case VLCDefaults.Compat.passcodeOnKey:
             passcodeLockSwitchOn(state: isOn)
         case VLCDefaults.Compat.hideLibraryInFilesAppKey:
             medialibraryHidingLockSwitchOn(state: isOn)
@@ -470,7 +470,7 @@ extension SettingsController {
             KeychainCoordinator.passcodeService.setSecret { success in
                 // If the user cancels setting the password, the toggle should revert to the unset state.
                 // This ensures the UI reflects the correct state.
-                UserDefaults.standard.set(success, forKey: kVLCSettingPasscodeOnKey)
+                VLCDefaults.shared.passcodeOn = success
                 self.reloadSettingsSections() // To show/hide biometric row
             }
         } else {

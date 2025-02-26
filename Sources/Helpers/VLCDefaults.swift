@@ -44,6 +44,7 @@
             Keys.mediaLibraryServiceDidForceRescan: false,
             Keys.networkRTSPTCP: false,
             Keys.passcodeEnableBiometricAuth: true,
+            Keys.passcodeOn: false,
             Keys.pauseWhenShowingControls: false,
             Keys.playbackForwardBackwardEqual: true,
             Keys.playbackLongTouchSpeedUp: true,
@@ -397,6 +398,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.passcodeEnableBiometricAuth)
+        }
+    }
+
+    @objc var passcodeOn: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.passcodeOn)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.passcodeOn)
         }
     }
 
@@ -924,6 +934,7 @@ extension VLCDefaults {
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let networkCachingKey: String = Keys.networkCaching
+        static let passcodeOnKey: String = Keys.passcodeOn
         static let playbackBackwardSkipLengthKey: String = Keys.playbackBackwardSkipLength
         static let playbackBackwardSkipLengthSwipeKey: String = Keys.playbackBackwardSkipLengthSwipe
         static let playbackForwardSkipLengthKey: String = Keys.playbackForwardSkipLength
@@ -1020,6 +1031,7 @@ fileprivate enum Keys {
     static let networkSatIPChannelListUrl = "satip-channellist-url"
     static let numberOfLaunches = "kVLCNumberOfLaunches"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
+    static let passcodeOn = "PasscodeProtection"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackBackwardSkipLength = "playback-backward-skip-length"
     static let playbackBackwardSkipLengthSwipe = "playback-backward-skip-length-swipe"
