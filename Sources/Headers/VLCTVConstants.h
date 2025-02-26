@@ -46,10 +46,6 @@
 #define kVLCSettingSubtitlesFontColorDefaultValue @"16777215"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
-#define kVLCSettingPlaybackBackwardSkipLength @"playback-backward-skip-length"
-#define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
-#define kVLCSettingPlaybackLockscreenSkip @"playback-lockscreen-skip"
-#define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCPlayerUIShouldHide @"PlayerUIShouldHide"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"

@@ -40,8 +40,6 @@
 #define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
 #define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
 #define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
-#define kVLCSettingPlaybackBackwardSkipLength @"playback-backward-skip-length"
-#define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
 #define kVLCSettingsDisableGrouping @"MLDisableGrouping"
 #define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
 #define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"

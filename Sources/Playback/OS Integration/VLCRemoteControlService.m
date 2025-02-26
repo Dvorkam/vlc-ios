@@ -81,7 +81,7 @@ static inline NSArray * RemoteCommandCenterCommandsToHandle(void)
 
     NSNumber *forwardSkip = [NSNumber numberWithInteger:VLCDefaults.shared.playbackForwardSkipLength];
     commandCenter.skipForwardCommand.preferredIntervals = @[forwardSkip];
-    NSNumber *backwardSkip = [defaults valueForKey:kVLCSettingPlaybackBackwardSkipLength];
+    NSNumber *backwardSkip = [NSNumber numberWithInteger:VLCDefaults.shared.playbackBackwardSkipLength];
     commandCenter.skipBackwardCommand.preferredIntervals = @[backwardSkip];
 
     commandCenter.changePlaybackRateCommand.supportedPlaybackRates = @[@(0.5),@(0.75),@(1.0),@(1.25),@(1.5),@(1.75),@(2.0)];

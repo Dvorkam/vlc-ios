@@ -45,9 +45,6 @@
                                   kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
                                   kVLCSettingSubtitlesFontSize : kVLCSettingSubtitlesFontSizeDefaultValue,
                                   kVLCSettingSubtitlesBoldFont: kVLCSettingSubtitlesBoldFontDefaultValue,
-                                  kVLCSettingPlaybackBackwardSkipLength : kVLCSettingPlaybackBackwardSkipLengthDefaultValue,
-                                  kVLCSettingPlaybackLockscreenSkip : @(NO),
-                                  kVLCSettingPlaybackRemoteControlSkip : @(NO),
                                   kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
                                   kVLCPlayerUIShouldHide : @(NO),
     };

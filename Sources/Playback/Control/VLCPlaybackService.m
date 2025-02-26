@@ -1133,7 +1133,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             [_listPlayer playItemAtNumber:@(_currentIndex)];
         }
     } else {
-        NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackBackwardSkipLength];
+        NSNumber *skipLength = [NSNumber numberWithInteger:VLCDefaults.shared.playbackBackwardSkipLength];
         [_mediaPlayer jumpBackward:skipLength.intValue];
     }
     return YES;
