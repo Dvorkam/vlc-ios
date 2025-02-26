@@ -220,8 +220,6 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return;
     }
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
     if (!self.mediaList) {
         APLog(@"%s: no URL and no media list set, stopping playback", __PRETTY_FUNCTION__);
         [_playbackSessionManagementLock unlock];
@@ -340,7 +338,6 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return;
     }
 
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     BOOL equalizerEnabled = !VLCDefaults.shared.equalizerProfileDisabled;
 
     VLCAudioEqualizer *equalizer;
@@ -580,7 +577,6 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackModeUpdated object:self];
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (VLCDefaults.shared.playerShouldRememberState) {
         VLCDefaults.shared.playerIsRepeatEnabled = repeatMode;
     }
@@ -1017,7 +1013,6 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServiceShuffleModeUpdated object:self];
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (VLCDefaults.shared.playerShouldRememberState) {
         VLCDefaults.shared.playerIsShuffleEnabled = shuffleMode;
     }
@@ -1399,7 +1394,6 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
 - (void)resetEqualizerFromProfile:(unsigned int)profile
 {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (profile == 0) {
         _mediaPlayer.equalizer = nil;
         VLCDefaults.shared.equalizerProfileDisabled = YES;
