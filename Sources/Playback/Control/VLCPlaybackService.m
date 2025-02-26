@@ -1776,11 +1776,9 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
 - (NSDictionary *)mediaOptionsDictionary
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
     return @{ @"network-caching" : [NSNumber numberWithInteger:VLCDefaults.shared.networkCachingObjC],
               @"subsdec-encoding" : VLCDefaults.shared.textEncoding,
-              @"avcodec-skiploopfilter" : [defaults objectForKey:kVLCSettingSkipLoopFilter],
+              @"avcodec-skiploopfilter" : [NSNumber numberWithInteger:VLCDefaults.shared.skipLoopFilterObjC],
               @"codec" : VLCDefaults.shared.hardwareDecodingObjC,
               @"rtsp-tcp" : [NSNumber numberWithBool:VLCDefaults.shared.networkRTSPTCP]
     };

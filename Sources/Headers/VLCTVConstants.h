@@ -32,10 +32,6 @@
 /* deprecated */
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
 
-#define kVLCSettingSkipLoopFilter @"avcodec-skiploopfilter"
-#define kVLCSettingSkipLoopFilterNone @(0)
-#define kVLCSettingSkipLoopFilterNonRef @(1)
-#define kVLCSettingSkipLoopFilterNonKey @(3)
 #define kVLCSettingSubtitlesFont @"quartztext-font"
 #define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"
 #define kVLCSettingSubtitlesFontColor @"quartztext-color"

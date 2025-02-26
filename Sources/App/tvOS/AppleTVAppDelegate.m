@@ -40,8 +40,7 @@
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    NSDictionary *appDefaults = @{kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
-                                  kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
+    NSDictionary *appDefaults = @{kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
                                   kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
     };
     [defaults registerDefaults:appDefaults];

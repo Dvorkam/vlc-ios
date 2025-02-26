@@ -19,9 +19,6 @@
 #define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
-#define kVLCSettingSkipLoopFilter @"avcodec-skiploopfilter"
-#define kVLCSettingSkipLoopFilterNone @(0)
-#define kVLCSettingSkipLoopFilterNonRef @(1)
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCSettingSubtitlesFont @"quartztext-font"
 #define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"

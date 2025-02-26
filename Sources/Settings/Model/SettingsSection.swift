@@ -495,7 +495,7 @@ enum GestureControlOptions {
 
 enum VideoOptions {
     static var deBlockingFilter: SettingsItem {
-        let k = kVLCSettingSkipLoopFilter
+        let k = VLCDefaults.Compat.skipLoopFilterKey
         return .init(title: "SETTINGS_SKIP_LOOP_FILTER",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_SKIP_LOOP_FILTER", preferenceKey: k, hasInfo: true))

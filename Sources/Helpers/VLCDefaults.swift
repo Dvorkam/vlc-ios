@@ -75,6 +75,7 @@
             Keys.networkCaching: NetworkCaching.normal.rawValue,
             Keys.networkSatIPChannelListUrl: DefaultValues.networkSatIPChannelListUrl,
             Keys.playerIsRepeatEnabled: DefaultValues.playerRepeatMode,
+            Keys.skipLoopFilter: DefaultValues.skipLoopFilter,
             Keys.subtitlesFontSize: DefaultValues.subtitlesFontSize,
             Keys.textEncoding: DefaultValues.textEncoding,
         ]
@@ -605,6 +606,22 @@ extension VLCDefaults {
         }
     }
 
+    var skipLoopFilter: SkipLoopFilter {
+        get {
+            let v = userDefaults.integer(forKey: Keys.skipLoopFilter)
+            return SkipLoopFilter(rawValue: v) ?? DefaultValues.skipLoopFilter
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.skipLoopFilter)
+        }
+    }
+
+    @objc var skipLoopFilterObjC: Int {
+        get {
+            userDefaults.integer(forKey: Keys.skipLoopFilter)
+        }
+    }
+
     @objc var subtitlesFontSize: String {
         get {
             userDefaults.string(forKey: Keys.subtitlesFontSize) ?? DefaultValues.subtitlesFontSize
@@ -645,6 +662,7 @@ extension VLCDefaults {
         static let playbackForwardSkipLengthSwipeKey: String = Keys.playbackForwardSkipLengthSwipe
         static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
+        static let skipLoopFilterKey: String = Keys.skipLoopFilter
         static let subtitlesFontSizeKey: String = Keys.subtitlesFontSize
         static let textEncodingKey: String = Keys.textEncoding
 
@@ -670,6 +688,14 @@ extension VLCDefaults {
         case normal = 999
         case high = 1667
         case highest = 3333
+    }
+}
+
+extension VLCDefaults {
+    enum SkipLoopFilter: Int {
+        case none = 0
+        case nonRef = 1
+        case nonKey = 3
     }
 }
 
@@ -722,6 +748,7 @@ fileprivate enum Keys {
     static let playPauseGesture = "EnablePlayPauseGesture"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let seekGesture = "EnableSeekGesture"
+    static let skipLoopFilter = "avcodec-skiploopfilter"
     static let showArtworks = "ShowArtworks"
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
@@ -756,5 +783,6 @@ fileprivate enum DefaultValues {
     static let playbackSpeedDefaultValue = Float(1)
     static let playerControlDuration = 4
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
+    static let skipLoopFilter = VLCDefaults.SkipLoopFilter.nonRef
     static let subtitlesFontSize = "16"
 }

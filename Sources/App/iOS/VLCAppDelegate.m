@@ -44,7 +44,6 @@
     [VLCDefaults.shared registerDefaults];
 
     NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
-                                  kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
                                   kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
                                   kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
     };
