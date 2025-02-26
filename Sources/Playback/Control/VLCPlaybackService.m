@@ -1080,7 +1080,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 - (BOOL)next
 {
     if (_mediaList.count == 1) {
-        NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackForwardSkipLength];
+        NSNumber *skipLength = [NSNumber numberWithInteger:VLCDefaults.shared.playbackForwardSkipLength];
         [_mediaPlayer jumpForward:skipLength.intValue];
         return YES;
     }

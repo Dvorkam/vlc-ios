@@ -13,6 +13,7 @@
 
 #import "VLCRemoteControlService.h"
 #import "VLCPlaybackService.h"
+#import "VLC-Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 @implementation VLCRemoteControlService
@@ -78,7 +79,7 @@ static inline NSArray * RemoteCommandCenterCommandsToHandle(void)
     commandCenter.seekForwardCommand.enabled = NO;
     commandCenter.seekBackwardCommand.enabled = NO;
 
-    NSNumber *forwardSkip = [defaults valueForKey:kVLCSettingPlaybackForwardSkipLength];
+    NSNumber *forwardSkip = [NSNumber numberWithInteger:VLCDefaults.shared.playbackForwardSkipLength];
     commandCenter.skipForwardCommand.preferredIntervals = @[forwardSkip];
     NSNumber *backwardSkip = [defaults valueForKey:kVLCSettingPlaybackBackwardSkipLength];
     commandCenter.skipBackwardCommand.preferredIntervals = @[backwardSkip];

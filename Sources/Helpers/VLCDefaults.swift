@@ -60,6 +60,7 @@
             Keys.deinterlace: DefaultValues.deinterlace,
             Keys.equalizerProfile: DefaultValues.equalizerProfile,
             Keys.playbackBackwardSkipLengthSwipe: DefaultValues.playbackBackwardSkipLengthSwipe,
+            Keys.playbackForwardSkipLength: DefaultValues.playbackForwardSkipLength,
             Keys.playbackForwardSkipLengthSwipe: DefaultValues.playbackForwardSkipLengthSwipe,
             Keys.playerControlDuration: DefaultValues.playerControlDuration,
             Keys.tabBarIndex: 0,
@@ -446,6 +447,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var playbackForwardSkipLength: Int {
+        get {
+            userDefaults.integer(forKey: Keys.playbackForwardSkipLength)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.playbackForwardSkipLength)
+        }
+    }
+
     @objc var playbackForwardSkipLengthSwipe: Int {
         get {
             userDefaults.integer(forKey: Keys.playbackForwardSkipLengthSwipe)
@@ -568,6 +578,7 @@ extension VLCDefaults {
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
         static let networkCachingKey: String = Keys.networkCaching
         static let playbackBackwardSkipLengthSwipeKey: String = Keys.playbackBackwardSkipLengthSwipe
+        static let playbackForwardSkipLengthKey: String = Keys.playbackForwardSkipLength
         static let playbackForwardSkipLengthSwipeKey: String = Keys.playbackForwardSkipLengthSwipe
         static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
@@ -628,6 +639,7 @@ fileprivate enum Keys {
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackForwardBackwardEqual = "playback-forward-backward-equal"
+    static let playbackForwardSkipLength = "playback-forward-skip-length"
     static let playbackBackwardSkipLengthSwipe = "playback-backward-skip-length-swipe"
     static let playbackForwardSkipLengthSwipe = "playback-forward-skip-length-swipe"
     static let playbackLongTouchSpeedUp = "LongTouchSpeedUp"
@@ -667,6 +679,7 @@ fileprivate enum DefaultValues {
     static let textEncoding = "Windows-1252"
     static let networkSatIPChannelListUrl = ""
     static let playbackBackwardSkipLengthSwipe = 10
+    static let playbackForwardSkipLength = 10
     static let playbackForwardSkipLengthSwipe = 10
     static let playbackSpeedDefaultValue = Float(1)
     static let playerControlDuration = 4

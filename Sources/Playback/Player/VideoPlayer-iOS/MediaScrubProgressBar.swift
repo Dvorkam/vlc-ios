@@ -144,8 +144,7 @@ class MediaScrubProgressBar: UIStackView {
     }
 
     @objc private func handleAccessibilityForward() -> Bool {
-        let defaults = UserDefaults.standard
-        playbackService.jumpForward(Int32(defaults.integer(forKey: kVLCSettingPlaybackForwardSkipLength)))
+        playbackService.jumpForward(Int32(VLCDefaults.shared.playbackForwardSkipLength))
         return true
     }
 

@@ -389,7 +389,7 @@ enum GestureControlOptions {
     }
 
     static var forwardSkipLength: SettingsItem {
-        let k = kVLCSettingPlaybackForwardSkipLength
+        let k = VLCDefaults.Compat.playbackForwardSkipLengthKey
         return .init(title: dynamicForwardSkipDescription(),
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: dynamicForwardSkipDescription(), preferenceKey: k, hasInfo: false))
