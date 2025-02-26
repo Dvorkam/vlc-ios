@@ -195,7 +195,7 @@ enum MainOptions {
     }
 
     static var appearance: SettingsItem {
-        let k = kVLCSettingAppTheme
+        let k = VLCDefaults.Compat.appThemeKey
         return .init(title: "SETTINGS_DARKTHEME",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_DARKTHEME", preferenceKey: k, hasInfo: false))

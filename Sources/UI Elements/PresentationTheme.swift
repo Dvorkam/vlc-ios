@@ -104,6 +104,17 @@ enum PresentationThemeType: Int {
     case bright = 0
     case dark
     case auto
+
+    static func from(appTheme: VLCDefaults.AppTheme) -> PresentationThemeType {
+        switch appTheme {
+        case .dark:
+            return .dark
+        case .bright:
+            return .bright
+        case .system:
+            return .auto
+        }
+    }
 }
 
 @objcMembers class PresentationTheme: NSObject {
@@ -121,8 +132,7 @@ enum PresentationThemeType: Int {
     }
 
     static var current: PresentationTheme = {
-        let themeSettings = UserDefaults.standard.integer(forKey: kVLCSettingAppTheme)
-        return PresentationTheme.respectiveTheme(for: PresentationThemeType(rawValue: themeSettings))
+        return PresentationTheme.respectiveTheme(for: PresentationThemeType.from(appTheme: VLCDefaults.shared.appTheme))
     }() {
         didSet {
             AppearanceManager.setupAppearance(theme: self.current)
@@ -144,9 +154,7 @@ enum PresentationThemeType: Int {
     }
 
     @objc static func themeDidUpdate() {
-        let themeSettings = UserDefaults.standard.integer(forKey: kVLCSettingAppTheme)
-        PresentationTheme.current = PresentationTheme.respectiveTheme(for:
-            PresentationThemeType(rawValue: themeSettings))
+        PresentationTheme.current = PresentationTheme.respectiveTheme(for: PresentationThemeType.from(appTheme: VLCDefaults.shared.appTheme))
     }
 
     static func respectiveTheme(for theme: PresentationThemeType?, excludingBlackTheme: Bool = false) -> PresentationTheme {

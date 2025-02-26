@@ -35,16 +35,7 @@
 
 + (void)initialize
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSUInteger appThemeIndex = kVLCSettingAppThemeBright;
-    if (@available(iOS 13.0, *)) {
-        appThemeIndex = kVLCSettingAppThemeSystem;
-    }
-
     [VLCDefaults.shared registerDefaults];
-
-    NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex)};
-    [defaults registerDefaults:appDefaults];
 }
 
 - (void)setupTabBarAppearance

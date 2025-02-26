@@ -71,6 +71,7 @@
             Keys.tabBarIndex: 0,
 
             // other
+            Keys.appTheme: DefaultValues.appTheme,
             Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
             Keys.networkCaching: NetworkCaching.normal.rawValue,
             Keys.networkSatIPChannelListUrl: DefaultValues.networkSatIPChannelListUrl,
@@ -548,6 +549,20 @@ extension VLCDefaults {
 
     // Other
 
+    var appTheme: AppTheme {
+        get {
+            let v = userDefaults.integer(forKey: Keys.appTheme)
+            return AppTheme(rawValue: v) ?? DefaultValues.appTheme
+        }
+        set {
+            userDefaults.set(newValue.rawValue, forKey: Keys.appTheme)
+        }
+    }
+
+    @objc var appThemeIsSystem: Bool {
+        appTheme == .system
+    }
+
     var hardwareDecoding: HardwareDecoding {
         get {
             guard let v = userDefaults.string(forKey: Keys.hardwareDecoding) else {
@@ -665,6 +680,7 @@ extension VLCDefaults {
     @available(*, deprecated, message: "avoid using keys to access defaults directly, instead use properties on VLCDefaults")
     @objc(VLCDefaultsCompat)
     final class Compat: NSObject {
+        static let appThemeKey: String = Keys.appTheme
         static let automaticallyPlayNextItemKey: String = Keys.automaticallyPlayNextItem
         static let backupMediaLibraryKey: String = Keys.backupMediaLibrary
         static let castingConversionQualityKey: String = Keys.castingConversionQuality
@@ -694,6 +710,14 @@ extension VLCDefaults {
 }
 
 // MARK: - Value Types
+
+extension VLCDefaults {
+    enum AppTheme: Int {
+        case bright = 0
+        case dark = 1
+        case system = 2
+    }
+}
 
 extension VLCDefaults {
     enum HardwareDecoding: String {
@@ -726,6 +750,7 @@ fileprivate enum Keys {
     // Avoid ever changing these values. Some are used as parameters in functions.
     // Changing a value also causes the locally stored value to become unreachable.
     static let alwaysPlayURLs = "kVLCSettingAlwaysPlayURLs"
+    static let appTheme = "darkMode"
     static let appThemeBlack = "blackTheme"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let backupMediaLibrary = "BackupMediaLibrary"
@@ -794,6 +819,12 @@ fileprivate enum Keys {
 // MARK: - Default Values
 
 fileprivate enum DefaultValues {
+    static let appTheme: VLCDefaults.AppTheme = {
+        if #available(iOS 13.0, *) {
+            return .system
+        }
+        return .bright
+    }()
     static let castingConversionQuality = 2
     static let deinterlace = Int(-1)
     static let equalizerProfile = Int(0)

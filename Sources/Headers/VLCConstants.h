@@ -13,9 +13,6 @@
 
 #define kVLCSettingPasscodeOnKey @"PasscodeProtection"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
-#define kVLCSettingAppTheme @"darkMode"
-#define kVLCSettingAppThemeBright 0
-#define kVLCSettingAppThemeSystem 2
 #define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"

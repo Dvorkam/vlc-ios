@@ -60,7 +60,7 @@ extension ActionSheetSpecifier: ActionSheetDelegate {
             return
         }
 
-        guard preferenceKey != kVLCSettingAppTheme ||
+        guard preferenceKey != VLCDefaults.Compat.appThemeKey ||
                 (!PresentationTheme.current.isDark || indexPath.row != numberOfRows() - 1) else {
             // Disable the selection for the black background option cell in the appearance action sheet
             return
@@ -73,7 +73,7 @@ extension ActionSheetSpecifier: ActionSheetDelegate {
 
         userDefaults.set(settingSpecifier?.specifier[indexPath.row].value, forKey: preferenceKey)
 
-        if preferenceKey == kVLCSettingAppTheme {
+        if preferenceKey == VLCDefaults.Compat.appThemeKey {
             PresentationTheme.themeDidUpdate()
         }
 
@@ -106,7 +106,7 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             return 0
         }
 
-        if preferenceKey == kVLCSettingAppTheme {
+        if preferenceKey == VLCDefaults.Compat.appThemeKey {
             let isThemeDark: Bool = PresentationTheme.current.isDark
             if #available(iOS 13, *) {
                 return isThemeDark ? rowCount : rowCount - 1
@@ -128,7 +128,7 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             return UICollectionViewCell()
         }
 
-        if preferenceKey == kVLCSettingAppTheme &&
+        if preferenceKey == VLCDefaults.Compat.appThemeKey &&
             PresentationTheme.current.isDark && indexPath.row == numberOfRows() - 1 {
             // Update the black background option cell
             cell.setAccessoryType(to: .toggleSwitch)
