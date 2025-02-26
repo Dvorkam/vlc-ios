@@ -33,6 +33,7 @@
             Keys.currentlyPlayingPlaylist: false,
             Keys.customEqualizerProfileEnabled: false,
             Keys.disableGrouping: false,
+            Keys.disableSubtitles: false,
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.equalizerProfileDisabled: true,
@@ -235,6 +236,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.disableGrouping)
+        }
+    }
+
+    @objc var disableSubtitles: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.disableSubtitles)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.disableSubtitles)
         }
     }
 
@@ -1013,6 +1023,7 @@ fileprivate enum Keys {
     static let defaultPreampLevel = "pre-amp-level"
     static let deinterlace = "deinterlace"
     static let disableGrouping = "MLDisableGrouping"
+    static let disableSubtitles = "kVLCSettingDisableSubtitles"
     static let downloadArtwork = "download-artwork"
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let equalizerProfile = "EqualizerProfile"

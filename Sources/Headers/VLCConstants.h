@@ -20,7 +20,6 @@
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
-#define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"

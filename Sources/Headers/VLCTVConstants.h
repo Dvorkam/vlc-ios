@@ -36,7 +36,6 @@
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"
-#define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
 
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
 

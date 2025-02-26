@@ -496,13 +496,13 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             }
         }
 
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles]) {
+        if (VLCDefaults.shared.disableSubtitles) {
             _mediaPlayer.currentVideoSubTitleIndex = -1;
         } else {
             [self selectVideoSubtitleAtIndex:media.subtitleTrackIndex];
         }
 #else
-        BOOL disableSubtitles = [[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles];
+        BOOL disableSubtitles = VLCDefaults.shared.disableSubtitles;
 
         NSArray *audioTracks = _mediaPlayer.audioTracks;
         if (media.audioTrackIndex < audioTracks.count) {
@@ -1684,7 +1684,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
 - (void)disableSubtitlesIfNeeded
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles]) {
+    if (VLCDefaults.shared.disableSubtitles) {
         [_mediaPlayer deselectAllTextTracks];
     }
 }

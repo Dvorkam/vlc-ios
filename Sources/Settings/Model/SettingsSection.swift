@@ -544,7 +544,7 @@ enum SubtitlesOptions {
     static var disableSubtitles: SettingsItem {
         .toggle(title: "SETTINGS_SUBTITLES_DISABLE",
                 subtitle: "SETTINGS_SUBTITLES_DISABLE_LONG",
-                preferenceKey: kVLCSettingDisableSubtitles)
+                keyPath: \.disableSubtitles)
     }
 
     static var font: SettingsItem {
