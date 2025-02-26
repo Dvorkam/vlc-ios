@@ -62,6 +62,7 @@
             Keys.playbackBackwardSkipLengthSwipe: DefaultValues.playbackBackwardSkipLengthSwipe,
             Keys.playbackForwardSkipLengthSwipe: DefaultValues.playbackForwardSkipLengthSwipe,
             Keys.playerControlDuration: DefaultValues.playerControlDuration,
+            Keys.tabBarIndex: 0,
 
             // other
             Keys.hardwareDecoding: HardwareDecoding.hardware.rawValue,
@@ -472,6 +473,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var tabBarIndex: Int {
+        get {
+            userDefaults.integer(forKey: Keys.tabBarIndex)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.tabBarIndex)
+        }
+    }
+
     // Other
 
     var hardwareDecoding: HardwareDecoding {
@@ -637,6 +647,7 @@ fileprivate enum Keys {
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
+    static let tabBarIndex = "TabBarIndex"
     static let textEncoding = "subsdec-encoding"
     static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
     static let volumeGesture = "EnableVolumeGesture"

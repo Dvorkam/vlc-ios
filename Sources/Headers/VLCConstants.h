@@ -108,8 +108,6 @@
 #define kVLCNumberOfLaunches @"kVLCNumberOfLaunches"
 #define kVLCHasActiveSubscription @"kVLCHasActiveSubscription"
 
-#define kVLCTabBarIndex @"TabBarIndex"
-
 #define kVLCGroupLayout @"kVLCGroupLayout"
 
 #define kVLCEqualizerSnapBands @"EqualizerSnapBands"

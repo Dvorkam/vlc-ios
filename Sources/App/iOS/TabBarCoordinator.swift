@@ -50,7 +50,7 @@ class TabBarCoordinator: NSObject {
         ]
 
         tabBarController.viewControllers = controllers.map { UINavigationController(rootViewController: $0) }
-        tabBarController.selectedIndex = UserDefaults.standard.integer(forKey: kVLCTabBarIndex)
+        tabBarController.selectedIndex = VLCDefaults.shared.tabBarIndex
     }
 
     func setupEditToolbar() {
@@ -162,6 +162,6 @@ class TabBarCoordinator: NSObject {
 extension TabBarCoordinator: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         let viewControllerIndex: Int = tabBarController.viewControllers?.firstIndex(of: viewController) ?? 0
-        UserDefaults.standard.set(viewControllerIndex, forKey: kVLCTabBarIndex)
+        VLCDefaults.shared.tabBarIndex = viewControllerIndex
     }
 }
