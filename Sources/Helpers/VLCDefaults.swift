@@ -35,6 +35,7 @@
             Keys.equalizerProfileDisabled: true,
             Keys.forceSMBV1: true,
             Keys.hideLibraryInFilesApp: false,
+            Keys.mediaLibraryServiceDidForceRescan: false,
             Keys.networkRTSPTCP: false,
             Keys.passcodeEnableBiometricAuth: true,
             Keys.pauseWhenShowingControls: false,
@@ -237,6 +238,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.hideLibraryInFilesApp)
+        }
+    }
+
+    @objc var mediaLibraryServiceDidForceRescan: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.mediaLibraryServiceDidForceRescan)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.mediaLibraryServiceDidForceRescan)
         }
     }
 
@@ -800,6 +810,7 @@ fileprivate enum Keys {
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
+    static let mediaLibraryServiceDidForceRescan = "MediaLibraryDidForceRescan"
     static let networkCaching = "network-caching"
     static let networkRTSPTCP = "rtsp-tcp"
     static let networkSatIPChannelListUrl = "satip-channellist-url"
