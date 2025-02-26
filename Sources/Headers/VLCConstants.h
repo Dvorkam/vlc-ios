@@ -20,8 +20,6 @@
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
-#define kVLCSettingSubtitlesFont @"quartztext-font"
-#define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingRotationLock @"kVLCSettingRotationLock"

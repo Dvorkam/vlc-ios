@@ -623,6 +623,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var subtitlesFont: String {
+        get {
+            userDefaults.string(forKey: Keys.subtitlesFont) ?? DefaultValues.subtitlesFont
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.subtitlesFont)
+        }
+    }
+
     @objc var subtitlesFontColor: String {
         get {
             userDefaults.string(forKey: Keys.subtitlesFontColor) ?? DefaultValues.subtitlesFontColor
@@ -673,6 +682,7 @@ extension VLCDefaults {
         static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
         static let skipLoopFilterKey: String = Keys.skipLoopFilter
+        static let subtitlesFontKey: String = Keys.subtitlesFont
         static let subtitlesFontColorKey: String = Keys.subtitlesFontColor
         static let subtitlesFontSizeKey: String = Keys.subtitlesFontSize
         static let textEncodingKey: String = Keys.textEncoding
@@ -765,8 +775,9 @@ fileprivate enum Keys {
     static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
     static let subtitlesBoldFont = "quartztext-bold"
-    static let subtitlesFontSize = "quartztext-rel-fontsize"
+    static let subtitlesFont = "quartztext-font"
     static let subtitlesFontColor = "quartztext-color"
+    static let subtitlesFontSize = "quartztext-rel-fontsize"
     static let tabBarIndex = "TabBarIndex"
     static let textEncoding = "subsdec-encoding"
     static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
@@ -796,6 +807,7 @@ fileprivate enum DefaultValues {
     static let playerControlDuration = 4
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
     static let skipLoopFilter = VLCDefaults.SkipLoopFilter.nonRef
-    static let subtitlesFontSize = "16"
+    static let subtitlesFont = "HelveticaNeue"
     static let subtitlesFontColor = "16777215"
+    static let subtitlesFontSize = "16"
 }

@@ -32,8 +32,6 @@
 /* deprecated */
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
 
-#define kVLCSettingSubtitlesFont @"quartztext-font"
-#define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"

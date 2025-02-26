@@ -859,10 +859,9 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             _mediaPlayer.media.delegate = self;
 
             /* on-the-fly values through hidden API */
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-            [_mediaPlayer performSelector:@selector(setTextRendererFont:) withObject:[defaults objectForKey:kVLCSettingSubtitlesFont]];
+            [_mediaPlayer performSelector:@selector(setTextRendererFont:) withObject:VLCDefaults.shared.subtitlesFontSize];
             [_mediaPlayer performSelector:@selector(setTextRendererFontSize:) withObject:VLCDefaults.shared.subtitlesFontSize];
             [_mediaPlayer performSelector:@selector(setTextRendererFontColor:) withObject:VLCDefaults.shared.subtitlesFontColor];
             [_mediaPlayer performSelector:@selector(setTextRendererFontForceBold:) withObject:[NSNumber numberWithBool:VLCDefaults.shared.subtitlesBoldFont]];

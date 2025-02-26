@@ -43,9 +43,7 @@
 
     [VLCDefaults.shared registerDefaults];
 
-    NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
-                                  kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
-    };
+    NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex)};
     [defaults registerDefaults:appDefaults];
 }
 

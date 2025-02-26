@@ -38,11 +38,7 @@
 
 + (void)initialize
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-    NSDictionary *appDefaults = @{kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
-    };
-    [defaults registerDefaults:appDefaults];
+    [VLCDefaults.shared registerDefaults];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
