@@ -13,7 +13,6 @@
 
 #define kVLCSettingPasscodeOnKey @"PasscodeProtection"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
-#define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
 #define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
 #define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
