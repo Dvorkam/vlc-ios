@@ -863,7 +863,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
             [_mediaPlayer performSelector:@selector(setTextRendererFont:) withObject:[defaults objectForKey:kVLCSettingSubtitlesFont]];
-            [_mediaPlayer performSelector:@selector(setTextRendererFontSize:) withObject:[defaults objectForKey:kVLCSettingSubtitlesFontSize]];
+            [_mediaPlayer performSelector:@selector(setTextRendererFontSize:) withObject:VLCDefaults.shared.subtitlesFontSize];
             [_mediaPlayer performSelector:@selector(setTextRendererFontColor:) withObject:[defaults objectForKey:kVLCSettingSubtitlesFontColor]];
             [_mediaPlayer performSelector:@selector(setTextRendererFontForceBold:) withObject:[NSNumber numberWithBool:VLCDefaults.shared.subtitlesBoldFont]];
 #pragma clang diagnostic pop

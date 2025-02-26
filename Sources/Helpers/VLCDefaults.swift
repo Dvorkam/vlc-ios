@@ -74,6 +74,7 @@
             Keys.networkCaching: NetworkCaching.normal.rawValue,
             Keys.networkSatIPChannelListUrl: DefaultValues.networkSatIPChannelListUrl,
             Keys.playerIsRepeatEnabled: DefaultValues.playerRepeatMode,
+            Keys.subtitlesFontSize: DefaultValues.subtitlesFontSize,
             Keys.textEncoding: DefaultValues.textEncoding,
         ]
 
@@ -593,6 +594,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var subtitlesFontSize: String {
+        get {
+            userDefaults.string(forKey: Keys.subtitlesFontSize) ?? DefaultValues.subtitlesFontSize
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.subtitlesFontSize)
+        }
+    }
+
     func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
         userDefaults.bool(forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
@@ -624,6 +634,7 @@ extension VLCDefaults {
         static let playbackForwardSkipLengthSwipeKey: String = Keys.playbackForwardSkipLengthSwipe
         static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
+        static let subtitlesFontSizeKey: String = Keys.subtitlesFontSize
         static let textEncodingKey: String = Keys.textEncoding
 
         override init() {
@@ -704,6 +715,7 @@ fileprivate enum Keys {
     static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
     static let subtitlesBoldFont = "quartztext-bold"
+    static let subtitlesFontSize = "quartztext-rel-fontsize"
     static let tabBarIndex = "TabBarIndex"
     static let textEncoding = "subsdec-encoding"
     static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
@@ -732,4 +744,5 @@ fileprivate enum DefaultValues {
     static let playbackSpeedDefaultValue = Float(1)
     static let playerControlDuration = 4
     static let playerRepeatMode = VLCRepeatMode.doNotRepeat
+    static let subtitlesFontSize = "16"
 }

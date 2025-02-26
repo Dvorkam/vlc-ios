@@ -555,7 +555,7 @@ enum SubtitlesOptions {
     }
 
     static var relativeFontSize: SettingsItem {
-        let k = kVLCSettingSubtitlesFontSize
+        let k = VLCDefaults.Compat.subtitlesFontSizeKey
         return .init(title: "SETTINGS_SUBTITLES_FONTSIZE",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_SUBTITLES_FONTSIZE", preferenceKey: k, hasInfo: true))
