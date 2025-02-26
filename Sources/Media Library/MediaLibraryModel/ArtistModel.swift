@@ -20,7 +20,7 @@ class ArtistModel: AudioCollectionModel {
     var fileArrayLock = NSRecursiveLock()
 
     var cellType: BaseCollectionViewCell.Type {
-        return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(name)") ? MediaGridCollectionCell.self : MediaCollectionViewCell.self
+        return VLCDefaults.shared.audioLibraryGridLayout(name: name) ? MediaGridCollectionCell.self : MediaCollectionViewCell.self
     }
 
     var medialibrary: MediaLibraryService

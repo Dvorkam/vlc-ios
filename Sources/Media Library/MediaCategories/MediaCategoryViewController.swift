@@ -1525,8 +1525,6 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
 
     func handleLayoutChange(gridLayout: Bool) {
         var prefix: String = ""
-        var suffix: String = ""
-
         var collectionModelName: String = ""
         var isVideoModel = false
         if let model = model as? CollectionModel {
@@ -1544,9 +1542,9 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
                                                          name: model.name,
                                                          isGrid: gridLayout)
         case false:
-            prefix = kVLCAudioLibraryGridLayout
-            suffix = collectionModelName + model.name
-            userDefaults.set(gridLayout, forKey: "\(prefix)\(suffix)")
+            VLCDefaults.shared.setAudioLibraryGridLayout(collectionModelName: collectionModelName,
+                                                         name: model.name,
+                                                         isGrid: gridLayout)
         }
 
         setupCollectionView()

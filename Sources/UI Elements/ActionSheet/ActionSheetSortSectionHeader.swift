@@ -30,7 +30,6 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
 
     private var sortModel: SortModel
     private var secondSortModel: SortModel?
-    private let userDefaults = UserDefaults.standard
     private var isAdditionalOptionShown: Bool = false
 
     private let descendingStackView: UIStackView = {
@@ -255,7 +254,7 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
         case true:
             layoutChangeSwitch.isOn = VLCDefaults.shared.videoLibraryGridLayout(name: modelType)
         case false:
-            layoutChangeSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCAudioLibraryGridLayout + modelType)
+            layoutChangeSwitch.isOn = VLCDefaults.shared.audioLibraryGridLayout(name: modelType)
         }
     }
 

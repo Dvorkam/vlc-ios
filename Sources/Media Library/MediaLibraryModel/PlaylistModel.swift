@@ -21,7 +21,7 @@ class PlaylistModel: MLBaseModel {
     var files = [VLCMLPlaylist]()
 
     var cellType: BaseCollectionViewCell.Type {
-        return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(name)") ? MovieCollectionViewCell.self : MediaCollectionViewCell.self
+        return VLCDefaults.shared.audioLibraryGridLayout(name: name) ? MovieCollectionViewCell.self : MediaCollectionViewCell.self
     }
 
     var medialibrary: MediaLibraryService

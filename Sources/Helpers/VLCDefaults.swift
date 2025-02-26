@@ -672,6 +672,14 @@ extension VLCDefaults {
     func setVideoLibraryGridLayout(collectionModelName: String? = nil, name: String, isGrid: Bool) {
         userDefaults.set(isGrid, forKey: Keys.videoLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
+
+    func audioLibraryGridLayout(collectionModelName: String? = nil, name: String) -> Bool {
+        userDefaults.bool(forKey: Keys.audioLibraryGridLayout(collectionModelName: collectionModelName, name: name))
+    }
+
+    func setAudioLibraryGridLayout(collectionModelName: String? = nil, name: String, isGrid: Bool) {
+        userDefaults.set(isGrid, forKey: Keys.audioLibraryGridLayout(collectionModelName: collectionModelName, name: name))
+    }
 }
 
 // MARK: - Compatibility
@@ -812,6 +820,12 @@ fileprivate enum Keys {
     static func videoLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {
         [
             "kVLCVideoLibraryGridLayout", collectionModelName, name
+        ].compactMap { $0 }.joined()
+    }
+
+    static func audioLibraryGridLayout(collectionModelName: String? = nil, name: String) -> String {
+        [
+            "kVLCAudioLibraryGridLayout", collectionModelName, name
         ].compactMap { $0 }.joined()
     }
 }
