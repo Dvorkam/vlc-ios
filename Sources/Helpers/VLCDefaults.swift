@@ -719,6 +719,33 @@ extension VLCDefaults {
         hardwareDecoding.rawValue
     }
 
+    var lastPlayedPlaylist: LastPlayedPlaylistModel? {
+        get {
+            guard let encodedData = userDefaults.data(forKey: Keys.lastPlayedPlaylist) else {
+                return nil
+            }
+
+            guard let decoded = try? NSKeyedUnarchiver(forReadingFrom: encodedData)
+                .decodeObject(forKey: "root") as? LastPlayedPlaylistModel else {
+                return nil
+            }
+
+            return decoded
+        }
+        set {
+            guard let newValue = newValue else {
+                return
+            }
+
+            guard let encoded = try? NSKeyedArchiver
+                .archivedData(withRootObject: newValue, requiringSecureCoding: false) else {
+                return
+            }
+
+            userDefaults.setValue(encoded, forKey: Keys.lastPlayedPlaylist)
+        }
+    }
+
     var networkCaching: NetworkCaching {
         get {
             let v = userDefaults.integer(forKey: Keys.networkCaching)
@@ -925,6 +952,7 @@ fileprivate enum Keys {
     static let hasLaunchedBefore = "hasLaunchedBefore"
     static let hasNaggedThisMonth = "kVLCHasNaggedThisMonth"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
+    static let lastPlayedPlaylist = "LastPlayedPlaylist"
     static let mediaLibraryServiceDidForceRescan = "MediaLibraryDidForceRescan"
     static let networkCaching = "network-caching"
     static let networkRTSPTCP = "rtsp-tcp"

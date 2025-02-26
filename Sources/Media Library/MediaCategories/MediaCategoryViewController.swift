@@ -202,12 +202,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     }()
 
     private var lastPlaylist: LastPlayedPlaylistModel? {
-        let encodedLastPlaylist = userDefaults.data(forKey: kVLCLastPlayedPlaylist)
-        guard let encodedData = encodedLastPlaylist,
-              let lastPlayed = NSKeyedUnarchiver(forReadingWith: encodedData).decodeObject(forKey: "root") as? LastPlayedPlaylistModel else {
-            return nil
-        }
-        return lastPlayed
+        return VLCDefaults.shared.lastPlayedPlaylist
     }
 
     // Indicating that the current chosen collection to play is playlist, useful for handling Observer
@@ -1842,7 +1837,7 @@ extension MediaCategoryViewController {
 
         let lastMedia = LastPlayed(identifier: media.identifier(), title: media.title)
         let playlistInfo = LastPlayedPlaylistModel(identifier: playlistId, title: playlistTitle, lastPlayedMedia: lastMedia)
-        userDefaults.setValue(NSKeyedArchiver.archivedData(withRootObject: playlistInfo), forKey: kVLCLastPlayedPlaylist)
+        VLCDefaults.shared.lastPlayedPlaylist = playlistInfo
     }
 
     private func addPlaybackWillStopObserver() {
