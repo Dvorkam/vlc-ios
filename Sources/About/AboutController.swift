@@ -181,7 +181,6 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
     func generateFeedbackEmailPrefill() -> String {
         let bundleShortVersionString = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let device = UIDevice.current
-        let defaults = UserDefaults.standard
         let locale = NSLocale.autoupdatingCurrent
         let prefilledFeedback = String(format: "\n\n\n----------------------------------------\n%@\nDevice: %@\nOS: %@ - %@\nLocale: %@ (%@)\nVLC app version: %@\nlibvlc version: %@\nhardware decoding: %i\nnetwork caching level: %i\nskip loop filter: %i\nRTSP over TCP: %i\nAudio time stretching: %i",
                                        NSLocalizedString("FEEDBACK_EMAIL_BODY", comment: ""),

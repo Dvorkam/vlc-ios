@@ -296,9 +296,7 @@ class SettingsController: UITableViewController {
     }
 
     private func resetOptions() {
-        // note that [NSUserDefaults resetStandardUserDefaults] will NOT correctly reset to the defaults
-        let appDomain = Bundle.main.bundleIdentifier!
-        UserDefaults().removePersistentDomain(forName: appDomain)
+        VLCDefaults.shared.reset()
     }
 }
 

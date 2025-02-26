@@ -98,6 +98,11 @@
 
         userDefaults.register(defaults: dict)
     }
+
+    func reset() {
+        let appDomain = Bundle.main.bundleIdentifier!
+        UserDefaults().removePersistentDomain(forName: appDomain)
+    }
 }
 
 // MARK: - Defaults
