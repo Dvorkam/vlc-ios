@@ -23,6 +23,7 @@
             Keys.alwaysPlayURLs: false,
             Keys.appThemeBlack: false,
             Keys.audioLibraryHideFeatArtists: false,
+            Keys.audioLibraryHideTrackNumbers: false,
             Keys.automaticallyPlayNextItem: true,
             Keys.backupMediaLibrary: false,
             Keys.brightnessGesture: true,
@@ -136,6 +137,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.audioLibraryHideFeatArtists)
+        }
+    }
+
+    @objc var audioLibraryHideTrackNumbers: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.audioLibraryHideTrackNumbers)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.audioLibraryHideTrackNumbers)
         }
     }
 
@@ -807,6 +817,7 @@ fileprivate enum Keys {
     static let appTheme = "darkMode"
     static let appThemeBlack = "blackTheme"
     static let audioLibraryHideFeatArtists = "kVLCAudioLibraryHideFeatArtists"
+    static let audioLibraryHideTrackNumbers = "kVLCAudioLibraryHideTrackNumbers"
     static let automaticallyPlayNextItem = "AutomaticallyPlayNextItem"
     static let backupMediaLibrary = "BackupMediaLibrary"
     static let brightnessGesture = "EnableBrightnessGesture"

@@ -309,6 +309,6 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
 
         secondaryStackView.addArrangedSubview(hideTrackNumbersStackView)
 
-        hideTrackNumbersSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCAudioLibraryHideTrackNumbers)
+        hideTrackNumbersSwitch.isOn = VLCDefaults.shared.audioLibraryHideTrackNumbers
     }
 }

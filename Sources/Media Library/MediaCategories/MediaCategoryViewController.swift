@@ -1562,7 +1562,7 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
     }
 
     func actionSheetSortSectionHeaderShouldHideTrackNumbers(onSwitchIsOnChange: Bool) {
-        userDefaults.set(onSwitchIsOnChange, forKey: "\(kVLCAudioLibraryHideTrackNumbers)")
+        VLCDefaults.shared.audioLibraryHideTrackNumbers = onSwitchIsOnChange
         setupCollectionView()
         cachedCellSize = .zero
         model.sort(by: model.sortModel.currentSort, desc: model.sortModel.desc)

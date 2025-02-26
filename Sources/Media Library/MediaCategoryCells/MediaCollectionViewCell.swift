@@ -260,7 +260,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
             trackNumber = String(describing: media.trackNumber) + ". "
         }
 
-        let displayTrackNumber: Bool = !UserDefaults.standard.bool(forKey: kVLCAudioLibraryHideTrackNumbers)
+        let displayTrackNumber: Bool = !VLCDefaults.shared.audioLibraryHideTrackNumbers
         titleLabel.text = displayTrackNumber ? trackNumber + audiotrack.title() : audiotrack.title()
         accessibilityLabel = audiotrack.accessibilityText(editing: false)
         var descriptionText = audiotrack.albumTrackArtistName()
