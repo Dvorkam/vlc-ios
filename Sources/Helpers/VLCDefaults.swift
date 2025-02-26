@@ -74,6 +74,7 @@
             Keys.deinterlace: DefaultValues.deinterlace,
             Keys.equalizerProfile: DefaultValues.equalizerProfile,
             Keys.hasNaggedThisMonth: 0,
+            Keys.numberOfLaunches: 0,
             Keys.playbackBackwardSkipLength: DefaultValues.playbackBackwardSkipLength,
             Keys.playbackBackwardSkipLengthSwipe: DefaultValues.playbackBackwardSkipLengthSwipe,
             Keys.playbackForwardSkipLength: DefaultValues.playbackForwardSkipLength,
@@ -600,6 +601,18 @@ extension VLCDefaults {
         }
     }
 
+    @objc var numberOfLaunches: Int {
+        userDefaults.integer(forKey: Keys.numberOfLaunches)
+    }
+
+    @objc func incrementNumberOfLaunches() {
+        userDefaults.set(numberOfLaunches + 1, forKey: Keys.numberOfLaunches)
+    }
+
+    @objc func resetNumberOfLaunches() {
+        userDefaults.set(0, forKey: Keys.numberOfLaunches)
+    }
+
     @objc var playbackBackwardSkipLength: Int {
         get {
             userDefaults.integer(forKey: Keys.playbackBackwardSkipLength)
@@ -980,6 +993,7 @@ fileprivate enum Keys {
     static let networkCaching = "network-caching"
     static let networkRTSPTCP = "rtsp-tcp"
     static let networkSatIPChannelListUrl = "satip-channellist-url"
+    static let numberOfLaunches = "kVLCNumberOfLaunches"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let pauseWhenShowingControls = "kVLCSettingPauseWhenShowingControls"
     static let playbackBackwardSkipLength = "playback-backward-skip-length"
