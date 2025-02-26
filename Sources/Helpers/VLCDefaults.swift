@@ -34,6 +34,7 @@
             Keys.enableMediaCellTextScrolling: false,
             Keys.equalizerProfileDisabled: true,
             Keys.forceSMBV1: true,
+            Keys.hasLaunchedBefore: false,
             Keys.hideLibraryInFilesApp: false,
             Keys.mediaLibraryServiceDidForceRescan: false,
             Keys.networkRTSPTCP: false,
@@ -234,6 +235,16 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.forceSMBV1)
+        }
+    }
+
+    var hasLaunchedBefore: Bool {
+        userDefaults.bool(forKey: Keys.hasLaunchedBefore)
+    }
+
+    func setHasLaunchedBeforeIfNeeded() {
+        if !hasLaunchedBefore {
+            userDefaults.set(true, forKey: Keys.hasLaunchedBefore)
         }
     }
 
@@ -814,6 +825,7 @@ fileprivate enum Keys {
     static let equalizerProfileDisabled = "EqualizerDisabled"
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
+    static let hasLaunchedBefore = "hasLaunchedBefore"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let mediaLibraryServiceDidForceRescan = "MediaLibraryDidForceRescan"
     static let networkCaching = "network-caching"

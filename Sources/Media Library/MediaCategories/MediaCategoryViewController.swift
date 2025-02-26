@@ -79,7 +79,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     private lazy var navItemTitle: VLCMarqueeLabel = VLCMarqueeLabel()
 
     private var hasLaunchedBefore: Bool {
-        return userDefaults.bool(forKey: kVLCHasLaunchedBefore)
+        return VLCDefaults.shared.hasLaunchedBefore
     }
 
     @objc private lazy var sortActionSheet: ActionSheet = {
@@ -604,7 +604,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             let navigationController = UINavigationController(rootViewController: firstStepController)
             navigationController.modalPresentationStyle = .formSheet
             self.present(navigationController, animated: true)
-            userDefaults.set(true, forKey: kVLCHasLaunchedBefore)
+            VLCDefaults.shared.setHasLaunchedBeforeIfNeeded()
         } else {
             if userDefaults.bool(forKey: kVLCHasActiveSubscription) {
                 return
