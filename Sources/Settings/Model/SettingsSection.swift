@@ -564,7 +564,7 @@ enum SubtitlesOptions {
     static var useBoldFont: SettingsItem {
         .toggle(title: "SETTINGS_SUBTITLES_BOLDFONT",
                 subtitle: nil,
-                preferenceKey: kVLCSettingSubtitlesBoldFont)
+                keyPath: \.subtitlesBoldFont)
     }
 
     static var fontColor: SettingsItem {

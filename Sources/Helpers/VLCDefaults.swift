@@ -50,6 +50,7 @@
             Keys.showRemainingTime: false,
             Keys.showThumbnails: true,
             Keys.stretchAudio: true,
+            Keys.subtitlesBoldFont: false,
             Keys.videoFullscreenPlayback: true,
             Keys.volumeGesture: true,
             Keys.wifiSharingIPv6: false,
@@ -376,6 +377,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var subtitlesBoldFont: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.subtitlesBoldFont)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.subtitlesBoldFont)
+        }
+    }
+
     @objc var videoFullscreenPlayback: Bool {
         get {
             userDefaults.bool(forKey: Keys.videoFullscreenPlayback)
@@ -693,6 +703,7 @@ fileprivate enum Keys {
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
     static let stretchAudio = "audio-time-stretch"
+    static let subtitlesBoldFont = "quartztext-bold"
     static let tabBarIndex = "TabBarIndex"
     static let textEncoding = "subsdec-encoding"
     static let videoFullscreenPlayback = "AlwaysUseFullscreenForVideo"
