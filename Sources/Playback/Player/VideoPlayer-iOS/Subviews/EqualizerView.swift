@@ -214,7 +214,7 @@ import UIKit
         snapBandsLabel.text = NSLocalizedString("SNAP_BANDS", comment: "")
         snapBandsLabel.textAlignment = .right
         snapBandsLabel.setContentHuggingPriority(.required, for: .vertical)
-        snapBandsSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCEqualizerSnapBands)
+        snapBandsSwitch.isOn = VLCDefaults.shared.equalizerSnapBands
         snapBandsSwitch.addTarget(self, action: #selector(snapBandsSwitchDidChangeValue), for: .valueChanged)
         snapBandsSwitch.setContentHuggingPriority(.required, for: .vertical)
         snapBandsStackView.addArrangedSubview(snapBandsLabel)
@@ -419,7 +419,7 @@ extension EqualizerView {
 
 extension EqualizerView {
     @objc func snapBandsSwitchDidChangeValue(sender: UISwitch) {
-        UserDefaults.standard.setValue(sender.isOn, forKey: kVLCEqualizerSnapBands)
+        VLCDefaults.shared.equalizerSnapBands = sender.isOn
     }
 }
 
@@ -476,7 +476,6 @@ extension EqualizerView {
     }
 
     @objc func resetEqualizer() {
-        let userDefaults = UserDefaults.standard
         let isEqualizerDisabled = VLCDefaults.shared.equalizerProfileDisabled
         let isCustomProfile = VLCDefaults.shared.customEqualizerProfileEnabled
 
@@ -499,8 +498,6 @@ extension EqualizerView {
     }
 
     private func applyCustomProfile(_ index: Int) {
-        let userDefaults = UserDefaults.standard
-
         guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles,
               index < customProfiles.profiles.count else {
             return

@@ -78,8 +78,6 @@
 
 #define kVLCGroupLayout @"kVLCGroupLayout"
 
-#define kVLCEqualizerSnapBands @"EqualizerSnapBands"
-
 #define kVLCDonationAnonymousCustomerID @"kVLCDonationAnonymousCustomerID"
 
 /* LEGACY KEYS, DO NOT USE IN NEW CODE */

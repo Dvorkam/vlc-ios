@@ -35,6 +35,7 @@
             Keys.downloadArtwork: true,
             Keys.enableMediaCellTextScrolling: false,
             Keys.equalizerProfileDisabled: true,
+            Keys.equalizerSnapBands: false,
             Keys.forceSMBV1: true,
             Keys.hasLaunchedBefore: false,
             Keys.hideLibraryInFilesApp: false,
@@ -247,6 +248,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.equalizerProfileDisabled)
+        }
+    }
+
+    @objc var equalizerSnapBands: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.equalizerSnapBands)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.equalizerSnapBands)
         }
     }
 
@@ -899,6 +909,7 @@ fileprivate enum Keys {
     static let enableMediaCellTextScrolling = "EnableMediaCellTextScrolling"
     static let equalizerProfile = "EqualizerProfile"
     static let equalizerProfileDisabled = "EqualizerDisabled"
+    static let equalizerSnapBands = "EqualizerSnapBands"
     static let forceSMBV1 = "smb-force-v1"
     static let hardwareDecoding = "codec"
     static let hasLaunchedBefore = "hasLaunchedBefore"
