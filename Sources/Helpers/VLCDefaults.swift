@@ -762,6 +762,7 @@ extension VLCDefaults {
         appTheme == .system
     }
 
+#if os(iOS) || os(visionOS)
     var customEqualizerProfiles: CustomEqualizerProfiles? {
         get {
             guard let encodedData = userDefaults.data(forKey: Keys.customEqualizerProfiles) else {
@@ -788,6 +789,7 @@ extension VLCDefaults {
             userDefaults.setValue(encoded, forKey: Keys.customEqualizerProfiles)
         }
     }
+#endif
 
     var hardwareDecoding: HardwareDecoding {
         get {
@@ -806,6 +808,7 @@ extension VLCDefaults {
         hardwareDecoding.rawValue
     }
 
+#if os(iOS) || os(visionOS)
     var lastPlayedPlaylist: LastPlayedPlaylistModel? {
         get {
             guard let encodedData = userDefaults.data(forKey: Keys.lastPlayedPlaylist) else {
@@ -832,6 +835,7 @@ extension VLCDefaults {
             userDefaults.setValue(encoded, forKey: Keys.lastPlayedPlaylist)
         }
     }
+#endif
 
     var networkCaching: NetworkCaching {
         get {
@@ -934,6 +938,7 @@ extension VLCDefaults {
         userDefaults.set(isGrid, forKey: Keys.audioLibraryGridLayout(collectionModelName: collectionModelName, name: name))
     }
 
+#if os(iOS) || os(visionOS)
     func sortDefault(name: String) -> VLCMLSortingCriteria? {
         let k = Keys.sortDefault(name: name)
 
@@ -958,6 +963,7 @@ extension VLCDefaults {
         let k = Keys.sortDescendingDefault(name: name)
         userDefaults.set(isDescending, forKey: k)
     }
+#endif
 }
 
 // MARK: - Compatibility
