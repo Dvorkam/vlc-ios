@@ -20,6 +20,7 @@ import UIKit
 
 extension Notification.Name {
     static let VLCDisableGroupingDidChangeNotification = Notification.Name("disableGroupingDidChangeNotfication")
+    static let VLCSettingsShouldReloadNotification = Notification.Name("settingsShouldReloadNotification")
 }
 
 class SettingsController: UITableViewController {
@@ -96,6 +97,10 @@ class SettingsController: UITableViewController {
         notificationCenter.addObserver(self,
                                        selector: #selector(reloadSettingsSections),
                                        name: UserDefaults.didChangeNotification,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(reloadSettingsSections),
+                                       name: .VLCSettingsShouldReloadNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(themeDidChange),
@@ -303,7 +308,8 @@ class SettingsController: UITableViewController {
 extension SettingsController {
     @objc func reloadSettingsSections() {
         settingsSections = SettingsSection
-            .sections(isLabActivated: isLabActivated,
+            .sections(mediaLibraryService: mediaLibraryService,
+                      isLabActivated: isLabActivated,
                       isBackingUp: isBackingUp,
                       isForwardBackwardEqual: VLCDefaults.shared.playbackForwardBackwardEqual,
                       isTapSwipeEqual: VLCDefaults.shared.playbackTapSwipeEqual)
@@ -426,21 +432,6 @@ extension SettingsController: MediaLibraryHidingDelegate {
 // MARK: - SwitchOn Delegates
 
 extension SettingsController: SettingsCellDelegate {
-    func settingsCellDidChangeSwitchState(cell _: SettingsCell, preferenceKey: String, isOn: Bool) {
-        switch preferenceKey {
-        case VLCDefaults.Compat.passcodeOnKey:
-            passcodeLockSwitchOn(state: isOn)
-        case VLCDefaults.Compat.hideLibraryInFilesAppKey:
-            medialibraryHidingLockSwitchOn(state: isOn)
-        case VLCDefaults.Compat.backupMediaLibraryKey:
-            mediaLibraryBackupActivateSwitchOn(state: isOn)
-        case VLCDefaults.Compat.disableGroupingKey:
-            medialibraryDisableGroupingSwitchOn(state: isOn)
-        default:
-            break
-        }
-    }
-
     func settingsCellInfoButtonPressed(cell: SettingsCell, preferenceKey: String) {
         guard let settingSpecifier = getSettingsSpecifier(for: preferenceKey) else {
             return
@@ -461,46 +452,6 @@ extension SettingsController: SettingsCellDelegate {
         alert.popoverPresentationController?.sourceRect = cell.bounds
 
         self.present(alert, animated: true, completion: nil)
-    }
-}
-
-extension SettingsController {
-    func passcodeLockSwitchOn(state: Bool) {
-        if state {
-            KeychainCoordinator.passcodeService.setSecret { success in
-                // If the user cancels setting the password, the toggle should revert to the unset state.
-                // This ensures the UI reflects the correct state.
-                VLCDefaults.shared.passcodeOn = success
-                self.reloadSettingsSections() // To show/hide biometric row
-            }
-        } else {
-            // When disabled any existing passcode should be removed.
-            // If user previously set a passcode and then disable and enable it
-            // the new passcode view will be showed, but if user terminates the app
-            // passcode will remain open even if the user doesn't set the new passcode.
-            // So, this may cause the app being locked.
-            try? KeychainCoordinator.passcodeService.removeSecret()
-
-            reloadSettingsSections()
-        }
-    }
-}
-
-extension SettingsController {
-    func medialibraryHidingLockSwitchOn(state: Bool) {
-        mediaLibraryService.hideMediaLibrary(state)
-    }
-}
-
-extension SettingsController {
-    func mediaLibraryBackupActivateSwitchOn(state: Bool) {
-        mediaLibraryService.excludeFromDeviceBackup(state)
-    }
-}
-
-extension SettingsController {
-    func medialibraryDisableGroupingSwitchOn(state _: Bool) {
-        notificationCenter.post(name: .VLCDisableGroupingDidChangeNotification, object: self)
     }
 }
 

@@ -28,8 +28,6 @@ struct SettingsItem: Equatable {
     @available(*, deprecated, message: "access from self.action")
     var preferenceKey: String? {
         switch action {
-        case let .toggle(toggle):
-            return toggle.preferenceKey
         case let .showActionSheet(_, preferenceKey, _):
             return preferenceKey
         default:
@@ -44,12 +42,8 @@ struct SettingsItem: Equatable {
         self.isTitleEmphasized = isTitleEmphasized
     }
 
-    static func toggle(title: String, subtitle: String?, preferenceKey: String) -> Self {
-        return Self(title: title, subtitle: subtitle, action: .toggle(Toggle(preferenceKey: preferenceKey)))
-    }
-
-    static func toggle(title: String, subtitle: String?, keyPath: WritableKeyPath<VLCDefaults, Bool>) -> Self {
-        return Self(title: title, subtitle: subtitle, action: .toggle(Toggle(keyPath: keyPath)))
+    static func toggle(title: String, subtitle: String? = nil, keyPath: WritableKeyPath<VLCDefaults, Bool>, onChange: ((Bool) -> Void)? = nil) -> Self {
+        return Self(title: title, subtitle: subtitle, action: .toggle(Toggle(keyPath: keyPath, onChange: onChange)))
     }
 
     enum Action: Equatable {
@@ -66,17 +60,11 @@ struct SettingsItem: Equatable {
     final class Toggle: Equatable {
         typealias Observer = (Bool) -> Void
 
-        let preferenceKey: String?
-        let keyPath: WritableKeyPath<VLCDefaults, Bool>?
+        private let keyPath: WritableKeyPath<VLCDefaults, Bool>
+        private let onChange: ((Bool) -> Void)?
 
         var isOn: Bool {
-            if let keyPath = keyPath {
-                VLCDefaults.shared[keyPath: keyPath]
-            } else if let preferenceKey = preferenceKey {
-                UserDefaults.standard.bool(forKey: preferenceKey)
-            } else {
-                fatalError()
-            }
+            VLCDefaults.shared[keyPath: keyPath]
         }
 
         private var observers: [Int: Observer] = [:]
@@ -88,27 +76,19 @@ struct SettingsItem: Equatable {
             set { lock.withLock { _lastId = newValue } }
         }
 
-        init(preferenceKey: String) {
-            self.preferenceKey = preferenceKey
-            self.keyPath = nil
-            NotificationCenter.default.addObserver(self, selector: #selector(didChange), name: UserDefaults.didChangeNotification, object: nil)
-        }
-
-        init(keyPath: WritableKeyPath<VLCDefaults, Bool>) {
-            self.preferenceKey = nil
+        init(keyPath: WritableKeyPath<VLCDefaults, Bool>, onChange: ((Bool) -> Void)? = nil) {
             self.keyPath = keyPath
-            NotificationCenter.default.addObserver(self, selector: #selector(didChange), name: UserDefaults.didChangeNotification, object: nil)
+            self.onChange = onChange
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didChange),
+                                                   name: UserDefaults.didChangeNotification,
+                                                   object: nil)
         }
 
         func set(isOn: Bool) {
-            if let keyPath = keyPath {
-                var defaults = VLCDefaults.shared
-                defaults[keyPath: keyPath] = isOn
-            } else if let preferenceKey = preferenceKey {
-                UserDefaults.standard.set(isOn, forKey: preferenceKey)
-            } else {
-                fatalError()
-            }
+            var defaults = VLCDefaults.shared
+            defaults[keyPath: keyPath] = isOn
+            onChange?(isOn)
         }
 
         // does not call out initially.
@@ -128,7 +108,7 @@ struct SettingsItem: Equatable {
         }
 
         private func notifyObservers() {
-            precondition(!isNotifyingObservers, "[\(preferenceKey)] updating the toggle switch from an observer is illegal")
+            precondition(!isNotifyingObservers, "updating the toggle switch from an observer is illegal")
 
             isNotifyingObservers = true
 
@@ -145,7 +125,7 @@ struct SettingsItem: Equatable {
         }
 
         static func == (lhs: SettingsItem.Toggle, rhs: SettingsItem.Toggle) -> Bool {
-            lhs.preferenceKey == rhs.preferenceKey
+            lhs.keyPath == rhs.keyPath
         }
     }
 }
@@ -165,18 +145,22 @@ struct SettingsSection: Equatable {
         self.items = items
     }
 
-    static func sections(isLabActivated: Bool, isBackingUp: Bool, isForwardBackwardEqual: Bool, isTapSwipeEqual: Bool) -> [SettingsSection] {
+    static func sections(mediaLibraryService: MediaLibraryService,
+                         isLabActivated: Bool,
+                         isBackingUp: Bool,
+                         isForwardBackwardEqual: Bool,
+                         isTapSwipeEqual: Bool) -> [SettingsSection] {
         [
             MainOptions.section(),
             DonationOptions.section(),
             GenericOptions.section(),
-            PrivacyOptions.section(),
+            PrivacyOptions.section(mediaLibraryService: mediaLibraryService),
             GestureControlOptions.section(isForwardBackwardEqual: isForwardBackwardEqual, isTapSwipeEqual: isTapSwipeEqual),
             VideoOptions.section(),
             SubtitlesOptions.section(),
             AudioOptions.section(),
             CastingOptions.section(),
-            MediaLibraryOptions.section(isBackingUp: isBackingUp),
+            MediaLibraryOptions.section(mediaLibraryService: mediaLibraryService, isBackingUp: isBackingUp),
             NetworkOptions.section(),
             Accessibility.section(),
             Lab.section(isLabActivated: isLabActivated),
@@ -242,7 +226,6 @@ enum GenericOptions {
 
     static var playVideoInFullScreen: SettingsItem {
         .toggle(title: "SETTINGS_VIDEO_FULLSCREEN",
-                subtitle: nil,
                 keyPath: \.videoFullscreenPlayback)
     }
 
@@ -262,19 +245,16 @@ enum GenericOptions {
 
     static var enableTextScrollingInMediaList: SettingsItem {
         .toggle(title: "SETTINGS_ENABLE_MEDIA_CELL_TEXT_SCROLLING",
-                subtitle: nil,
                 keyPath: \.enableMediaCellTextScrolling)
     }
 
     static var rememberPlayerState: SettingsItem {
         .toggle(title: "SETTINGS_REMEMBER_PLAYER_STATE",
-                subtitle: nil,
                 keyPath: \.playerShouldRememberState)
     }
 
     static var restoreLastPlayedMedia: SettingsItem {
         .toggle(title: "SETTINGS_RESTORE_LAST_PLAYED_MEDIA",
-                subtitle: nil,
                 keyPath: \.restoreLastPlayedMedia)
     }
 
@@ -298,7 +278,25 @@ enum PrivacyOptions {
     static var passcodeLock: SettingsItem {
         .toggle(title: "SETTINGS_PASSCODE_LOCK",
                 subtitle: "SETTINGS_PASSCODE_LOCK_SUBTITLE",
-                keyPath: \.passcodeOn)
+                keyPath: \.passcodeOn) { isOn in
+            if isOn {
+                KeychainCoordinator.passcodeService.setSecret { success in
+                    // If the user cancels setting the password, the toggle should revert to the unset state.
+                    // This ensures the UI reflects the correct state.
+                    VLCDefaults.shared.passcodeOn = success
+                    NotificationCenter.default.post(name: .VLCSettingsShouldReloadNotification, object: nil) // To show/hide biometric row
+                }
+            } else {
+                // When disabled any existing passcode should be removed.
+                // If user previously set a passcode and then disable and enable it
+                // the new passcode view will be showed, but if user terminates the app
+                // passcode will remain open even if the user doesn't set the new passcode.
+                // So, this may cause the app being locked.
+                try? KeychainCoordinator.passcodeService.removeSecret()
+
+                NotificationCenter.default.post(name: .VLCSettingsShouldReloadNotification, object: nil)
+            }
+        }
     }
 
     static var enableBiometrics: SettingsItem? {
@@ -308,15 +306,12 @@ enum PrivacyOptions {
             switch authContext.biometryType {
             case .touchID:
                 return .toggle(title: "SETTINGS_PASSCODE_LOCK_ALLOWTOUCHID",
-                               subtitle: nil,
                                keyPath: \.passcodeEnableBiometricAuth)
             case .faceID:
                 return .toggle(title: "SETTINGS_PASSCODE_LOCK_ALLOWFACEID",
-                               subtitle: nil,
                                keyPath: \.passcodeEnableBiometricAuth)
             case .opticID:
                 return .toggle(title: "SETTINGS_PASSCODE_LOCK_ALLOWOPTICID",
-                               subtitle: nil,
                                keyPath: \.passcodeEnableBiometricAuth)
             case .none:
                 fallthrough
@@ -328,17 +323,19 @@ enum PrivacyOptions {
         return nil
     }
 
-    static var hideLibraryInFilesApp: SettingsItem {
+    static func hideLibraryInFilesApp(mediaLibraryService: MediaLibraryService) -> SettingsItem {
         .toggle(title: "SETTINGS_HIDE_LIBRARY_IN_FILES_APP",
                 subtitle: "SETTINGS_HIDE_LIBRARY_IN_FILES_APP_SUBTITLE",
-                keyPath: \.hideLibraryInFilesApp)
+                keyPath: \.hideLibraryInFilesApp) { isOn in
+            mediaLibraryService.hideMediaLibrary(isOn)
+        }
     }
 
-    static func section() -> SettingsSection? {
+    static func section(mediaLibraryService: MediaLibraryService) -> SettingsSection? {
         .init(title: "SETTINGS_PRIVACY_TITLE", items: [
             passcodeLock,
             enableBiometrics,
-            hideLibraryInFilesApp,
+            hideLibraryInFilesApp(mediaLibraryService: mediaLibraryService),
         ].compactMap { $0 })
     }
 }
@@ -348,43 +345,36 @@ enum PrivacyOptions {
 enum GestureControlOptions {
     static var swipeUpDownForVolume: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_VOLUME",
-                subtitle: nil,
                 keyPath: \.volumeGesture)
     }
 
     static var twoFingerTap: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_PLAYPAUSE",
-                subtitle: nil,
                 keyPath: \.playPauseGesture)
     }
 
     static var swipeUpDownForBrightness: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_BRIGHTNESS",
-                subtitle: nil,
                 keyPath: \.brightnessGesture)
     }
 
     static var swipeRightLeftToSeek: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_SEEK",
-                subtitle: nil,
                 keyPath: \.seekGesture)
     }
 
     static var pinchToClose: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_CLOSE",
-                subtitle: nil,
                 keyPath: \.closeGesture)
     }
 
     static var forwardBackwardEqual: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_FORWARD_BACKWARD_EQUAL",
-                subtitle: nil,
                 keyPath: \.playbackForwardBackwardEqual)
     }
 
     static var tapSwipeEqual: SettingsItem {
         .toggle(title: "SETTINGS_GESTURES_TAP_SWIPE_EQUAL",
-                subtitle: nil,
                 keyPath: \.playbackTapSwipeEqual)
     }
 
@@ -418,7 +408,6 @@ enum GestureControlOptions {
 
     static var longTouchToSpeedUp: SettingsItem {
         .toggle(title: "SETINGS_LONG_TOUCH_SPEED_UP",
-                subtitle: nil,
                 keyPath: \.playbackLongTouchSpeedUp)
     }
 
@@ -517,13 +506,11 @@ enum VideoOptions {
 
     static var rememberPlayerBrightness: SettingsItem {
         .toggle(title: "SETTINGS_REMEMBER_PLAYER_BRIGHTNESS",
-                subtitle: nil,
                 keyPath: \.playerShouldRememberBrightness)
     }
 
     static var lockRotation: SettingsItem {
         .toggle(title: "SETTINGS_LOCK_ROTATION",
-                subtitle: nil,
                 keyPath: \.rotationLock)
     }
 
@@ -563,7 +550,6 @@ enum SubtitlesOptions {
 
     static var useBoldFont: SettingsItem {
         .toggle(title: "SETTINGS_SUBTITLES_BOLDFONT",
-                subtitle: nil,
                 keyPath: \.subtitlesBoldFont)
     }
 
@@ -635,7 +621,6 @@ enum AudioOptions {
 
     static var audioPlaybackInBackground: SettingsItem {
         .toggle(title: "SETTINGS_BACKGROUND_AUDIO",
-                subtitle: nil,
                 keyPath: \.continueAudioInBackgroundKey)
     }
 
@@ -660,32 +645,31 @@ enum MediaLibraryOptions {
 
     static var optimiseItemNamesForDisplay: SettingsItem {
         .toggle(title: "SETTINGS_DECRAPIFY",
-                subtitle: nil,
                 keyPath: \.optimizeTitles)
     }
 
     static var disableGrouping: SettingsItem {
         .toggle(title: "SETTINGS_DISABLE_GROUPING",
-                subtitle: nil,
-                keyPath: \.disableGrouping)
+                keyPath: \.disableGrouping) { isOn in
+            NotificationCenter.default.post(name: .VLCDisableGroupingDidChangeNotification, object: nil)
+        }
     }
 
     static var showVideoThumbnails: SettingsItem {
         .toggle(title: "SETTINGS_SHOW_THUMBNAILS",
-                subtitle: nil,
                 keyPath: \.showThumbnails)
     }
 
     static var showAudioArtworks: SettingsItem {
         .toggle(title: "SETTINGS_SHOW_ARTWORKS",
-                subtitle: nil,
                 keyPath: \.showArtworks)
     }
 
-    static var includeMediaLibInDeviceBackup: SettingsItem {
+    static func includeMediaLibInDeviceBackup(mediaLibraryService: MediaLibraryService) -> SettingsItem {
         .toggle(title: "SETTINGS_BACKUP_MEDIA_LIBRARY",
-                subtitle: nil,
-                keyPath: \.backupMediaLibrary)
+                keyPath: \.backupMediaLibrary) { isOn in
+            mediaLibraryService.excludeFromDeviceBackup(isOn)
+        }
     }
 
     static var includeMediaLibInDeviceBackupWhenBackingUp: SettingsItem {
@@ -694,7 +678,7 @@ enum MediaLibraryOptions {
               action: .isLoading)
     }
 
-    static func section(isBackingUp: Bool) -> SettingsSection? {
+    static func section(mediaLibraryService: MediaLibraryService, isBackingUp: Bool) -> SettingsSection? {
         var options = [forceVLCToRescanTheMediaLibrary,
                        optimiseItemNamesForDisplay,
                        disableGrouping,
@@ -704,7 +688,7 @@ enum MediaLibraryOptions {
         if isBackingUp {
             options.append(includeMediaLibInDeviceBackupWhenBackingUp)
         } else {
-            options.append(includeMediaLibInDeviceBackup)
+            options.append(includeMediaLibInDeviceBackup(mediaLibraryService: mediaLibraryService))
         }
 
         return .init(title: "SETTINGS_MEDIA_LIBRARY", items: options)
@@ -723,7 +707,6 @@ enum NetworkOptions {
 
     static var ipv6SupportForWiFiSharing: SettingsItem {
         .toggle(title: "SETTINGS_WIFISHARING_IPv6",
-                subtitle: nil,
                 keyPath: \.wifiSharingIPv6)
     }
 
@@ -735,7 +718,6 @@ enum NetworkOptions {
 
     static var rtspctp: SettingsItem {
         .toggle(title: "SETTINGS_RTSP_TCP",
-                subtitle: nil,
                 keyPath: \.networkRTSPTCP)
     }
 
@@ -761,7 +743,6 @@ enum Accessibility {
 
     static var pauseWhenShowingControls: SettingsItem {
         .toggle(title: "SETTINGS_PAUSE_WHEN_SHOWING_CONTROLS",
-                subtitle: nil,
                 keyPath: \.pauseWhenShowingControls)
     }
 
@@ -778,7 +759,6 @@ enum Accessibility {
 enum Lab {
     static var debugLogging: SettingsItem {
         .toggle(title: "SETTINGS_DEBUG_LOG",
-                subtitle: nil,
                 keyPath: \.saveDebugLogs)
     }
 

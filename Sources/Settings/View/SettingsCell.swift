@@ -12,11 +12,6 @@
 import UIKit
 
 protocol SettingsCellDelegate: AnyObject {
-    /// Implementations should only perform side effects on
-    /// specific preferences; updating the preference itself
-    /// is handled by the cell.
-    func settingsCellDidChangeSwitchState(cell: SettingsCell, preferenceKey: String, isOn: Bool)
-
     func settingsCellInfoButtonPressed(cell: SettingsCell, preferenceKey: String)
 }
 
@@ -288,10 +283,6 @@ class SettingsCell: UITableViewCell {
         switch settingsItem.action {
         case let .toggle(toggle):
             toggle.set(isOn: sender.isOn)
-            // TODO: we should get rid of the delegate entirely, and perform side effects within SettingSection
-            if let preferenceKey = toggle.preferenceKey {
-                delegate?.settingsCellDidChangeSwitchState(cell: self, preferenceKey: preferenceKey, isOn: sender.isOn)
-            }
 
         default:
             // we should never get here; only toggles have a switch
