@@ -243,7 +243,6 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     /* the chromecast and audio options cannot be set per media, so we need to set it per
      * media player instance however, potentially initialising an additional library instance
      * for this is costly, so this should be done only if needed */
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     BOOL audioTimeStretch = VLCDefaults.shared.stretchAudio;
     NSMutableArray *libVLCOptions = [NSMutableArray array];
 #if TARGET_OS_IOS

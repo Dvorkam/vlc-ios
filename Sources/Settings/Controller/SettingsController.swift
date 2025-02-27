@@ -96,7 +96,7 @@ class SettingsController: UITableViewController {
     private func addObservers() {
         notificationCenter.addObserver(self,
                                        selector: #selector(reloadSettingsSections),
-                                       name: UserDefaults.didChangeNotification,
+                                       name: .VLCDefaultsDidUpdate,
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(reloadSettingsSections),

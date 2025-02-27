@@ -80,8 +80,8 @@ struct SettingsItem: Equatable {
             self.keyPath = keyPath
             self.onChange = onChange
             NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(didChange),
-                                                   name: UserDefaults.didChangeNotification,
+                                                   selector: #selector(defaultsDidUpdate),
+                                                   name: .VLCDefaultsDidUpdate,
                                                    object: nil)
         }
 
@@ -103,7 +103,7 @@ struct SettingsItem: Equatable {
             observers.removeValue(forKey: Int)
         }
 
-        @objc private func didChange(_: Notification) {
+        @objc private func defaultsDidUpdate(_: Notification) {
             notifyObservers()
         }
 

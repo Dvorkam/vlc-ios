@@ -10,12 +10,22 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
+extension Notification.Name {
+    static let VLCDefaultsDidUpdate = Notification.Name("VLCDefaultsDidUpdate")
+}
+
 @objc final class VLCDefaults: NSObject {
     @objc static let shared = VLCDefaults()
 
     private let userDefaults = UserDefaults.standard
 
-    private override init() {}
+    private override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(defaultsDidChange),
+                                               name: UserDefaults.didChangeNotification,
+                                               object: nil)
+    }
 
     @objc func registerDefaults() {
         var dict: [String: Any] = [
@@ -115,6 +125,10 @@
     func reset() {
         let appDomain = Bundle.main.bundleIdentifier!
         UserDefaults().removePersistentDomain(forName: appDomain)
+    }
+
+    @objc private func defaultsDidChange(_: Notification) {
+        NotificationCenter.default.post(name: .VLCDefaultsDidUpdate, object: self)
     }
 }
 
