@@ -53,6 +53,7 @@ extension Notification.Name {
             Keys.hasActiveSubscription: false,
             Keys.hasLaunchedBefore: false,
             Keys.hideLibraryInFilesApp: false,
+            Keys.lockscreenSkip: false,
             Keys.mediaLibraryServiceDidForceRescan: false,
             Keys.networkRTSPTCP: false,
             Keys.passcodeEnableBiometricAuth: true,
@@ -68,6 +69,7 @@ extension Notification.Name {
             Keys.playerUIShouldHide: false,
             Keys.playlistPlayNextItem: true,
             Keys.playPauseGesture: true,
+            Keys.remoteControlSkip: false,
             Keys.restoreLastPlayedMedia: true,
             Keys.rotationLock: false,
             Keys.saveDebugLogs: false,
@@ -346,6 +348,15 @@ extension VLCDefaults {
         }
     }
 
+    @objc var lockscreenSkip: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.lockscreenSkip)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.lockscreenSkip)
+        }
+    }
+
     @objc var mediaLibraryServiceDidForceRescan: Bool {
         get {
             userDefaults.bool(forKey: Keys.mediaLibraryServiceDidForceRescan)
@@ -488,6 +499,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.restoreLastPlayedMedia)
+        }
+    }
+
+    @objc var remoteControlSkip: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.remoteControlSkip)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.remoteControlSkip)
         }
     }
 
@@ -983,6 +1003,7 @@ extension VLCDefaults {
         static let disableGroupingKey: String = Keys.disableGrouping
         static let hardwareDecodingKey: String = Keys.hardwareDecoding
         static let hideLibraryInFilesAppKey: String = Keys.hideLibraryInFilesApp
+        static let lockscreenSkipKey: String = Keys.lockscreenSkip
         static let networkCachingKey: String = Keys.networkCaching
         static let passcodeOnKey: String = Keys.passcodeOn
         static let playbackBackwardSkipLengthKey: String = Keys.playbackBackwardSkipLength
@@ -991,6 +1012,7 @@ extension VLCDefaults {
         static let playbackForwardSkipLengthSwipeKey: String = Keys.playbackForwardSkipLengthSwipe
         static let playbackSpeedDefaultValueKey: String = Keys.playbackSpeedDefaultValue
         static let playerControlDurationKey: String = Keys.playerControlDuration
+        static let remoteControlSkipKey: String = Keys.remoteControlSkip
         static let skipLoopFilterKey: String = Keys.skipLoopFilter
         static let subtitlesFontColorKey: String = Keys.subtitlesFontColor
         static let subtitlesFontKey: String = Keys.subtitlesFont
@@ -1077,6 +1099,7 @@ fileprivate enum Keys {
     static let hasNaggedThisMonth = "kVLCHasNaggedThisMonth"
     static let hideLibraryInFilesApp = "HideLibraryInFilesApp"
     static let lastPlayedPlaylist = "LastPlayedPlaylist"
+    static let lockscreenSkip = "playback-lockscreen-skip"
     static let mediaLibraryServiceDidForceRescan = "MediaLibraryDidForceRescan"
     static let networkCaching = "network-caching"
     static let networkRTSPTCP = "rtsp-tcp"
@@ -1103,6 +1126,7 @@ fileprivate enum Keys {
     static let playerUIShouldHide = "PlayerUIShouldHide"
     static let playlistPlayNextItem = "PlaylistPlayNextItem"
     static let playPauseGesture = "EnablePlayPauseGesture"
+    static let remoteControlSkip = "playback-remote-control-skip"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let rotationLock = "kVLCSettingRotationLock"
     static let saveDebugLogs = "kVLCSaveDebugLogs"

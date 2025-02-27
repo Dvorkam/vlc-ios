@@ -413,14 +413,14 @@ enum GestureControlOptions {
     }
 
     static var lockScreenSkip: SettingsItem {
-        let k = kVLCSettingPlaybackLockscreenSkip
+        let k = VLCDefaults.Compat.lockscreenSkipKey
         return .init(title: "SETTINGS_PLAYBACK_LOCKSCREEN_SKIP",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_PLAYBACK_LOCKSCREEN_SKIP", preferenceKey: k, hasInfo: false))
     }
 
     static var externalControlsSkip: SettingsItem {
-        let k = kVLCSettingPlaybackRemoteControlSkip
+        let k = VLCDefaults.Compat.remoteControlSkipKey
         return .init(title: "SETTINGS_PLAYBACK_EXTERNAL_CONTROLS_SKIP",
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_PLAYBACK_EXTERNAL_CONTROLS_SKIP", preferenceKey: k, hasInfo: false))
