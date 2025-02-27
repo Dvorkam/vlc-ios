@@ -5,6 +5,7 @@
  * Copyright (c) 2020 VideoLAN. All rights reserved.
  *
  * Authors: Swapnanil Dhol <swapnanildhol # gmail.com>
+ *          Craig Reyenga <craig.reyenga # gmail.com>
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/

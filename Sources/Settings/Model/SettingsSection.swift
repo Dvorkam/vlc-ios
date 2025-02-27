@@ -10,6 +10,7 @@
  *          Diogo Simao Marques <dogo@videolabs.io>
  *          Felix Paul Kühne <fkuehne # videolan.org>
  *          Eshan Singh <eeeshan789@icloud.com>
+ *          Craig Reyenga <craig.reyenga # gmail.com>          
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/

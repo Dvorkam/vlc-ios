@@ -11,6 +11,7 @@
  *          Diogo Simao Marques <dogo@videolabs.io>
  *          Felix Paul Kühne <fkuehne # videolan.org>
  *          Andrew Breckenridge <asbreckenridge@me.com>
+ *          Craig Reyenga <craig.reyenga # gmail.com>          
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
@@ -27,7 +28,6 @@ class SettingsController: UITableViewController {
     private let cellReuseIdentifier = "settingsCell"
     private let sectionHeaderReuseIdentifier = "sectionHeaderReuseIdentifier"
     private let sectionFooterReuseIdentifier = "sectionFooterReuseIdentifier"
-    private let userDefaults = UserDefaults.standard
     private let notificationCenter = NotificationCenter.default
     private let actionSheet = ActionSheet()
     private let specifierManager = ActionSheetSpecifier()
