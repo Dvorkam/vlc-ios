@@ -779,7 +779,7 @@ enum Lab {
     static var debugLogging: SettingsItem {
         .toggle(title: "SETTINGS_DEBUG_LOG",
                 subtitle: nil,
-                preferenceKey: kVLCSaveDebugLogs)
+                keyPath: \.saveDebugLogs)
     }
 
     static var exportLibrary: SettingsItem {

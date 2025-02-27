@@ -60,6 +60,7 @@
             Keys.playPauseGesture: true,
             Keys.restoreLastPlayedMedia: true,
             Keys.rotationLock: false,
+            Keys.saveDebugLogs: false,
             Keys.seekGesture: true,
             Keys.showRemainingTime: false,
             Keys.showThumbnails: true,
@@ -482,6 +483,15 @@ extension VLCDefaults {
         }
         set {
             userDefaults.set(newValue, forKey: Keys.rotationLock)
+        }
+    }
+
+    @objc var saveDebugLogs: Bool {
+        get {
+            userDefaults.bool(forKey: Keys.saveDebugLogs)
+        }
+        set {
+            userDefaults.set(newValue, forKey: Keys.saveDebugLogs)
         }
     }
 
@@ -1075,6 +1085,7 @@ fileprivate enum Keys {
     static let playPauseGesture = "EnablePlayPauseGesture"
     static let restoreLastPlayedMedia = "RestoreLastPlayedMedia"
     static let rotationLock = "kVLCSettingRotationLock"
+    static let saveDebugLogs = "kVLCSaveDebugLogs"
     static let seekGesture = "EnableSeekGesture"
     static let showArtworks = "ShowArtworks"
     static let showRemainingTime = "show-remaining-time"

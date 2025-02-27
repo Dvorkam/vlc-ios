@@ -14,6 +14,7 @@
 #import "IASKSettingsReader.h"
 #import "IASKSpecifier.h"
 #import "VLCAboutViewController.h"
+#import "VLC-Swift.h"
 
 #define SettingsReUseIdentifier @"SettingsReUseIdentifier"
 
@@ -45,7 +46,7 @@
     self.tableView.opaque = NO;
     self.tableView.backgroundColor = [UIColor clearColor];
 
-    _debugLoggingOn = [self.userDefaults boolForKey:kVLCSaveDebugLogs];
+    _debugLoggingOn = VLCDefaults.shared.saveDebugLogs;
 }
 
 - (NSString *)title
@@ -58,13 +59,11 @@
     [super viewWillDisappear:animated];
 
     /* if debug logging was disabled in this session of the settings screen, delete all the logs */
-    if (_debugLoggingOn) {
-        if (![self.userDefaults boolForKey:kVLCSaveDebugLogs]) {
-            NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-            NSString* logFilePath = [searchPaths.firstObject stringByAppendingPathComponent:@"Logs"];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            [fileManager removeItemAtPath:logFilePath error:nil];
-        }
+    if (_debugLoggingOn && !VLCDefaults.shared.saveDebugLogs) {
+        NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString* logFilePath = [searchPaths.firstObject stringByAppendingPathComponent:@"Logs"];
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        [fileManager removeItemAtPath:logFilePath error:nil];
     }
 }
 

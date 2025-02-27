@@ -273,7 +273,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     consoleLogger.level = kVLCLogLevelDebug;
     [debugLoggers addObject:consoleLogger];
 #endif
-    BOOL saveDebugLogs = [userDefaults boolForKey:kVLCSaveDebugLogs];
+    BOOL saveDebugLogs = VLCDefaults.shared.saveDebugLogs;
     if (saveDebugLogs) {
         NSArray *searchPaths;
 #if TARGET_OS_TV

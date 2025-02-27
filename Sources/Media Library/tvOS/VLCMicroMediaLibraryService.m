@@ -113,7 +113,7 @@
         ret = self.discoveredFiles.readonlycopy;
     }
 
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kVLCSaveDebugLogs]) {
+    if (VLCDefaults.shared.saveDebugLogs) {
         ret = [self injectLogsToMedia:ret];
     }
 
