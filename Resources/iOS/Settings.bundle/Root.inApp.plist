@@ -49,7 +49,7 @@
 				<integer>0</integer>
 				<integer>1</integer>
 				<integer>2</integer>
-				<string>3</string>
+				<integer>3</integer>
 			</array>
 		</dict>
 		<dict>
@@ -163,6 +163,8 @@
 			<string>SETTINGS_NETWORK_PLAY_ALL</string>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
+			<key>DefaultValue</key>
+				<false/>
 			<key>Titles</key>
 			<array>
 				<string>SETTINGS_PLAY_ALL</string>
@@ -170,8 +172,8 @@
 			</array>
 			<key>Values</key>
 			<array>
-				<integer>0</integer>
-				<integer>1</integer>
+				<false/>
+				<true/>
 			</array>
 		</dict>
 		<dict>
@@ -522,7 +524,7 @@
 			<key>Key</key>
 			<string>avcodec-skiploopfilter</string>
 			<key>DefaultValue</key>
-			<string>1</string>
+			<integer>1</integer>
 			<key>Titles</key>
 			<array>
 				<string>SETTINGS_SKIP_LOOP_FILTER_NONE</string>
@@ -557,7 +559,7 @@
 			<array>
 				<integer>1</integer>
 				<integer>0</integer>
-				<string>-1</string>
+				<integer>-1</integer>
 			</array>
 		</dict>
 		<dict>

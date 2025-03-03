@@ -95,6 +95,7 @@ extension Notification.Name {
             Keys.playbackBackwardSkipLengthSwipe: DefaultValues.playbackBackwardSkipLengthSwipe,
             Keys.playbackForwardSkipLength: DefaultValues.playbackForwardSkipLength,
             Keys.playbackForwardSkipLengthSwipe: DefaultValues.playbackForwardSkipLengthSwipe,
+            Keys.playbackSpeedDefaultValue: DefaultValues.playbackSpeedDefaultValue,
             Keys.playerControlDuration: DefaultValues.playerControlDuration,
             Keys.tabBarIndex: 0,
 
@@ -132,6 +133,26 @@ extension Notification.Name {
     @objc private func defaultsDidChange(_: Notification) {
         NotificationCenter.default.post(name: .VLCDefaultsDidUpdate, object: self)
     }
+
+    // These methods are not strictly necessary, however, they help prevent a
+    // programmer error whereby attempts to write invalid data types will get
+    // past the compiler, but will cause a crash at runtime.
+
+    fileprivate func set(bool b: Bool, forKey key: String) {
+        userDefaults.set(b, forKey: key)
+    }
+
+    fileprivate func set(float f: Float, forKey key: String) {
+        userDefaults.set(f, forKey: key)
+    }
+
+    fileprivate func set(integer i: Int, forKey key: String) {
+        userDefaults.set(i, forKey: key)
+    }
+
+    fileprivate func set(string s: String, forKey key: String) {
+        userDefaults.set(s, forKey: key)
+    }
 }
 
 // MARK: - Defaults
@@ -145,7 +166,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.alwaysPlayURLs)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.alwaysPlayURLs)
+            set(bool: newValue, forKey: Keys.alwaysPlayURLs)
         }
     }
 
@@ -154,7 +175,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.appThemeBlack)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.appThemeBlack)
+            set(bool: newValue, forKey: Keys.appThemeBlack)
         }
     }
 
@@ -163,7 +184,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.audioLibraryHideFeatArtists)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.audioLibraryHideFeatArtists)
+            set(bool: newValue, forKey: Keys.audioLibraryHideFeatArtists)
         }
     }
 
@@ -172,7 +193,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.audioLibraryHideTrackNumbers)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.audioLibraryHideTrackNumbers)
+            set(bool: newValue, forKey: Keys.audioLibraryHideTrackNumbers)
         }
     }
 
@@ -181,7 +202,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.automaticallyPlayNextItem)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.automaticallyPlayNextItem)
+            set(bool: newValue, forKey: Keys.automaticallyPlayNextItem)
         }
     }
 
@@ -190,7 +211,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.backupMediaLibrary)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.backupMediaLibrary)
+            set(bool: newValue, forKey: Keys.backupMediaLibrary)
         }
     }
 
@@ -199,7 +220,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.brightnessGesture)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.brightnessGesture)
+            set(bool: newValue, forKey: Keys.brightnessGesture)
         }
     }
 
@@ -208,7 +229,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.castingAudioPassthrough)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.castingAudioPassthrough)
+            set(bool: newValue, forKey: Keys.castingAudioPassthrough)
         }
     }
 
@@ -217,7 +238,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.closeGesture)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.closeGesture)
+            set(bool: newValue, forKey: Keys.closeGesture)
         }
     }
 
@@ -226,7 +247,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.continueAudioInBackground)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.continueAudioInBackground)
+            set(bool: newValue, forKey: Keys.continueAudioInBackground)
         }
     }
 
@@ -235,7 +256,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.currentlyPlayingPlaylist)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.currentlyPlayingPlaylist)
+            set(bool: newValue, forKey: Keys.currentlyPlayingPlaylist)
         }
     }
 
@@ -244,7 +265,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.customEqualizerProfileEnabled)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.customEqualizerProfileEnabled)
+            set(bool: newValue, forKey: Keys.customEqualizerProfileEnabled)
         }
     }
 
@@ -253,7 +274,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.optimizeTitles)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.optimizeTitles)
+            set(bool: newValue, forKey: Keys.optimizeTitles)
         }
     }
 
@@ -262,7 +283,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.disableGrouping)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.disableGrouping)
+            set(bool: newValue, forKey: Keys.disableGrouping)
         }
     }
 
@@ -271,7 +292,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.disableSubtitles)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.disableSubtitles)
+            set(bool: newValue, forKey: Keys.disableSubtitles)
         }
     }
 
@@ -280,7 +301,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.downloadArtwork)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.downloadArtwork)
+            set(bool: newValue, forKey: Keys.downloadArtwork)
         }
     }
 
@@ -289,7 +310,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.enableMediaCellTextScrolling)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.enableMediaCellTextScrolling)
+            set(bool: newValue, forKey: Keys.enableMediaCellTextScrolling)
         }
     }
 
@@ -298,7 +319,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.equalizerProfileDisabled)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.equalizerProfileDisabled)
+            set(bool: newValue, forKey: Keys.equalizerProfileDisabled)
         }
     }
 
@@ -307,7 +328,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.equalizerSnapBands)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.equalizerSnapBands)
+            set(bool: newValue, forKey: Keys.equalizerSnapBands)
         }
     }
 
@@ -316,7 +337,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.forceSMBV1)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.forceSMBV1)
+            set(bool: newValue, forKey: Keys.forceSMBV1)
         }
     }
 
@@ -325,7 +346,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.hasActiveSubscription)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.hasActiveSubscription)
+            set(bool: newValue, forKey: Keys.hasActiveSubscription)
         }
     }
 
@@ -344,7 +365,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.hideLibraryInFilesApp)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.hideLibraryInFilesApp)
+            set(bool: newValue, forKey: Keys.hideLibraryInFilesApp)
         }
     }
 
@@ -353,7 +374,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.lockscreenSkip)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.lockscreenSkip)
+            set(bool: newValue, forKey: Keys.lockscreenSkip)
         }
     }
 
@@ -362,7 +383,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.mediaLibraryServiceDidForceRescan)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.mediaLibraryServiceDidForceRescan)
+            set(bool: newValue, forKey: Keys.mediaLibraryServiceDidForceRescan)
         }
     }
 
@@ -371,7 +392,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.networkRTSPTCP)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.networkRTSPTCP)
+            set(bool: newValue, forKey: Keys.networkRTSPTCP)
         }
     }
 
@@ -380,7 +401,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.pauseWhenShowingControls)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.pauseWhenShowingControls)
+            set(bool: newValue, forKey: Keys.pauseWhenShowingControls)
         }
     }
 
@@ -389,7 +410,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playbackForwardBackwardEqual)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackForwardBackwardEqual)
+            set(bool: newValue, forKey: Keys.playbackForwardBackwardEqual)
         }
     }
 
@@ -398,7 +419,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playbackLongTouchSpeedUp)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackLongTouchSpeedUp)
+            set(bool: newValue, forKey: Keys.playbackLongTouchSpeedUp)
         }
     }
 
@@ -407,7 +428,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playbackTapSwipeEqual)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackTapSwipeEqual)
+            set(bool: newValue, forKey: Keys.playbackTapSwipeEqual)
         }
     }
 
@@ -416,7 +437,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playerIsShuffleEnabled)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playerIsShuffleEnabled)
+            set(bool: newValue, forKey: Keys.playerIsShuffleEnabled)
         }
     }
 
@@ -425,7 +446,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playerShouldRememberBrightness)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playerShouldRememberBrightness)
+            set(bool: newValue, forKey: Keys.playerShouldRememberBrightness)
         }
     }
 
@@ -434,7 +455,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playerShouldRememberState)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playerShouldRememberState)
+            set(bool: newValue, forKey: Keys.playerShouldRememberState)
         }
     }
 
@@ -443,7 +464,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.passcodeEnableBiometricAuth)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.passcodeEnableBiometricAuth)
+            set(bool: newValue, forKey: Keys.passcodeEnableBiometricAuth)
         }
     }
 
@@ -452,7 +473,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.passcodeOn)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.passcodeOn)
+            set(bool: newValue, forKey: Keys.passcodeOn)
         }
     }
 
@@ -461,7 +482,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playerShowPlaybackSpeedShortcut)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playerShowPlaybackSpeedShortcut)
+            set(bool: newValue, forKey: Keys.playerShowPlaybackSpeedShortcut)
         }
     }
 
@@ -471,7 +492,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playerUIShouldHide)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playerUIShouldHide)
+            set(bool: newValue, forKey: Keys.playerUIShouldHide)
         }
     }
 
@@ -480,7 +501,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playlistPlayNextItem)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playlistPlayNextItem)
+            set(bool: newValue, forKey: Keys.playlistPlayNextItem)
         }
     }
 
@@ -489,7 +510,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.playPauseGesture)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playPauseGesture)
+            set(bool: newValue, forKey: Keys.playPauseGesture)
         }
     }
 
@@ -498,7 +519,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.restoreLastPlayedMedia)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.restoreLastPlayedMedia)
+            set(bool: newValue, forKey: Keys.restoreLastPlayedMedia)
         }
     }
 
@@ -507,7 +528,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.remoteControlSkip)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.remoteControlSkip)
+            set(bool: newValue, forKey: Keys.remoteControlSkip)
         }
     }
 
@@ -516,7 +537,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.rotationLock)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.rotationLock)
+            set(bool: newValue, forKey: Keys.rotationLock)
         }
     }
 
@@ -525,7 +546,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.saveDebugLogs)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.saveDebugLogs)
+            set(bool: newValue, forKey: Keys.saveDebugLogs)
         }
     }
 
@@ -534,7 +555,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.seekGesture)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.seekGesture)
+            set(bool: newValue, forKey: Keys.seekGesture)
         }
     }
 
@@ -543,7 +564,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.showArtworks)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.showArtworks)
+            set(bool: newValue, forKey: Keys.showArtworks)
         }
     }
 
@@ -552,7 +573,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.showRemainingTime)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.showRemainingTime)
+            set(bool: newValue, forKey: Keys.showRemainingTime)
         }
     }
 
@@ -561,7 +582,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.showThumbnails)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.showThumbnails)
+            set(bool: newValue, forKey: Keys.showThumbnails)
         }
     }
 
@@ -570,7 +591,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.stretchAudio)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.stretchAudio)
+            set(bool: newValue, forKey: Keys.stretchAudio)
         }
     }
 
@@ -579,7 +600,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.subtitlesBoldFont)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.subtitlesBoldFont)
+            set(bool: newValue, forKey: Keys.subtitlesBoldFont)
         }
     }
 
@@ -588,7 +609,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.videoFullscreenPlayback)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.videoFullscreenPlayback)
+            set(bool: newValue, forKey: Keys.videoFullscreenPlayback)
         }
     }
 
@@ -597,7 +618,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.volumeGesture)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.volumeGesture)
+            set(bool: newValue, forKey: Keys.volumeGesture)
         }
     }
 
@@ -606,7 +627,7 @@ extension VLCDefaults {
             userDefaults.bool(forKey: Keys.wifiSharingIPv6)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.wifiSharingIPv6)
+            set(bool: newValue, forKey: Keys.wifiSharingIPv6)
         }
     }
 
@@ -617,7 +638,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.castingConversionQuality)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.castingConversionQuality)
+            set(integer: newValue, forKey: Keys.castingConversionQuality)
         }
     }
 
@@ -626,7 +647,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.continueAudioPlayback)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.continueAudioPlayback)
+            set(integer: newValue, forKey: Keys.continueAudioPlayback)
         }
     }
 
@@ -635,7 +656,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.continuePlayback)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.continuePlayback)
+            set(integer: newValue, forKey: Keys.continuePlayback)
         }
     }
 
@@ -644,7 +665,7 @@ extension VLCDefaults {
             userDefaults.float(forKey: Keys.defaultPreampLevel)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.defaultPreampLevel)
+            set(float: newValue, forKey: Keys.defaultPreampLevel)
         }
     }
 
@@ -653,7 +674,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.deinterlace)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.deinterlace)
+            set(integer: newValue, forKey: Keys.deinterlace)
         }
     }
 
@@ -662,7 +683,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.equalizerProfile)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.equalizerProfile)
+            set(integer: newValue, forKey: Keys.equalizerProfile)
         }
     }
 
@@ -671,7 +692,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.hasNaggedThisMonth)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.hasNaggedThisMonth)
+            set(integer: newValue, forKey: Keys.hasNaggedThisMonth)
         }
     }
 
@@ -692,7 +713,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.playbackBackwardSkipLength)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackBackwardSkipLength)
+            set(integer: newValue, forKey: Keys.playbackBackwardSkipLength)
         }
     }
 
@@ -701,7 +722,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.playbackBackwardSkipLengthSwipe)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackBackwardSkipLengthSwipe)
+            set(integer: newValue, forKey: Keys.playbackBackwardSkipLengthSwipe)
         }
     }
 
@@ -710,7 +731,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.playbackForwardSkipLength)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackForwardSkipLength)
+            set(integer: newValue, forKey: Keys.playbackForwardSkipLength)
         }
     }
 
@@ -719,7 +740,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.playbackForwardSkipLengthSwipe)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackForwardSkipLengthSwipe)
+            set(integer: newValue, forKey: Keys.playbackForwardSkipLengthSwipe)
         }
     }
 
@@ -728,7 +749,7 @@ extension VLCDefaults {
             userDefaults.float(forKey: Keys.playbackSpeedDefaultValue)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playbackSpeedDefaultValue)
+            set(float: newValue, forKey: Keys.playbackSpeedDefaultValue)
         }
     }
 
@@ -741,7 +762,7 @@ extension VLCDefaults {
         }
         set {
             if let newValue = newValue {
-                userDefaults.set(newValue, forKey: Keys.playerBrightness)
+                set(float: newValue, forKey: Keys.playerBrightness)
             } else {
                 userDefaults.removeObject(forKey: Keys.playerBrightness)
             }
@@ -753,7 +774,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.playerControlDuration)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playerControlDuration)
+            set(integer: newValue, forKey: Keys.playerControlDuration)
         }
     }
 
@@ -762,7 +783,7 @@ extension VLCDefaults {
             userDefaults.integer(forKey: Keys.tabBarIndex)
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.tabBarIndex)
+            set(integer: newValue, forKey: Keys.tabBarIndex)
         }
     }
 
@@ -774,7 +795,7 @@ extension VLCDefaults {
             return AppTheme(rawValue: v) ?? DefaultValues.appTheme
         }
         set {
-            userDefaults.set(newValue.rawValue, forKey: Keys.appTheme)
+            set(integer: newValue.rawValue, forKey: Keys.appTheme)
         }
     }
 
@@ -820,7 +841,7 @@ extension VLCDefaults {
             return HardwareDecoding(rawValue: v) ?? .hardware
         }
         set {
-            userDefaults.set(newValue.rawValue, forKey: Keys.hardwareDecoding)
+            set(string: newValue.rawValue, forKey: Keys.hardwareDecoding)
         }
     }
 
@@ -863,7 +884,7 @@ extension VLCDefaults {
             return NetworkCaching(rawValue: v) ?? .normal
         }
         set {
-            userDefaults.set(newValue.rawValue, forKey: Keys.networkCaching)
+            set(integer: newValue.rawValue, forKey: Keys.networkCaching)
         }
     }
 
@@ -876,7 +897,7 @@ extension VLCDefaults {
             userDefaults.string(forKey: Keys.networkSatIPChannelListUrl) ?? DefaultValues.networkSatIPChannelListUrl
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.networkSatIPChannelListUrl)
+            set(string: newValue, forKey: Keys.networkSatIPChannelListUrl)
         }
     }
 
@@ -886,7 +907,7 @@ extension VLCDefaults {
             return VLCRepeatMode(rawValue: v) ?? DefaultValues.playerRepeatMode
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.playerIsRepeatEnabled)
+            set(integer: newValue.rawValue, forKey: Keys.playerIsRepeatEnabled)
         }
     }
 
@@ -895,7 +916,7 @@ extension VLCDefaults {
             userDefaults.string(forKey: Keys.textEncoding) ?? DefaultValues.textEncoding
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.textEncoding)
+            set(string: newValue, forKey: Keys.textEncoding)
         }
     }
 
@@ -905,7 +926,7 @@ extension VLCDefaults {
             return SkipLoopFilter(rawValue: v) ?? DefaultValues.skipLoopFilter
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.skipLoopFilter)
+            set(integer: newValue.rawValue, forKey: Keys.skipLoopFilter)
         }
     }
 
@@ -920,7 +941,7 @@ extension VLCDefaults {
             userDefaults.string(forKey: Keys.subtitlesFont) ?? DefaultValues.subtitlesFont
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.subtitlesFont)
+            set(string: newValue, forKey: Keys.subtitlesFont)
         }
     }
 
@@ -929,7 +950,7 @@ extension VLCDefaults {
             userDefaults.string(forKey: Keys.subtitlesFontColor) ?? DefaultValues.subtitlesFontColor
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.subtitlesFontColor)
+            set(string: newValue, forKey: Keys.subtitlesFontColor)
         }
     }
 
@@ -938,7 +959,7 @@ extension VLCDefaults {
             userDefaults.string(forKey: Keys.subtitlesFontSize) ?? DefaultValues.subtitlesFontSize
         }
         set {
-            userDefaults.set(newValue, forKey: Keys.subtitlesFontSize)
+            set(string: newValue, forKey: Keys.subtitlesFontSize)
         }
     }
 
@@ -1032,6 +1053,7 @@ extension VLCDefaults {
         case bright = 0
         case dark = 1
         case system = 2
+        case black = 3
     }
 }
 

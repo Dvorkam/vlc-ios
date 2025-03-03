@@ -107,7 +107,7 @@ enum PresentationThemeType: Int {
 
     static func from(appTheme: VLCDefaults.AppTheme) -> PresentationThemeType {
         switch appTheme {
-        case .dark:
+        case .dark, .black:
             return .dark
         case .bright:
             return .bright
