@@ -249,10 +249,10 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     BOOL chromecastPassthrough = VLCDefaults.shared.castingAudioPassthrough;
     int chromecastQuality = (int)VLCDefaults.shared.castingConversionQuality;
     if (chromecastPassthrough) {
-        [libVLCOptions addObject:@"--sout-chromecast-audio-passthrough"];
+        [libVLCOptions addObject:[@"--" stringByAppendingString:kVLCSettingCastingAudioPassthrough]];
     }
     if (chromecastQuality != 2) {
-        [libVLCOptions addObject:[NSString stringWithFormat:@"--sout-chromecast-conversion-quality=%i", chromecastQuality]];
+        [libVLCOptions addObject:[NSString stringWithFormat:@"--%@=%i", kVLCSettingCastingConversionQuality, chromecastQuality]];
     }
 #endif
     if (!audioTimeStretch) {

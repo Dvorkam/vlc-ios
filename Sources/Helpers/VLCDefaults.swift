@@ -1096,7 +1096,7 @@ fileprivate enum Keys {
     static let backupMediaLibrary = "BackupMediaLibrary"
     static let brightnessGesture = "EnableBrightnessGesture"
     static let castingAudioPassthrough = "sout-chromecast-audio-passthrough"
-    static let castingConversionQuality = "sout-chromecast-conversion-quality"
+    static let castingConversionQuality = kVLCSettingCastingConversionQuality
     static let closeGesture = "EnableCloseGesture"
     static let continueAudioInBackground = "BackgroundAudioPlayback"
     static let continueAudioPlayback = "ContinueAudioPlayback"

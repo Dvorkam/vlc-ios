@@ -19,7 +19,8 @@
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
-
+#define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
+#define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"
 #define kVLCPrivateWebStreaming @"private-streaming"

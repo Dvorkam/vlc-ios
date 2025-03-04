@@ -43,6 +43,9 @@
 
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 
+#define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
+#define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
+
 #define kVLCfortvOSMovieDBKey @""
 
 #define kVLCStoredServerList @"kVLCStoredServerList"
