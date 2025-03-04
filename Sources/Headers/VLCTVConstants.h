@@ -28,13 +28,14 @@
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 
-/* deprecated */
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
 
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"
+
+#define kVLCSettingStretchAudio @"audio-time-stretch"
 
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
 

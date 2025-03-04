@@ -46,7 +46,7 @@
             NSString *satipURLstring = VLCDefaults.shared.networkSatIPChannelListUrl;
             NSMutableArray *libVLCOptions = [NSMutableArray array];
             if (satipURLstring.length > 0) {
-                [libVLCOptions addObject:[NSString stringWithFormat:@"--satip-channellist-url=%@", satipURLstring]];
+                [libVLCOptions addObject:[NSString stringWithFormat:@"--%@=%@", kVLCSettingNetworkSatIPChannelListUrl, satipURLstring]];
                 [libVLCOptions addObject:[NSString stringWithFormat:@"--%@=%@", kVLCSettingNetworkSatIPChannelList, kVLCSettingNetworkSatIPChannelListCustom]];
             }
             NSString *multicastInterfaceName = [[[VLCAppCoordinator sharedInstance] httpUploaderController] nameOfUsedNetworkInterface];

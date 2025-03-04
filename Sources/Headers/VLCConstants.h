@@ -17,6 +17,7 @@
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
+#define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 
 #define kVLCRecentURLs @"recent-urls"
@@ -24,7 +25,7 @@
 #define kVLCPrivateWebStreaming @"private-streaming"
 #define kVLChttpScanSubtitle @"http-scan-subtitle"
 #define kVLCHTTPUploadDirectory @"Upload"
-
+#define kVLCSettingStretchAudio @"audio-time-stretch"
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
 
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"

@@ -256,7 +256,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     }
 #endif
     if (!audioTimeStretch) {
-        [libVLCOptions addObject:@"--no-audio-time-stretch"];
+        [libVLCOptions addObject:[NSString stringWithFormat:@"--no-%@", kVLCSettingStretchAudio]];
     }
     if (libVLCOptions.count > 0) {
         _listPlayer = [[VLCMediaListPlayer alloc] initWithOptions:libVLCOptions
@@ -315,7 +315,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     CGFloat defaultPlaybackSpeed = VLCDefaults.shared.playbackSpeedDefaultValue;
     if (defaultPlaybackSpeed != 0.)
         [_mediaPlayer setRate: defaultPlaybackSpeed];
-    int deinterlace = VLCDefaults.shared.deinterlace;
+    int deinterlace = (int)VLCDefaults.shared.deinterlace;
     [_mediaPlayer setDeinterlace:deinterlace withFilter:@"blend"];
 
     [_listPlayer setMediaList:self.mediaList];

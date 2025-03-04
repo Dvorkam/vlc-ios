@@ -1125,7 +1125,7 @@ fileprivate enum Keys {
     static let mediaLibraryServiceDidForceRescan = "MediaLibraryDidForceRescan"
     static let networkCaching = "network-caching"
     static let networkRTSPTCP = "rtsp-tcp"
-    static let networkSatIPChannelListUrl = "satip-channellist-url"
+    static let networkSatIPChannelListUrl = kVLCSettingNetworkSatIPChannelListUrl
     static let numberOfLaunches = "kVLCNumberOfLaunches"
     static let passcodeEnableBiometricAuth = "EnableBiometricAuth"
     static let passcodeOn = "PasscodeProtection"
@@ -1157,7 +1157,7 @@ fileprivate enum Keys {
     static let showRemainingTime = "show-remaining-time"
     static let showThumbnails = "ShowThumbnails"
     static let skipLoopFilter = "avcodec-skiploopfilter"
-    static let stretchAudio = "audio-time-stretch"
+    static let stretchAudio = kVLCSettingStretchAudio
     static let subtitlesBoldFont = "quartztext-bold"
     static let subtitlesFont = "quartztext-font"
     static let subtitlesFontColor = "quartztext-color"
