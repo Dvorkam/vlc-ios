@@ -182,6 +182,7 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
         let bundleShortVersionString = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let device = UIDevice.current
         let locale = NSLocale.autoupdatingCurrent
+        let defaults = VLCDefaults.shared
         let messageFormat = """
             
 
@@ -208,11 +209,11 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
                                        locale.regionCode!,
                                        bundleShortVersionString,
                                        VLCLibrary.shared().changeset,
-                                       VLCDefaults.shared.hardwareDecoding.description,
-                                       VLCDefaults.shared.networkCaching.rawValue,
-                                       VLCDefaults.shared.skipLoopFilter.rawValue,
-                                       VLCDefaults.shared.networkRTSPTCP ? 1 : 0,
-                                       VLCDefaults.shared.stretchAudio ? 1 : 0)
+                                       defaults.hardwareDecoding.description,
+                                       defaults.networkCaching.rawValue,
+                                       defaults.skipLoopFilter.rawValue,
+                                       defaults.networkRTSPTCP ? 1 : 0,
+                                       defaults.stretchAudio ? 1 : 0)
         return prefilledFeedback
     }
 
