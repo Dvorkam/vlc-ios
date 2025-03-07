@@ -182,7 +182,24 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
         let bundleShortVersionString = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let device = UIDevice.current
         let locale = NSLocale.autoupdatingCurrent
-        let prefilledFeedback = String(format: "\n\n\n----------------------------------------\n%@\nDevice: %@\nOS: %@ - %@\nLocale: %@ (%@)\nVLC app version: %@\nlibvlc version: %@\nhardware decoding: %i\nnetwork caching level: %i\nskip loop filter: %i\nRTSP over TCP: %i\nAudio time stretching: %i",
+        let messageFormat = """
+            
+
+
+        ----------------------------------------
+        %@
+        Device: %@
+        OS: %@ - %@
+        Locale: %@ (%@)
+        VLC app version: %@
+        libvlc version: %@
+        hardware decoding: %@
+        network caching level: %i
+        skip loop filter: %i
+        RTSP over TCP: %i
+        Audio time stretching: %i
+        """
+        let prefilledFeedback = String(format: messageFormat,
                                        NSLocalizedString("FEEDBACK_EMAIL_BODY", comment: ""),
                                        generateDeviceIdentifier(),
                                        device.systemName,
@@ -191,11 +208,11 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
                                        locale.regionCode!,
                                        bundleShortVersionString,
                                        VLCLibrary.shared().changeset,
-                                       VLCDefaults.shared.hardwareDecoding == .hardware ? 0 : 1, // TODO: unsure
+                                       VLCDefaults.shared.hardwareDecoding.description,
                                        VLCDefaults.shared.networkCaching.rawValue,
                                        VLCDefaults.shared.skipLoopFilter.rawValue,
                                        VLCDefaults.shared.networkRTSPTCP ? 1 : 0,
-                                       VLCDefaults.shared.stretchAudio ? 1 : 0) // TODO: unsure
+                                       VLCDefaults.shared.stretchAudio ? 1 : 0)
         return prefilledFeedback
     }
 

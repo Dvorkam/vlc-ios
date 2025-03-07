@@ -1058,9 +1058,18 @@ extension VLCDefaults {
 }
 
 extension VLCDefaults {
-    enum HardwareDecoding: String {
+    enum HardwareDecoding: String, CustomStringConvertible {
         case software = "avcodec,all"
         case hardware = ""
+
+        var description: String {
+            switch self {
+            case .software:
+                return "Software"
+            case .hardware:
+                return "Hardware"
+            }
+        }
     }
 }
 
