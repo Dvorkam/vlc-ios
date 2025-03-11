@@ -82,7 +82,7 @@
             return;
         }
 
-        if ([[NSUserDefaults standardUserDefaults] integerForKey:kVLCSettingAppTheme] == kVLCSettingAppThemeSystem) {
+        if (VLCDefaults.shared.appThemeIsSystem) {
             [PresentationTheme themeDidUpdate];
         }
         [self themeDidChange];

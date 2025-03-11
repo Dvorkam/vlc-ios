@@ -50,7 +50,7 @@ class PlaybackSpeedView: UIView {
     private var currentSpeed: Float = 1.0
 
     private let defaultDelay: Float = 0.0
-    private var defaultSpeed: Float = UserDefaults.standard.float(forKey: kVLCSettingPlaybackSpeedDefaultValue)
+    private var defaultSpeed: Float = VLCDefaults.shared.playbackSpeedDefaultValue
 
     let vpc = PlaybackService.sharedInstance()
     let notificationCenter = NotificationCenter.default
@@ -164,7 +164,7 @@ class PlaybackSpeedView: UIView {
         shortcutLabel.text = NSLocalizedString("DISPLAY_PLAYBACK_SPEED_SHORTCUT", comment: "")
         shortcutLabel.accessibilityLabel = NSLocalizedString("DISPLAY_PLAYBACK_SPEED_SHORTCUT", comment: "")
         shortcutLabel.accessibilityHint = NSLocalizedString("DISPLAY_PLAYBACK_SPEED_SHORTCUT_HINT", comment: "")
-        shortcutSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCPlayerShowPlaybackSpeedShortcut)
+        shortcutSwitch.isOn = VLCDefaults.shared.playerShowPlaybackSpeedShortcut
     }
 
     @objc func playbackSpeedHasChanged(_ notification: NSNotification) {
@@ -264,7 +264,7 @@ class PlaybackSpeedView: UIView {
     }
 
     func reset() {
-        defaultSpeed = UserDefaults.standard.float(forKey: kVLCSettingPlaybackSpeedDefaultValue)
+        defaultSpeed = VLCDefaults.shared.playbackSpeedDefaultValue
         currentSpeed = defaultSpeed
         vpc.playbackRate = currentSpeed
         notificationCenter.post(name: Notification.Name("ChangePlaybackSpeed"), object: nil)
@@ -345,7 +345,7 @@ class PlaybackSpeedView: UIView {
 
     @IBAction func handleShortcutSwitch(_ sender: Any) {
         let isSwitchOn: Bool = shortcutSwitch.isOn
-        UserDefaults.standard.setValue(isSwitchOn, forKey: kVLCPlayerShowPlaybackSpeedShortcut)
+        VLCDefaults.shared.playerShowPlaybackSpeedShortcut = isSwitchOn
         delegate?.playbackSpeedViewHandleShortcutSwitchChange(displayView: isSwitchOn)
     }
 }

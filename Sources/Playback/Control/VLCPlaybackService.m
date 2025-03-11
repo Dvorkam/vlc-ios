@@ -220,8 +220,6 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return;
     }
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
     if (!self.mediaList) {
         APLog(@"%s: no URL and no media list set, stopping playback", __PRETTY_FUNCTION__);
         [_playbackSessionManagementLock unlock];
@@ -245,12 +243,11 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     /* the chromecast and audio options cannot be set per media, so we need to set it per
      * media player instance however, potentially initialising an additional library instance
      * for this is costly, so this should be done only if needed */
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    BOOL audioTimeStretch = [[userDefaults objectForKey:kVLCSettingStretchAudio] boolValue];
+    BOOL audioTimeStretch = VLCDefaults.shared.stretchAudio;
     NSMutableArray *libVLCOptions = [NSMutableArray array];
 #if TARGET_OS_IOS
-    BOOL chromecastPassthrough = [[userDefaults objectForKey:kVLCSettingCastingAudioPassthrough] boolValue];
-    int chromecastQuality = [[userDefaults objectForKey:kVLCSettingCastingConversionQuality] intValue];
+    BOOL chromecastPassthrough = VLCDefaults.shared.castingAudioPassthrough;
+    int chromecastQuality = (int)VLCDefaults.shared.castingConversionQuality;
     if (chromecastPassthrough) {
         [libVLCOptions addObject:[@"--" stringByAppendingString:kVLCSettingCastingAudioPassthrough]];
     }
@@ -275,7 +272,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     consoleLogger.level = kVLCLogLevelDebug;
     [debugLoggers addObject:consoleLogger];
 #endif
-    BOOL saveDebugLogs = [userDefaults boolForKey:kVLCSaveDebugLogs];
+    BOOL saveDebugLogs = VLCDefaults.shared.saveDebugLogs;
     if (saveDebugLogs) {
         NSArray *searchPaths;
 #if TARGET_OS_TV
@@ -315,15 +312,15 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 #endif
 
     [_mediaPlayer setDelegate:self];
-    CGFloat defaultPlaybackSpeed = [[defaults objectForKey:kVLCSettingPlaybackSpeedDefaultValue] floatValue];
+    CGFloat defaultPlaybackSpeed = VLCDefaults.shared.playbackSpeedDefaultValue;
     if (defaultPlaybackSpeed != 0.)
         [_mediaPlayer setRate: defaultPlaybackSpeed];
-    int deinterlace = [[defaults objectForKey:kVLCSettingDeinterlace] intValue];
+    int deinterlace = (int)VLCDefaults.shared.deinterlace;
     [_mediaPlayer setDeinterlace:deinterlace withFilter:@"blend"];
 
     [_listPlayer setMediaList:self.mediaList];
-    if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
-        VLCRepeatMode repeatMode = [defaults integerForKey:kVLCPlayerIsRepeatEnabled];
+    if (VLCDefaults.shared.playerShouldRememberState) {
+        VLCRepeatMode repeatMode = VLCDefaults.shared.playerIsRepeatEnabled;
         [_listPlayer setRepeatMode:repeatMode];
     }
 
@@ -340,17 +337,16 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return;
     }
 
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    BOOL equalizerEnabled = ![userDefaults boolForKey:kVLCSettingEqualizerProfileDisabled];
+    BOOL equalizerEnabled = !VLCDefaults.shared.equalizerProfileDisabled;
 
     VLCAudioEqualizer *equalizer;
 
     if (equalizerEnabled) {
         NSArray *presets = [VLCAudioEqualizer presets];
-        unsigned int profile = (unsigned int)[userDefaults integerForKey:kVLCSettingEqualizerProfile];
+        unsigned int profile = (unsigned int)VLCDefaults.shared.equalizerProfile;
         equalizer = [[VLCAudioEqualizer alloc] initWithPreset:presets[profile]];
     } else {
-        float preampValue = [userDefaults floatForKey:kVLCSettingDefaultPreampLevel];
+        float preampValue = VLCDefaults.shared.defaultPreampLevel;
         equalizer = [[VLCAudioEqualizer alloc] init];
         equalizer.preAmplification = preampValue;
     }
@@ -499,13 +495,13 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             }
         }
 
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles]) {
+        if (VLCDefaults.shared.disableSubtitles) {
             _mediaPlayer.currentVideoSubTitleIndex = -1;
         } else {
             [self selectVideoSubtitleAtIndex:media.subtitleTrackIndex];
         }
 #else
-        BOOL disableSubtitles = [[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles];
+        BOOL disableSubtitles = VLCDefaults.shared.disableSubtitles;
 
         NSArray *audioTracks = _mediaPlayer.audioTracks;
         if (media.audioTrackIndex < audioTracks.count) {
@@ -580,9 +576,8 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServicePlaybackModeUpdated object:self];
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
-        [defaults setInteger:repeatMode forKey:kVLCPlayerIsRepeatEnabled];
+    if (VLCDefaults.shared.playerShouldRememberState) {
+        VLCDefaults.shared.playerIsRepeatEnabled = repeatMode;
     }
 }
 
@@ -859,13 +854,12 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             _mediaPlayer.media.delegate = self;
 
             /* on-the-fly values through hidden API */
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-            [_mediaPlayer performSelector:@selector(setTextRendererFont:) withObject:[defaults objectForKey:kVLCSettingSubtitlesFont]];
-            [_mediaPlayer performSelector:@selector(setTextRendererFontSize:) withObject:[defaults objectForKey:kVLCSettingSubtitlesFontSize]];
-            [_mediaPlayer performSelector:@selector(setTextRendererFontColor:) withObject:[defaults objectForKey:kVLCSettingSubtitlesFontColor]];
-            [_mediaPlayer performSelector:@selector(setTextRendererFontForceBold:) withObject:[defaults objectForKey:kVLCSettingSubtitlesBoldFont]];
+            [_mediaPlayer performSelector:@selector(setTextRendererFont:) withObject:VLCDefaults.shared.subtitlesFontSize];
+            [_mediaPlayer performSelector:@selector(setTextRendererFontSize:) withObject:VLCDefaults.shared.subtitlesFontSize];
+            [_mediaPlayer performSelector:@selector(setTextRendererFontColor:) withObject:VLCDefaults.shared.subtitlesFontColor];
+            [_mediaPlayer performSelector:@selector(setTextRendererFontForceBold:) withObject:[NSNumber numberWithBool:VLCDefaults.shared.subtitlesBoldFont]];
 #pragma clang diagnostic pop
         } break;
 
@@ -1018,9 +1012,8 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
     [[NSNotificationCenter defaultCenter] postNotificationName:VLCPlaybackServiceShuffleModeUpdated object:self];
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([[defaults valueForKey:kVLCPlayerShouldRememberState] boolValue]) {
-        [defaults setBool:shuffleMode forKey:kVLCPlayerIsShuffleEnabled];
+    if (VLCDefaults.shared.playerShouldRememberState) {
+        VLCDefaults.shared.playerIsShuffleEnabled = shuffleMode;
     }
 }
 
@@ -1080,7 +1073,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 - (BOOL)next
 {
     if (_mediaList.count == 1) {
-        NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackForwardSkipLength];
+        NSNumber *skipLength = [NSNumber numberWithInteger:VLCDefaults.shared.playbackForwardSkipLength];
         [_mediaPlayer jumpForward:skipLength.intValue];
         return YES;
     }
@@ -1133,7 +1126,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             [_listPlayer playItemAtNumber:@(_currentIndex)];
         }
     } else {
-        NSNumber *skipLength = [[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackBackwardSkipLength];
+        NSNumber *skipLength = [NSNumber numberWithInteger:VLCDefaults.shared.playbackBackwardSkipLength];
         [_mediaPlayer jumpBackward:skipLength.intValue];
     }
     return YES;
@@ -1400,12 +1393,11 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
 - (void)resetEqualizerFromProfile:(unsigned int)profile
 {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     if (profile == 0) {
         _mediaPlayer.equalizer = nil;
-        [userDefaults setBool:YES forKey:kVLCSettingEqualizerProfileDisabled];
+        VLCDefaults.shared.equalizerProfileDisabled = YES;
 
-        float preampValue = [userDefaults floatForKey:kVLCSettingDefaultPreampLevel];
+        float preampValue = VLCDefaults.shared.defaultPreampLevel;
         if (preampValue != 6.0) {
             APLog(@"Enforcing presumbly disabled equalizer due to custom preamp value of %f2.0", preampValue);
             VLCAudioEqualizer *eq = [[VLCAudioEqualizer alloc] init];
@@ -1415,10 +1407,10 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return;
     }
 
-    [userDefaults setBool:NO forKey:kVLCSettingEqualizerProfileDisabled];
+    VLCDefaults.shared.equalizerProfileDisabled = NO;
 
     unsigned int actualProfile = profile - 1;
-    [userDefaults setInteger:actualProfile forKey:kVLCSettingEqualizerProfile];
+    VLCDefaults.shared.equalizerProfile = actualProfile;
 
     NSArray *presets = [VLCAudioEqualizer presets];
     VLCAudioEqualizer *equalizer = [[VLCAudioEqualizer alloc] initWithPreset:presets[actualProfile]];
@@ -1442,7 +1434,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
         return equalizer.preAmplification;
     }
 
-    return [[NSUserDefaults standardUserDefaults] floatForKey:kVLCSettingDefaultPreampLevel];
+    return VLCDefaults.shared.defaultPreampLevel;
 }
 
 - (unsigned int)numberOfBands
@@ -1471,16 +1463,16 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 {
     /* this is a bit complex, if the eq is off, we need to return 0
      * if it is on, we need to provide the profile + 1 as the UI fakes a "Off" profile in its list */
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if ([userDefaults boolForKey:kVLCSettingEqualizerProfileDisabled]) {
+    if (VLCDefaults.shared.equalizerProfileDisabled) {
         return [NSIndexPath indexPathForRow:0 inSection:0];
     }
 
-    unsigned int actualProfile = (unsigned int)[userDefaults integerForKey:kVLCSettingEqualizerProfile];
-    if (![userDefaults boolForKey:kVLCCustomProfileEnabled]) {
-        return [NSIndexPath indexPathForRow:actualProfile + 1 inSection:0];
-    } else {
+    unsigned int actualProfile = (unsigned int)VLCDefaults.shared.equalizerProfile;
+
+    if (VLCDefaults.shared.customEqualizerProfileEnabled) {
         return [NSIndexPath indexPathForRow:actualProfile inSection:1];
+    } else {
+        return [NSIndexPath indexPathForRow:actualProfile + 1 inSection:0];
     }
 }
 #endif
@@ -1600,9 +1592,9 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
             if (!libraryMedia.isPodcast) {
                 return;
             }
-            continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioPlayback] integerValue];
+            continuePlayback = VLCDefaults.shared.continueAudioPlayback;
         } else {
-            continuePlayback = [[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinuePlayback] integerValue];
+            continuePlayback = VLCDefaults.shared.continuePlayback;
         }
 
         if (continuePlayback == 1) {
@@ -1691,7 +1683,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
 - (void)disableSubtitlesIfNeeded
 {
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingDisableSubtitles]) {
+    if (VLCDefaults.shared.disableSubtitles) {
         [_mediaPlayer deselectAllTextTracks];
     }
 }
@@ -1721,8 +1713,7 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 #if !TARGET_OS_TV
     [self savePlaybackState];
 #endif
-    if (![self isPlayingOnExternalScreen]
-        && ![[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingContinueAudioInBackgroundKey] boolValue]) {
+    if (![self isPlayingOnExternalScreen] && !VLCDefaults.shared.continueAudioInBackgroundKey) {
         if ([_mediaPlayer isPlaying]) {
             [_mediaPlayer pause];
             _shouldResumePlaying = YES;
@@ -1777,12 +1768,11 @@ NSString *const VLCLastPlaylistPlayedMedia = @"LastPlaylistPlayedMedia";
 
 - (NSDictionary *)mediaOptionsDictionary
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return @{ kVLCSettingNetworkCaching : [defaults objectForKey:kVLCSettingNetworkCaching],
-              kVLCSettingTextEncoding : [defaults objectForKey:kVLCSettingTextEncoding],
-              kVLCSettingSkipLoopFilter : [defaults objectForKey:kVLCSettingSkipLoopFilter],
-              kVLCSettingHardwareDecoding : [defaults objectForKey:kVLCSettingHardwareDecoding],
-              kVLCSettingNetworkRTSPTCP : [defaults objectForKey:kVLCSettingNetworkRTSPTCP]
+    return @{ @"network-caching" : [NSNumber numberWithInteger:VLCDefaults.shared.networkCachingObjC],
+              @"subsdec-encoding" : VLCDefaults.shared.textEncoding,
+              @"avcodec-skiploopfilter" : [NSNumber numberWithInteger:VLCDefaults.shared.skipLoopFilterObjC],
+              @"codec" : VLCDefaults.shared.hardwareDecodingObjC,
+              @"rtsp-tcp" : [NSNumber numberWithBool:VLCDefaults.shared.networkRTSPTCP]
     };
 }
 

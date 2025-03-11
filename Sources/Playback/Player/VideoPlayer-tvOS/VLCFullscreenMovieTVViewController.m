@@ -18,6 +18,7 @@
 #import "VLCNetworkImageView.h"
 #import "VLCMetaData.h"
 #import "VLCActivityManager.h"
+#import "VLC-Swift.h"
 
 typedef NS_ENUM(NSInteger, VLCPlayerScanState)
 {
@@ -172,12 +173,12 @@ typedef NS_ENUM(NSInteger, VLCPlayerScanState)
     vpc.delegate = self;
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults boolForKey:kVLCPlayerShouldRememberState]) {
-        vpc.shuffleMode = [defaults boolForKey:kVLCPlayerIsShuffleEnabled];
-        vpc.repeatMode = [defaults integerForKey:kVLCPlayerIsRepeatEnabled];
+    if (VLCDefaults.shared.playerShouldRememberState) {
+        vpc.shuffleMode = VLCDefaults.shared.playerIsShuffleEnabled;
+        vpc.repeatMode = VLCDefaults.shared.playerIsRepeatEnabled;
     }
 
-    self.playbackUIShouldHide = [defaults boolForKey:kVLCPlayerUIShouldHide];
+    self.playbackUIShouldHide = VLCDefaults.shared.playerUIShouldHide;
     if (self.playbackUIShouldHide) {
         self.activityIndicator.alpha = 0.;
         [self.activityIndicator stopAnimating];

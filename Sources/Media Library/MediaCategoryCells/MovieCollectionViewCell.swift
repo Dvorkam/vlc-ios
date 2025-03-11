@@ -169,9 +169,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
         descriptionLabel.text = movie.mediaDuration()
         thumbnailView.image = movie.thumbnailImage()
         let progress = movie.progress
-        guard let value = UserDefaults.standard.value(forKey: kVLCSettingContinuePlayback) as? Int else {
-            return
-        }
+        let value = VLCDefaults.shared.continuePlayback
         if value <= 0 {
             progressView.isHidden = true
         } else {
@@ -195,7 +193,7 @@ class MovieCollectionViewCell: BaseCollectionViewCell {
         let playbackService = PlaybackService.sharedInstance()
 
         if lastPlayed {
-            let isCurrentlyPlayingPlaylist = UserDefaults.standard.bool(forKey: kVLCIsCurrentlyPlayingPlaylist)
+            let isCurrentlyPlayingPlaylist = VLCDefaults.shared.currentlyPlayingPlaylist
             let shouldDisplayLastPlayedLabel = (!playbackService.isPlaying && playbackService.currentlyPlayingMedia == nil) || !isCurrentlyPlayingPlaylist
             groupLastPlayedLabel.isHidden = !shouldDisplayLastPlayedLabel
             groupLastPlayedLabel.text = NSLocalizedString("LAST_PLAYED_PLAYLIST_LABEL_TITLE", comment: "")

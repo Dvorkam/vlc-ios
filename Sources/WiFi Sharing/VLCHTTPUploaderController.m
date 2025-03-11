@@ -27,8 +27,9 @@
 
 #import "NSString+SupportedMedia.h"
 
-#if TARGET_OS_IOS || TARGET_OS_VISION
 #import "VLC-Swift.h"
+
+#if TARGET_OS_IOS || TARGET_OS_VISION
 #import "VLCMediaFileDiscoverer.h"
 #endif
 
@@ -256,7 +257,7 @@ NSString *VLCHTTPUploaderBackgroundTaskName = @"VLCHTTPUploaderBackgroundTaskNam
     [_httpServer setInterface:_nameOfUsedNetworkInterface];
 
     [_httpServer setIPv4Enabled:YES];
-    [_httpServer setIPv6Enabled:[[[NSUserDefaults standardUserDefaults] objectForKey:kVLCSettingWiFiSharingIPv6] boolValue]];
+    [_httpServer setIPv6Enabled:VLCDefaults.shared.wifiSharingIPv6];
 
     // Tell the server to broadcast its presence via Bonjour.
     // This allows browsers such as Safari to automatically discover our service.

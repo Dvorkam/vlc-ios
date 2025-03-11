@@ -104,6 +104,17 @@ enum PresentationThemeType: Int {
     case bright = 0
     case dark
     case auto
+
+    static func from(appTheme: VLCDefaults.AppTheme) -> PresentationThemeType {
+        switch appTheme {
+        case .dark, .black:
+            return .dark
+        case .bright:
+            return .bright
+        case .system:
+            return .auto
+        }
+    }
 }
 
 @objcMembers class PresentationTheme: NSObject {
@@ -117,12 +128,11 @@ enum PresentationThemeType: Int {
     }
 
     var isBlack: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingAppThemeBlack)
+        VLCDefaults.shared.appThemeBlack
     }
 
     static var current: PresentationTheme = {
-        let themeSettings = UserDefaults.standard.integer(forKey: kVLCSettingAppTheme)
-        return PresentationTheme.respectiveTheme(for: PresentationThemeType(rawValue: themeSettings))
+        return PresentationTheme.respectiveTheme(for: PresentationThemeType.from(appTheme: VLCDefaults.shared.appTheme))
     }() {
         didSet {
             AppearanceManager.setupAppearance(theme: self.current)
@@ -144,9 +154,7 @@ enum PresentationThemeType: Int {
     }
 
     @objc static func themeDidUpdate() {
-        let themeSettings = UserDefaults.standard.integer(forKey: kVLCSettingAppTheme)
-        PresentationTheme.current = PresentationTheme.respectiveTheme(for:
-            PresentationThemeType(rawValue: themeSettings))
+        PresentationTheme.current = PresentationTheme.respectiveTheme(for: PresentationThemeType.from(appTheme: VLCDefaults.shared.appTheme))
     }
 
     static func respectiveTheme(for theme: PresentationThemeType?, excludingBlackTheme: Bool = false) -> PresentationTheme {
@@ -157,7 +165,7 @@ enum PresentationThemeType: Int {
         var presentationTheme = PresentationTheme.brightTheme
         var darkTheme: PresentationTheme
 
-        if UserDefaults.standard.bool(forKey: kVLCSettingAppThemeBlack) {
+        if VLCDefaults.shared.appThemeBlack {
             darkTheme = PresentationTheme.blackTheme
         } else {
             darkTheme = PresentationTheme.darkTheme

@@ -25,81 +25,31 @@
 
 #define kSupportedProtocolSchemes @"(rtsp|mms|mmsh|udp|rtp|rtmp|sftp|ftp|smb)$"
 
-#define kVLCSettingPlaybackSpeedDefaultValue @"playback-speed"
-#define kVLCSettingNetworkCaching @"network-caching"
-#define kVLCSettingNetworkCachingDefaultValue @(999)
-#define kVLCSettingNetworkRTSPTCP @"rtsp-tcp"
-#define kVLCSaveDebugLogs @"kVLCSaveDebugLogs"
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
+
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
-#define kVLCSettingSkipLoopFilter @"avcodec-skiploopfilter"
-#define kVLCSettingSkipLoopFilterNone @(0)
-#define kVLCSettingSkipLoopFilterNonRef @(1)
-#define kVLCSettingSkipLoopFilterNonKey @(3)
-#define kVLCSettingDeinterlace @"deinterlace"
-#define kVLCSettingDeinterlaceDefaultValue @(-1)
-#define kVLCSettingHardwareDecoding @"codec"
-#define kVLCSettingHardwareDecodingDefault @""
-#define kVLCSettingSubtitlesFont @"quartztext-font"
-#define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"
-#define kVLCSettingSubtitlesFontSize @"quartztext-rel-fontsize"
-#define kVLCSettingSubtitlesFontSizeDefaultValue @"16"
-#define kVLCSettingSubtitlesBoldFont @"quartztext-bold"
-#define kVLCSettingSubtitlesBoldFontDefaultValue @NO
-#define kVLCSettingSubtitlesFontColor @"quartztext-color"
-#define kVLCSettingSubtitlesFontColorDefaultValue @"16777215"
+
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
-#define kVLCSettingTextEncoding @"subsdec-encoding"
-#define kVLCSettingTextEncodingDefaultValue @"Windows-1252"
-#define kVLCSettingStretchAudio @"audio-time-stretch"
-#define kVLCSettingStretchAudioOnValue @"1"
-#define kVLCSettingStretchAudioOffValue @"0"
-#define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
-#define kVLCSettingDefaultPreampLevel @"pre-amp-level"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
-#define kVLCSettingEqualizerProfile @"EqualizerProfile"
-#define kVLCSettingEqualizerProfileDisabled @"EqualizerDisabled"
-#define kVLCSettingEqualizerProfileDefaultValue @(0)
-#define kVLCSettingPlaybackForwardSkipLength @"playback-forward-skip-length"
-#define kVLCSettingPlaybackForwardSkipLengthDefaultValue @(10)
-#define kVLCSettingPlaybackBackwardSkipLength @"playback-backward-skip-length"
-#define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
-#define kVLCSettingPlaybackLockscreenSkip @"playback-lockscreen-skip"
-#define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
-#define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
-#define kVLCPlayerUIShouldHide @"PlayerUIShouldHide"
-#define kVLCSettingDownloadArtwork @"download-artwork"
 #define kVLCSettingUseSPDIF @"kVLCSettingUseSPDIF"
-#define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
-#define kVLCSettingBackupMediaLibraryDefaultValue @NO
-#define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
-#define kVLCSettingPlayerControlDuration @"kVLCSettingPlayerControlDuration"
-#define kVLCSettingPlayerControlDurationDefaultValue @(4)
+
+#define kVLCSettingStretchAudio @"audio-time-stretch"
 
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
 
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
-#define kVLCPlayerShouldRememberState @"PlayerShouldRememberState"
-#define kVLCPlayerIsShuffleEnabled @"PlayerIsShuffleEnabled"
-#define kVLCPlayerIsShuffleEnabledDefaultValue @NO
-#define kVLCPlayerIsRepeatEnabled @"PlayerIsRepeatEnabled"
-#define kVLCPlayerIsRepeatEnabledDefaultValue @(0)
 
 #define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
-#define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
-#define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
+
+#define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
+#define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
 
 #define kVLCfortvOSMovieDBKey @""
 
 #define kVLCStoredServerList @"kVLCStoredServerList"
 
 #define kVLCHTTPUploadDirectory @"Upload"
-
-#define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
-#define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
-
-#define kVLCForceSMBV1 @"smb-force-v1"
 
 #define kVLCSettingReset @"kVLCSettingReset"

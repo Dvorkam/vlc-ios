@@ -16,6 +16,7 @@
 #import "VLCLocalNetworkServiceBrowserUPnP.h"
 #import "VLCAppCoordinator.h"
 #import "VLCHTTPUploaderController.h"
+#import "VLC-Swift.h"
 
 @interface VLCLocalNetworkServiceBrowserMediaDiscoverer () <VLCMediaListDelegate>
 {
@@ -42,8 +43,7 @@
          * so it should be only if explicitly demanded by the user */
         _isUPnPdiscoverer = [serviceName isEqualToString:@"upnp"];
         if (_isUPnPdiscoverer) {
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSString *satipURLstring = [defaults stringForKey:kVLCSettingNetworkSatIPChannelListUrl];
+            NSString *satipURLstring = VLCDefaults.shared.networkSatIPChannelListUrl;
             NSMutableArray *libVLCOptions = [NSMutableArray array];
             if (satipURLstring.length > 0) {
                 [libVLCOptions addObject:[NSString stringWithFormat:@"--%@=%@", kVLCSettingNetworkSatIPChannelListUrl, satipURLstring]];

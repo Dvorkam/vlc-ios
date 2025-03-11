@@ -106,7 +106,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
     }
 
     private var enableMarquee: Bool {
-        return !UserDefaults.standard.bool(forKey: kVLCSettingEnableMediaCellTextScrolling)
+        return !VLCDefaults.shared.enableMediaCellTextScrolling
     }
 
     // MARK: - Init
@@ -260,7 +260,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
             trackNumber = String(describing: media.trackNumber) + ". "
         }
 
-        let displayTrackNumber: Bool = !UserDefaults.standard.bool(forKey: kVLCAudioLibraryHideTrackNumbers)
+        let displayTrackNumber: Bool = !VLCDefaults.shared.audioLibraryHideTrackNumbers
         titleLabel.text = displayTrackNumber ? trackNumber + audiotrack.title() : audiotrack.title()
         accessibilityLabel = audiotrack.accessibilityText(editing: false)
         var descriptionText = audiotrack.albumTrackArtistName()
@@ -617,7 +617,7 @@ class MediaCollectionViewCell: BaseCollectionViewCell, UIScrollViewDelegate {
     // MARK: - Handle  New label Text
 
     func handleLastPlayed() {
-        let isCurrentlyPlayingPlaylist = UserDefaults.standard.bool(forKey: kVLCIsCurrentlyPlayingPlaylist)
+        let isCurrentlyPlayingPlaylist = VLCDefaults.shared.currentlyPlayingPlaylist
         let shouldDisplayLastPlayedLabel = (!playbackService.isPlaying && playbackService.currentlyPlayingMedia == nil) || !isCurrentlyPlayingPlaylist
         newLabel.isHidden = !shouldDisplayLastPlayedLabel
 

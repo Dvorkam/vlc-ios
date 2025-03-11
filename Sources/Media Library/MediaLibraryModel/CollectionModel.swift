@@ -27,12 +27,16 @@ class CollectionModel: MLBaseModel {
     var files = [VLCMLMedia]()
 
     var cellType: BaseCollectionViewCell.Type {
+        let collectionModelName: String = String(describing: type(of: mediaCollection))
+
         if mediaCollection is VLCMLMediaGroup {
-            return UserDefaults.standard.bool(forKey: "\(kVLCVideoLibraryGridLayout)\(String(describing: type(of: mediaCollection)) + name)") ?
-                                              MovieCollectionViewCell.self : MediaCollectionViewCell.self
+            return VLCDefaults.shared
+                .videoLibraryGridLayout(collectionModelName: collectionModelName, name: name) ?
+            MovieCollectionViewCell.self : MediaCollectionViewCell.self
         } else {
-            return UserDefaults.standard.bool(forKey: "\(kVLCAudioLibraryGridLayout)\(String(describing: type(of: mediaCollection)) + name)") ?
-                                              MediaGridCollectionCell.self : MediaCollectionViewCell.self
+            return VLCDefaults.shared
+                .audioLibraryGridLayout(collectionModelName: collectionModelName, name: name) ?
+            MediaGridCollectionCell.self : MediaCollectionViewCell.self
         }
     }
 

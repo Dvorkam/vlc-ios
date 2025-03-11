@@ -200,7 +200,7 @@ const float MediaTimerInterval = 2.f;
                     }
                 }
             }
-            BOOL backupMediaLibrary = [NSUserDefaults.standardUserDefaults boolForKey:kVLCSettingBackupMediaLibrary];
+            BOOL backupMediaLibrary = VLCDefaults.shared.backupMediaLibrary;
             NSURL *fileURL = [NSURL fileURLWithPath:filePath];
             [fileURL setExcludedFromBackup:!backupMediaLibrary recursive:NO onlyFirstLevel:NO :nil];
 
@@ -226,7 +226,7 @@ const float MediaTimerInterval = 2.f;
 - (void)didAddMedia:(NSTimer*)timer
 {
 #if TARGET_OS_IOS
-    BOOL hideMediaLibrary = [NSUserDefaults.standardUserDefaults boolForKey:kVLCSettingHideLibraryInFilesApp];
+    BOOL hideMediaLibrary = VLCDefaults.shared.hideLibraryInFilesApp;
     [(NSURL*)[timer.userInfo valueForKey:@"fileURL"] setHidden:hideMediaLibrary recursive:NO onlyFirstLevel:NO :nil];
 #endif
     [NSFileManager.defaultManager removeItemAtPath:[NSString pathWithComponents:@[_directoryPath, NSLocalizedString(@"MEDIALIBRARY_ADDING_PLACEHOLDER", "")]] error:nil];

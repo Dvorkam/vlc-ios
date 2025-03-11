@@ -40,7 +40,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     private var searchBarConstraint: NSLayoutConstraint?
     private var searchDataSource: LibrarySearchDataSource
     private let searchBarSize: CGFloat = 50.0
-    private let userDefaults = UserDefaults.standard
 #if os(iOS)
     private var rendererButton: UIButton
 #endif
@@ -79,7 +78,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     private lazy var navItemTitle: VLCMarqueeLabel = VLCMarqueeLabel()
 
     private var hasLaunchedBefore: Bool {
-        return userDefaults.bool(forKey: kVLCHasLaunchedBefore)
+        return VLCDefaults.shared.hasLaunchedBefore
     }
 
     @objc private lazy var sortActionSheet: ActionSheet = {
@@ -202,17 +201,12 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     }()
 
     private var lastPlaylist: LastPlayedPlaylistModel? {
-        let encodedLastPlaylist = userDefaults.data(forKey: kVLCLastPlayedPlaylist)
-        guard let encodedData = encodedLastPlaylist,
-              let lastPlayed = NSKeyedUnarchiver(forReadingWith: encodedData).decodeObject(forKey: "root") as? LastPlayedPlaylistModel else {
-            return nil
-        }
-        return lastPlayed
+        return VLCDefaults.shared.lastPlayedPlaylist
     }
 
     // Indicating that the current chosen collection to play is playlist, useful for handling Observer
     private var isPlaylistCurrentlyPlaying: Bool {
-        return userDefaults.bool(forKey: kVLCIsCurrentlyPlayingPlaylist)
+        return VLCDefaults.shared.currentlyPlayingPlaylist
     }
 
     // catch the selected index from collection view, helper for playbackDidStart
@@ -234,8 +228,8 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         videoModel.secondName = model.name
 
         if model is MediaGroupViewModel {
-            self.model = userDefaults.bool(forKey: kVLCSettingsDisableGrouping) ? videoModel : model
-            self.secondModel = userDefaults.bool(forKey: kVLCSettingsDisableGrouping) ? model : videoModel
+            self.model = VLCDefaults.shared.disableGrouping ? videoModel : model
+            self.secondModel = VLCDefaults.shared.disableGrouping ? model : videoModel
         } else {
             self.model = model
             self.secondModel = videoModel
@@ -567,13 +561,8 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
     }
 
     func loadSort() {
-        let sortingCriteria: VLCMLSortingCriteria
-        if let sortingCriteriaDefault = UserDefaults.standard.value(forKey: "\(kVLCSortDefault)\(model.name)") as? UInt {
-            sortingCriteria = VLCMLSortingCriteria(rawValue: sortingCriteriaDefault) ?? model.sortModel.currentSort
-        } else {
-            sortingCriteria = model.sortModel.currentSort
-        }
-        let desc = UserDefaults.standard.bool(forKey: "\(kVLCSortDescendingDefault)\(model.name)")
+        let sortingCriteria = VLCDefaults.shared.sortDefault(name: model.name) ?? model.sortModel.currentSort
+        let desc = VLCDefaults.shared.sortDescendingDefault(name: model.name)
         self.model.sort(by: sortingCriteria, desc: desc)
     }
 
@@ -604,14 +593,14 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             let navigationController = UINavigationController(rootViewController: firstStepController)
             navigationController.modalPresentationStyle = .formSheet
             self.present(navigationController, animated: true)
-            userDefaults.set(true, forKey: kVLCHasLaunchedBefore)
+            VLCDefaults.shared.setHasLaunchedBeforeIfNeeded()
         } else {
-            if userDefaults.bool(forKey: kVLCHasActiveSubscription) {
+            if VLCDefaults.shared.hasActiveSubscription {
                 return
             }
 
-            var lastNagMonth = userDefaults.integer(forKey: kVLCHasNaggedThisMonth)
-            let numberOfLaunches = userDefaults.integer(forKey: kVLCNumberOfLaunches)
+            var lastNagMonth = VLCDefaults.shared.hasNaggedThisMonth
+            let numberOfLaunches = VLCDefaults.shared.numberOfLaunches
             let currentMonth = NSCalendar.current.component(.month, from: Date())
 
             if lastNagMonth == 12 && currentMonth < 12 {
@@ -619,8 +608,8 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             }
 
             if lastNagMonth < currentMonth && numberOfLaunches >= 5 {
-                userDefaults.setValue(currentMonth, forKey: kVLCHasNaggedThisMonth)
-                userDefaults.setValue(0, forKey: kVLCNumberOfLaunches)
+                VLCDefaults.shared.hasNaggedThisMonth = currentMonth
+                VLCDefaults.shared.resetNumberOfLaunches()
                 let donationVC = VLCDonationNagScreenViewController(nibName: "VLCDonationNagScreenViewController", bundle: nil)
                 let donationNC = UINavigationController(rootViewController: donationVC)
                 donationNC.navigationBar.isHidden = true
@@ -641,7 +630,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             saveCurrentPlaylistInfo(with: playlist.identifier(), playlistTitle: playlist.title(), media: playlist.media?[selectedIndex.row])
             addPlaybackWillStopObserver()
             reloadData()
-            userDefaults.set(true, forKey: kVLCIsCurrentlyPlayingPlaylist)
+            VLCDefaults.shared.currentlyPlayingPlaylist = true
         } else if let playlists = currentDataSet as? [VLCMLPlaylist], let selectedIndex = collectionSelectedIndex {
             let selectedPlaylist = playlists[selectedIndex.row]
             guard let media = PlaybackService.sharedInstance().currentlyPlayingMedia,
@@ -650,7 +639,7 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
             saveCurrentPlaylistInfo(with: selectedPlaylist.identifier(), playlistTitle: selectedPlaylist.title(), media: mlMedia)
             addPlaybackWillStopObserver()
             reloadData()
-            userDefaults.set(true, forKey: kVLCIsCurrentlyPlayingPlaylist)
+            VLCDefaults.shared.currentlyPlayingPlaylist = true
         } else if isPlaylistCurrentlyPlaying {
             //if the playlist media is already being played and the current model is not Playlist or playlist collection media.
             //This will update the value of last played media, leading to right indication if the app is suddenly closed.
@@ -937,10 +926,8 @@ extension MediaCategoryViewController {
 
     @objc func executeSortAction(with sortingCriteria: VLCMLSortingCriteria, desc: Bool) {
         model.sort(by: sortingCriteria, desc: desc)
-        userDefaults.set(desc,
-                         forKey: "\(kVLCSortDescendingDefault)\(model.name)")
-        userDefaults.set(sortingCriteria.rawValue,
-                         forKey: "\(kVLCSortDefault)\(model.name)")
+        VLCDefaults.shared.setSortDescendingDefault(name: model.name, isDescending: desc)
+        VLCDefaults.shared.setSortDefault(name: model.name, criteria: sortingCriteria)
         sortActionSheet.removeActionSheet()
         reloadData()
     }
@@ -1525,8 +1512,6 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
 
     func handleLayoutChange(gridLayout: Bool) {
         var prefix: String = ""
-        var suffix: String = ""
-
         var collectionModelName: String = ""
         var isVideoModel = false
         if let model = model as? CollectionModel {
@@ -1538,9 +1523,17 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
             isVideoModel = true
         }
 
-        prefix = isVideoModel ? kVLCVideoLibraryGridLayout : kVLCAudioLibraryGridLayout
-        suffix = collectionModelName + model.name
-        userDefaults.set(gridLayout, forKey: "\(prefix)\(suffix)")
+        switch isVideoModel {
+        case true:
+            VLCDefaults.shared.setVideoLibraryGridLayout(collectionModelName: collectionModelName,
+                                                         name: model.name,
+                                                         isGrid: gridLayout)
+        case false:
+            VLCDefaults.shared.setAudioLibraryGridLayout(collectionModelName: collectionModelName,
+                                                         name: model.name,
+                                                         isGrid: gridLayout)
+        }
+
         setupCollectionView()
         cachedCellSize = .zero
         collectionView?.collectionViewLayout.invalidateLayout()
@@ -1548,7 +1541,7 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
     }
 
     func actionSheetSortSectionHeaderShouldHideFeatArtists(onSwitchIsOnChange: Bool) {
-        userDefaults.set(onSwitchIsOnChange, forKey: "\(kVLCAudioLibraryHideFeatArtists)")
+        VLCDefaults.shared.audioLibraryHideFeatArtists = onSwitchIsOnChange
         setupCollectionView()
         cachedCellSize = .zero
         model.sort(by: model.sortModel.currentSort, desc: model.sortModel.desc)
@@ -1556,7 +1549,7 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
     }
 
     func actionSheetSortSectionHeaderShouldHideTrackNumbers(onSwitchIsOnChange: Bool) {
-        userDefaults.set(onSwitchIsOnChange, forKey: "\(kVLCAudioLibraryHideTrackNumbers)")
+        VLCDefaults.shared.audioLibraryHideTrackNumbers = onSwitchIsOnChange
         setupCollectionView()
         cachedCellSize = .zero
         model.sort(by: model.sortModel.currentSort, desc: model.sortModel.desc)
@@ -1564,18 +1557,17 @@ extension MediaCategoryViewController: ActionSheetSortSectionHeaderDelegate {
     }
 
     func actionSheetSortSectionHeader(_ header: ActionSheetSortSectionHeader, onSwitchIsOnChange: Bool, type: ActionSheetSortHeaderOptions) {
-        var prefix: String = ""
-        var suffix: String = ""
-        if type == .descendingOrder {
+        switch type {
+        case .descendingOrder:
             model.sort(by: model.sortModel.currentSort, desc: onSwitchIsOnChange)
-            prefix = kVLCSortDescendingDefault
-            suffix = model is VideoModel ? secondModel.name : model.name
-            userDefaults.set(onSwitchIsOnChange, forKey: "\(prefix)\(suffix)")
+            let name = model is VideoModel ? secondModel.name : model.name
+            VLCDefaults.shared.setSortDescendingDefault(name: name, isDescending: onSwitchIsOnChange)
             setupCollectionView()
             cachedCellSize = .zero
             collectionView?.collectionViewLayout.invalidateLayout()
             reloadData()
-        } else if type == .layoutChange {
+
+        case .layoutChange:
             handleLayoutChange(gridLayout: onSwitchIsOnChange)
         }
     }
@@ -1779,13 +1771,13 @@ extension MediaCategoryViewController: MediaLibraryBaseModelObserver {
 extension MediaCategoryViewController {
     func play(media: VLCMLMedia, at indexPath: IndexPath) {
         let playbackController = PlaybackService.sharedInstance()
-        var autoPlayNextItem: Bool = userDefaults.bool(forKey: kVLCAutomaticallyPlayNextItem)
+        var autoPlayNextItem: Bool = VLCDefaults.shared.automaticallyPlayNextItem
 
         playbackController.fullscreenSessionRequested = media.type() != .audio
 
         if let model = model as? CollectionModel,
            model.mediaCollection is VLCMLPlaylist {
-            autoPlayNextItem = userDefaults.bool(forKey: kVLCPlaylistPlayNextItem)
+            autoPlayNextItem = VLCDefaults.shared.playlistPlayNextItem
         }
 
         if !autoPlayNextItem {
@@ -1836,7 +1828,7 @@ extension MediaCategoryViewController {
 
         let lastMedia = LastPlayed(identifier: media.identifier(), title: media.title)
         let playlistInfo = LastPlayedPlaylistModel(identifier: playlistId, title: playlistTitle, lastPlayedMedia: lastMedia)
-        userDefaults.setValue(NSKeyedArchiver.archivedData(withRootObject: playlistInfo), forKey: kVLCLastPlayedPlaylist)
+        VLCDefaults.shared.lastPlayedPlaylist = playlistInfo
     }
 
     private func addPlaybackWillStopObserver() {
@@ -1859,7 +1851,7 @@ extension MediaCategoryViewController {
 
         reloadData()
         removePlaybackWillStopObserver()
-        userDefaults.setValue(false, forKey: kVLCIsCurrentlyPlayingPlaylist)
+        VLCDefaults.shared.currentlyPlayingPlaylist = false
         playbackCache.clearQueuePlaylistInfo()
     }
 

@@ -314,8 +314,6 @@ class PlayerViewController: UIViewController {
 
     private let notificationCenter = NotificationCenter.default
 
-    private let userDefaults = UserDefaults.standard
-
     // MARK: - Gestures
 
     lazy var panRecognizer: UIPanGestureRecognizer = {
@@ -436,8 +434,8 @@ class PlayerViewController: UIViewController {
         super.viewDidAppear(animated)
 
         if playerController.isRememberBrightnessEnabled && self is VideoPlayerViewController {
-            if let brightness = userDefaults.value(forKey: KVLCPlayerBrightness) as? CGFloat {
-                animateBrightness(to: brightness)
+            if let brightness = VLCDefaults.shared.playerBrightness {
+                animateBrightness(to: CGFloat(brightness))
                 self.brightnessControl.value = Float(brightness)
             }
         }
@@ -458,9 +456,9 @@ class PlayerViewController: UIViewController {
         super.viewDidDisappear(animated)
 
         if playerController.isRememberBrightnessEnabled && self is VideoPlayerViewController {
-            let currentBrightness = UIScreen.main.brightness
-            self.brightnessControl.value = Float(currentBrightness) // helper in indicating change in the system brightness
-            userDefaults.set(currentBrightness, forKey: KVLCPlayerBrightness)
+            let currentBrightness = Float(UIScreen.main.brightness)
+            self.brightnessControl.value = currentBrightness // helper in indicating change in the system brightness
+            VLCDefaults.shared.playerBrightness = currentBrightness
         }
         //set the value of system brightness after closing the app
         //even if the Player Should Remember Brightness option is disabled
@@ -736,13 +734,11 @@ class PlayerViewController: UIViewController {
     }
 
     private func setupSeekDurations() {
-        let defaults = UserDefaults.standard
-
-        tapSwipeEqual = defaults.bool(forKey: kVLCSettingPlaybackTapSwipeEqual)
-        forwardBackwardEqual = defaults.bool(forKey: kVLCSettingPlaybackForwardBackwardEqual)
-        seekForwardBy = defaults.integer(forKey: kVLCSettingPlaybackForwardSkipLength)
-        seekBackwardBy = forwardBackwardEqual ? seekForwardBy : defaults.integer(forKey: kVLCSettingPlaybackBackwardSkipLength)
-        seekForwardBySwipe = tapSwipeEqual ? seekForwardBy : defaults.integer(forKey: kVLCSettingPlaybackForwardSkipLengthSwipe)
+        tapSwipeEqual = VLCDefaults.shared.playbackTapSwipeEqual
+        forwardBackwardEqual = VLCDefaults.shared.playbackForwardBackwardEqual
+        seekForwardBy = VLCDefaults.shared.playbackForwardSkipLength
+        seekBackwardBy = forwardBackwardEqual ? seekForwardBy : VLCDefaults.shared.playbackBackwardSkipLength
+        seekForwardBySwipe = tapSwipeEqual ? seekForwardBy : VLCDefaults.shared.playbackForwardSkipLengthSwipe
 
         if tapSwipeEqual, forwardBackwardEqual {
             // if tap = swipe, and backward = forward, then backward swipe = forward tap
@@ -755,21 +751,18 @@ class PlayerViewController: UIViewController {
             seekBackwardBySwipe = seekForwardBySwipe
         } else {
             // otherwise backward swipe = backward swipe
-            seekBackwardBySwipe = defaults.integer(forKey: kVLCSettingPlaybackBackwardSkipLengthSwipe)
+            seekBackwardBySwipe = VLCDefaults.shared.playbackBackwardSkipLengthSwipe
         }
     }
 
     private func applyCustomEqualizerProfileIfNeeded() {
-        let userDefaults = UserDefaults.standard
-        guard userDefaults.bool(forKey: kVLCCustomProfileEnabled) else {
+        guard VLCDefaults.shared.customEqualizerProfileEnabled else {
             return
         }
 
-        let profileIndex = userDefaults.integer(forKey: kVLCSettingEqualizerProfile)
-        let encodedData = userDefaults.data(forKey: kVLCCustomEqualizerProfiles)
+        let profileIndex = VLCDefaults.shared.equalizerProfile
 
-        guard let encodedData = encodedData,
-              let customProfiles = NSKeyedUnarchiver(forReadingWith: encodedData).decodeObject(forKey: "root") as? CustomEqualizerProfiles,
+        guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles,
               profileIndex < customProfiles.profiles.count else {
             return
         }

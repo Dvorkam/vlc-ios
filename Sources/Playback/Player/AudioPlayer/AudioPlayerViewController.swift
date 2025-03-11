@@ -126,7 +126,7 @@ class AudioPlayerViewController: PlayerViewController {
         mediaScrubProgressBar.shouldHideScrubLabels = false
 #endif
 
-        let displayShortcutView: Bool = UserDefaults.standard.bool(forKey: kVLCPlayerShowPlaybackSpeedShortcut)
+        let displayShortcutView: Bool = VLCDefaults.shared.playerShowPlaybackSpeedShortcut
         audioPlayerView.shouldDisplaySecondaryStackView(displayShortcutView)
     }
 

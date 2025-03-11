@@ -173,7 +173,7 @@ extension VLCURLHandler {
         let alwaysPlayAction = UIAlertAction(title: NSLocalizedString("ALWAYS_STREAM_URL",
                                                                       comment: ""),
                                              style: .default) { _ in
-            UserDefaults.standard.set(true, forKey: kVLCSettingAlwaysPlayURLs)
+            VLCDefaults.shared.alwaysPlayURLs = true
             self.handlePlay()
         }
 
@@ -363,7 +363,7 @@ class XCallbackURLHandler: NSObject, VLCURLHandler {
             return true
         default:
 #if os(iOS)
-            if UserDefaults.standard.bool(forKey: kVLCSettingAlwaysPlayURLs) {
+            if VLCDefaults.shared.alwaysPlayURLs {
                 self.handlePlay()
             } else {
                 self.createAlert()
@@ -410,7 +410,7 @@ public class VLCCallbackURLHandler: NSObject, VLCURLHandler {
 #if os(iOS)
         let scheme = transformedURL.scheme
         if scheme == "http" || scheme == "https" || scheme == "ftp" {
-            if UserDefaults.standard.bool(forKey: kVLCSettingAlwaysPlayURLs) {
+            if VLCDefaults.shared.alwaysPlayURLs {
                 handlePlay()
             } else {
                 self.createAlert()

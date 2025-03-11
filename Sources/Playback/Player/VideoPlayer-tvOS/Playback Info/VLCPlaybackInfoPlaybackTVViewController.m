@@ -12,6 +12,7 @@
  *****************************************************************************/
 
 #import "VLCPlaybackInfoPlaybackTVViewController.h"
+#import "VLC-Swift.h"
 
 @interface VLCPlaybackInfoPlaybackTVViewController ()
 @property (nonatomic) VLCPlaybackService *playbackService;
@@ -93,7 +94,7 @@
     _decreaseSpeed = -0.05;
 
     _defaultDelay = 0.0;
-    _defaultSpeed = [[[NSUserDefaults standardUserDefaults] valueForKey:kVLCSettingPlaybackSpeedDefaultValue] doubleValue];
+    _defaultSpeed = (double)VLCDefaults.shared.playbackSpeedDefaultValue;
 
     _titleLabel.textColor = UIColor.VLCLightTextColor;
     _valueLabel.textColor = UIColor.VLCLightTextColor;

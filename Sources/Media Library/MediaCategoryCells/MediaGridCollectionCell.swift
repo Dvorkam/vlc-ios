@@ -15,7 +15,6 @@ import UIKit
 class MediaGridCollectionCell: BaseCollectionViewCell {
 
     private let notificationCenter = NotificationCenter.default
-    private let userDefaults = UserDefaults.standard
     private let selectionOverlayColor = UIColor.orange.withAlphaComponent(0.4)
 
     private let checkboxImageView: UIImageView = {
@@ -146,7 +145,7 @@ class MediaGridCollectionCell: BaseCollectionViewCell {
     }
 
     private var enableMarquee: Bool {
-       return !userDefaults.bool(forKey: kVLCSettingEnableMediaCellTextScrolling)
+        return !VLCDefaults.shared.enableMediaCellTextScrolling
     }
 
     override init(frame: CGRect) {

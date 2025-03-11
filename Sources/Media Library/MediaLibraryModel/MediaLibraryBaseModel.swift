@@ -169,8 +169,8 @@ extension MediaCollectionModel {
             }
         }
         if image == nil
-            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowThumbnails) && self is VLCMLMediaGroup)
-            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowArtworks) && !(self is VLCMLMediaGroup)) {
+            || (!VLCDefaults.shared.showThumbnails && self is VLCMLMediaGroup)
+            || (!VLCDefaults.shared.showArtworks && !(self is VLCMLMediaGroup)) {
             let isDarktheme = PresentationTheme.current.isDark
             if self is VLCMLMediaGroup {
                 image = isDarktheme ? UIImage(named: "movie-placeholder-dark") : UIImage(named: "movie-placeholder-white")

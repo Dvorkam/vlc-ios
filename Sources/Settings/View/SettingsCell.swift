@@ -5,6 +5,7 @@
  * Copyright (c) 2020 VideoLAN. All rights reserved.
  *
  * Authors: Swapnanil Dhol <swapnanildhol # gmail.com>
+ *          Craig Reyenga <craig.reyenga # gmail.com>
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
@@ -12,11 +13,6 @@
 import UIKit
 
 protocol SettingsCellDelegate: AnyObject {
-    /// Implementations should only perform side effects on
-    /// specific preferences; updating the preference itself
-    /// is handled by the cell.
-    func settingsCellDidChangeSwitchState(cell: SettingsCell, preferenceKey: String, isOn: Bool)
-
     func settingsCellInfoButtonPressed(cell: SettingsCell, preferenceKey: String)
 }
 
@@ -288,7 +284,6 @@ class SettingsCell: UITableViewCell {
         switch settingsItem.action {
         case let .toggle(toggle):
             toggle.set(isOn: sender.isOn)
-            delegate?.settingsCellDidChangeSwitchState(cell: self, preferenceKey: toggle.preferenceKey, isOn: sender.isOn)
 
         default:
             // we should never get here; only toggles have a switch

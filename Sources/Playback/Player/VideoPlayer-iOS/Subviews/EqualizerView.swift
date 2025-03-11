@@ -214,7 +214,7 @@ import UIKit
         snapBandsLabel.text = NSLocalizedString("SNAP_BANDS", comment: "")
         snapBandsLabel.textAlignment = .right
         snapBandsLabel.setContentHuggingPriority(.required, for: .vertical)
-        snapBandsSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCEqualizerSnapBands)
+        snapBandsSwitch.isOn = VLCDefaults.shared.equalizerSnapBands
         snapBandsSwitch.addTarget(self, action: #selector(snapBandsSwitchDidChangeValue), for: .valueChanged)
         snapBandsSwitch.setContentHuggingPriority(.required, for: .vertical)
         snapBandsStackView.addArrangedSubview(snapBandsLabel)
@@ -419,7 +419,7 @@ extension EqualizerView {
 
 extension EqualizerView {
     @objc func snapBandsSwitchDidChangeValue(sender: UISwitch) {
-        UserDefaults.standard.setValue(sender.isOn, forKey: kVLCEqualizerSnapBands)
+        VLCDefaults.shared.equalizerSnapBands = sender.isOn
     }
 }
 
@@ -447,11 +447,9 @@ extension EqualizerView {
             let preAmplification = self.playbackService.preAmplification
 
             let customProfile = CustomEqualizerProfile(name: name, preAmpLevel: Float(preAmplification), frequencies: frequencies)
-            let encodedProfiles = UserDefaults.standard.data(forKey: kVLCCustomEqualizerProfiles)
-            var customProfiles: CustomEqualizerProfiles
+            let customProfiles: CustomEqualizerProfiles
 
-            if let encodedProfiles = encodedProfiles,
-               let profiles = NSKeyedUnarchiver(forReadingWith: encodedProfiles).decodeObject(forKey: "root") as? CustomEqualizerProfiles {
+            if let profiles = VLCDefaults.shared.customEqualizerProfiles {
                 profiles.profiles.append(customProfile)
                 customProfiles = profiles
             } else {
@@ -459,11 +457,10 @@ extension EqualizerView {
             }
 
             let index = customProfiles.profiles.count - 1
-            let userDefaults = UserDefaults.standard
-            userDefaults.setValue(NSKeyedArchiver.archivedData(withRootObject: customProfiles), forKey: kVLCCustomEqualizerProfiles)
-            userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
-            userDefaults.setValue(false, forKey: kVLCSettingEqualizerProfileDisabled)
-            userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
+            VLCDefaults.shared.customEqualizerProfiles = customProfiles
+            VLCDefaults.shared.customEqualizerProfileEnabled = true
+            VLCDefaults.shared.equalizerProfileDisabled = false
+            VLCDefaults.shared.equalizerProfile = index
 
             self.presetSelectorView?.presetsTableView.reloadData()
             self.shouldDisplaySaveButton(false)
@@ -479,16 +476,15 @@ extension EqualizerView {
     }
 
     @objc func resetEqualizer() {
-        let userDefaults = UserDefaults.standard
-        let isEqualizerDisabled = userDefaults.bool(forKey: kVLCSettingEqualizerProfileDisabled)
-        let isCustomProfile = userDefaults.bool(forKey: kVLCCustomProfileEnabled)
+        let isEqualizerDisabled = VLCDefaults.shared.equalizerProfileDisabled
+        let isCustomProfile = VLCDefaults.shared.customEqualizerProfileEnabled
 
         let profile: Int
         if !isCustomProfile {
-            profile = isEqualizerDisabled ? 0 : userDefaults.integer(forKey: kVLCSettingEqualizerProfile) + 1
+            profile = isEqualizerDisabled ? 0 : VLCDefaults.shared.equalizerProfile + 1
             delegate?.resetEqualizer(fromProfile: UInt32(profile))
         } else {
-            profile = userDefaults.integer(forKey: kVLCSettingEqualizerProfile)
+            profile = VLCDefaults.shared.equalizerProfile
             applyCustomProfile(profile)
         }
 
@@ -502,11 +498,7 @@ extension EqualizerView {
     }
 
     private func applyCustomProfile(_ index: Int) {
-        let userDefaults = UserDefaults.standard
-        let encodedData = userDefaults.data(forKey: kVLCCustomEqualizerProfiles)
-
-        guard let encodedData = encodedData,
-              let customProfiles = NSKeyedUnarchiver(forReadingWith: encodedData).decodeObject(forKey: "root") as? CustomEqualizerProfiles,
+        guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles,
               index < customProfiles.profiles.count else {
             return
         }
@@ -518,9 +510,9 @@ extension EqualizerView {
             playbackService.setAmplification(CGFloat(frequency), forBand: UInt32(bandIndex))
         }
 
-        userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
-        userDefaults.setValue(false, forKey: kVLCSettingEqualizerProfileDisabled)
-        userDefaults.setValue(true, forKey: kVLCCustomProfileEnabled)
+        VLCDefaults.shared.equalizerProfile = index
+        VLCDefaults.shared.equalizerProfileDisabled = false
+        VLCDefaults.shared.customEqualizerProfileEnabled = true
     }
 
     private func shouldDisplaySaveButton(_ display: Bool) {
@@ -558,15 +550,13 @@ extension EqualizerView: EqualizerPresetSelectorDelegate {
 
         if type == .delete {
             action = UIAlertAction(title: NSLocalizedString("BUTTON_DELETE", comment: ""), style: .destructive) { _ in
-                let customEncodedProfiles = UserDefaults.standard.data(forKey: kVLCCustomEqualizerProfiles)
-                guard let customEncodedProfiles = customEncodedProfiles,
-                      var customProfiles = NSKeyedUnarchiver(forReadingWith: customEncodedProfiles).decodeObject(forKey: "root") as? CustomEqualizerProfiles,
+                guard var customProfiles = VLCDefaults.shared.customEqualizerProfiles,
                       index.row < customProfiles.profiles.count else {
                     return
                 }
 
                 customProfiles.profiles.remove(at: index.row)
-                UserDefaults.standard.setValue(NSKeyedArchiver.archivedData(withRootObject: customProfiles), forKey: kVLCCustomEqualizerProfiles)
+                VLCDefaults.shared.customEqualizerProfiles = customProfiles
                 self.presetSelectorView?.presetsTableView.reloadData()
             }
         } else {
@@ -576,9 +566,7 @@ extension EqualizerView: EqualizerPresetSelectorDelegate {
             }
 
             action = UIAlertAction(title: NSLocalizedString("BUTTON_RENAME", comment: ""), style: .default) { _ in
-                let customEncodedProfiles = UserDefaults.standard.data(forKey: kVLCCustomEqualizerProfiles)
-                guard let customEncodedProfiles = customEncodedProfiles,
-                      let customProfiles = NSKeyedUnarchiver(forReadingWith: customEncodedProfiles).decodeObject(forKey: "root") as? CustomEqualizerProfiles,
+                guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles,
                       index.row < customProfiles.profiles.count else {
                     return
                 }
@@ -589,7 +577,7 @@ extension EqualizerView: EqualizerPresetSelectorDelegate {
                 }
 
                 customProfiles.profiles[index.row].name = newName
-                UserDefaults.standard.setValue(NSKeyedArchiver.archivedData(withRootObject: customProfiles), forKey: kVLCCustomEqualizerProfiles)
+                VLCDefaults.shared.customEqualizerProfiles = customProfiles
                 self.presetSelectorView?.presetsTableView.reloadData()
             }
         }

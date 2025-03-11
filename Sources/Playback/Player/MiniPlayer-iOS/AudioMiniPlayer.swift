@@ -165,16 +165,13 @@ private extension AudioMiniPlayer {
     }
 
     private func applyCustomEqualizerProfileIfNeeded() {
-        let userDefaults = UserDefaults.standard
-        guard userDefaults.bool(forKey: kVLCCustomProfileEnabled) else {
+        guard VLCDefaults.shared.customEqualizerProfileEnabled else {
             return
         }
 
-        let profileIndex = userDefaults.integer(forKey: kVLCSettingEqualizerProfile)
-        let encodedData = userDefaults.data(forKey: kVLCCustomEqualizerProfiles)
+        let profileIndex = VLCDefaults.shared.equalizerProfile
 
-        guard let encodedData = encodedData,
-              let customProfiles = NSKeyedUnarchiver(forReadingWith: encodedData).decodeObject(forKey: "root") as? CustomEqualizerProfiles,
+        guard let customProfiles = VLCDefaults.shared.customEqualizerProfiles,
               profileIndex < customProfiles.profiles.count else {
             return
         }

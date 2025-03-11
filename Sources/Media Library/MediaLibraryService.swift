@@ -136,7 +136,6 @@ extension NSNotification {
 
 class MediaLibraryService: NSObject {
     private static let databaseName: String = "medialibrary.db"
-    private static let didForceRescan: String = "MediaLibraryDidForceRescan"
     private var triedToRecoverFromInitializationErrorOnce = false
 
     private var didFinishDiscovery = false
@@ -189,14 +188,14 @@ private extension MediaLibraryService {
     }
 
     private func startMediaLibrary(on path: String) {
-        let excludeMediaLibrary = !UserDefaults.standard.bool(forKey: kVLCSettingBackupMediaLibrary)
-        let hideML = UserDefaults.standard.bool(forKey: kVLCSettingHideLibraryInFilesApp)
+        let excludeMediaLibrary = !VLCDefaults.shared.backupMediaLibrary
+        let hideML = VLCDefaults.shared.hideLibraryInFilesApp
         excludeFromDeviceBackup(excludeMediaLibrary)
         hideMediaLibrary(hideML)
 
-        if UserDefaults.standard.bool(forKey: MediaLibraryService.didForceRescan) == false {
+        if !VLCDefaults.shared.mediaLibraryServiceDidForceRescan {
             medialib.forceRescan()
-            UserDefaults.standard.set(true, forKey: MediaLibraryService.didForceRescan)
+            VLCDefaults.shared.mediaLibraryServiceDidForceRescan = true
         }
 
         FileManager.default.createFile(atPath: "\(path)/\(NSLocalizedString("MEDIALIBRARY_FILES_PLACEHOLDER", comment: ""))", contents: nil, attributes: nil)

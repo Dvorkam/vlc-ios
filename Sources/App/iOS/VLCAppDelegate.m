@@ -35,75 +35,7 @@
 
 + (void)initialize
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSUInteger appThemeIndex = kVLCSettingAppThemeBright;
-    if (@available(iOS 13.0, *)) {
-        appThemeIndex = kVLCSettingAppThemeSystem;
-    }
-
-    NSDictionary *appDefaults = @{kVLCSettingAppTheme : @(appThemeIndex),
-                                  kVLCSettingPasscodeEnableBiometricAuth : @(1),
-                                  kVLCSettingContinueAudioInBackgroundKey : @(YES),
-                                  kVLCSettingStretchAudio : @(YES),
-                                  kVLCSettingDefaultPreampLevel : @(6),
-                                  kVLCSettingTextEncoding : kVLCSettingTextEncodingDefaultValue,
-                                  kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
-                                  kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
-                                  kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
-                                  kVLCSettingSubtitlesFontSize : kVLCSettingSubtitlesFontSizeDefaultValue,
-                                  kVLCSettingSubtitlesBoldFont: kVLCSettingSubtitlesBoldFontDefaultValue,
-                                  kVLCSettingDeinterlace : kVLCSettingDeinterlaceDefaultValue,
-                                  kVLCSettingHardwareDecoding : kVLCSettingHardwareDecodingDefault,
-                                  kVLCSettingNetworkCaching : kVLCSettingNetworkCachingDefaultValue,
-                                  kVLCSettingVolumeGesture : @(YES),
-                                  kVLCSettingPlayPauseGesture : @(YES),
-                                  kVLCSettingBrightnessGesture : @(YES),
-                                  kVLCSettingSeekGesture : @(YES),
-                                  kVLCSettingCloseGesture : @(YES),
-                                  kVLCSettingPlaybackLongTouchSpeedUp : @(YES),
-                                  kVLCSettingVideoFullscreenPlayback : @(YES),
-                                  kVLCSettingContinuePlayback : @(1),
-                                  kVLCSettingContinueAudioPlayback : @(1),
-                                  kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
-                                  kVLCSettingNetworkRTSPTCP : @(NO),
-                                  kVLCSettingNetworkSatIPChannelListUrl : @"",
-                                  kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,
-                                  kVLCSettingEqualizerProfileDisabled : @(YES),
-                                  kVLCSettingPlaybackForwardBackwardEqual: @(YES),
-                                  kVLCSettingPlaybackTapSwipeEqual:  @(YES),
-                                  kVLCSettingPlaybackForwardSkipLength : kVLCSettingPlaybackForwardSkipLengthDefaultValue,
-                                  kVLCSettingPlaybackBackwardSkipLength : kVLCSettingPlaybackBackwardSkipLengthDefaultValue,
-                                  kVLCSettingPlaybackForwardSkipLengthSwipe : kVLCSettingPlaybackForwardSkipLengthSwipeDefaultValue,
-                                  kVLCSettingPlaybackBackwardSkipLengthSwipe : kVLCSettingPlaybackBackwardSkipLengthSwipeDefaultValue,
-                                  kVLCSettingPlaybackLockscreenSkip : @(NO),
-                                  kVLCSettingPlaybackRemoteControlSkip : @(NO),
-                                  kVLCSettingOpenAppForPlayback : kVLCSettingOpenAppForPlaybackDefaultValue,
-                                  kVLCAutomaticallyPlayNextItem : @(YES),
-                                  kVLCPlaylistPlayNextItem: @(YES),
-                                  kVLCSettingEnableMediaCellTextScrolling : @(NO),
-                                  kVLCSettingShowThumbnails : kVLCSettingShowThumbnailsDefaultValue,
-                                  kVLCSettingShowArtworks : kVLCSettingShowArtworksDefaultValue,
-                                  kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
-                                  kVLCSettingCastingAudioPassthrough : @(NO),
-                                  kVLCSettingCastingConversionQuality : @(2),
-                                  kVLCForceSMBV1 : @(YES),
-                                  @"kVLCAudioLibraryGridLayoutALBUMS" : @(YES),
-                                  @"kVLCAudioLibraryGridLayoutARTISTS" : @(YES),
-                                  @"kVLCAudioLibraryGridLayoutGENRES" : @(YES),
-                                  @"kVLCVideoLibraryGridLayoutALL_VIDEOS" : @(YES),
-                                  @"kVLCVideoLibraryGridLayoutVIDEO_GROUPS" : @(YES),
-                                  @"kVLCVideoLibraryGridLayoutVLCMLMediaGroupCollections" : @(YES),
-                                  kVLCPlayerShouldRememberState: @(YES),
-                                  kVLCPlayerIsShuffleEnabled: kVLCPlayerIsShuffleEnabledDefaultValue,
-                                  kVLCPlayerIsRepeatEnabled: kVLCPlayerIsRepeatEnabledDefaultValue,
-                                  kVLCSettingPlaybackSpeedDefaultValue: @(1.0),
-                                  kVLCPlayerShowPlaybackSpeedShortcut: @(NO),
-                                  kVLCSettingAlwaysPlayURLs: @(NO),
-                                  kVLCRestoreLastPlayedMedia: @(YES),
-                                  kVLCSettingPlayerControlDuration: kVLCSettingPlayerControlDurationDefaultValue,
-                                  kVLCSettingPauseWhenShowingControls: @(NO)
-    };
-    [defaults registerDefaults:appDefaults];
+    [VLCDefaults.shared registerDefaults];
 }
 
 - (void)setupTabBarAppearance
@@ -163,8 +95,7 @@
 
     [self configureShortCutItemsWithApplication:application];
 
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:([defaults integerForKey:kVLCNumberOfLaunches] + 1) forKey:kVLCNumberOfLaunches];
+    [VLCDefaults.shared incrementNumberOfLaunches];
 
     return YES;
 }
@@ -277,7 +208,7 @@
 {
     if ([[VLCKeychainCoordinator passcodeService] hasSecret]) {
         //TODO: Dismiss playback
-        BOOL allowBiometricAuthentication = [[NSUserDefaults standardUserDefaults] boolForKey:kVLCSettingPasscodeEnableBiometricAuth];
+        BOOL allowBiometricAuthentication = VLCDefaults.shared.passcodeEnableBiometricAuth;
 
         [[VLCKeychainCoordinator passcodeService]
          validateSecretWithAllowBiometricAuthentication:allowBiometricAuthentication
@@ -332,7 +263,7 @@
 - (void)recoverLastPlayingMedia {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    if (![defaults boolForKey:kVLCRestoreLastPlayedMedia]) {
+    if (!VLCDefaults.shared.restoreLastPlayedMedia) {
         return;
     }
 

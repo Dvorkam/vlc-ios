@@ -87,14 +87,13 @@ class CustomEqualizerProfiles: NSObject, NSCoding {
 
         profiles.swapAt(index, index - 1)
 
-        let userDefaults = UserDefaults.standard
-        if userDefaults.bool(forKey: kVLCCustomProfileEnabled) {
-            let currentProfileIndex = userDefaults.integer(forKey: kVLCSettingEqualizerProfile)
+        if VLCDefaults.shared.customEqualizerProfileEnabled {
+            let currentProfileIndex = VLCDefaults.shared.equalizerProfile
 
             if currentProfileIndex == index {
-                userDefaults.setValue(index - 1, forKeyPath: kVLCSettingEqualizerProfile)
+                VLCDefaults.shared.equalizerProfile = index - 1
             } else if currentProfileIndex == index - 1 {
-                userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
+                VLCDefaults.shared.equalizerProfile = index
             }
         }
     }
@@ -106,14 +105,13 @@ class CustomEqualizerProfiles: NSObject, NSCoding {
 
         profiles.swapAt(index, index + 1)
 
-        let userDefaults = UserDefaults.standard
-        if userDefaults.bool(forKey: kVLCCustomProfileEnabled) {
-            let currentProfileIndex = userDefaults.integer(forKey: kVLCSettingEqualizerProfile)
+        if VLCDefaults.shared.customEqualizerProfileEnabled {
+            let currentProfileIndex = VLCDefaults.shared.equalizerProfile
 
             if currentProfileIndex == index {
-                userDefaults.setValue(index + 1, forKeyPath: kVLCSettingEqualizerProfile)
+                VLCDefaults.shared.equalizerProfile = index + 1
             } else if currentProfileIndex == index + 1 {
-                userDefaults.setValue(index, forKey: kVLCSettingEqualizerProfile)
+                VLCDefaults.shared.equalizerProfile = index
             }
         }
     }

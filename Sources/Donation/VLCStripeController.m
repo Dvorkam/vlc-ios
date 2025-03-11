@@ -20,6 +20,7 @@
 #import "VLCSubscription.h"
 #import "VLCDonationInvoicesViewController.h"
 #import "VLCDonationViewController.h"
+#import "VLC-Swift.h"
 
 const NSString *publishableStripeAPIKey = @"";
 const NSString *secretStripeAPIKey = @"";
@@ -708,12 +709,12 @@ NSString *callbackURLString = @"vlcpay://3ds";
         nextReminderMonth = currentMonth + 3;
     }
 
-    [[NSUserDefaults standardUserDefaults] setInteger:nextReminderMonth forKey:kVLCHasNaggedThisMonth];
+    VLCDefaults.shared.hasNaggedThisMonth = nextReminderMonth;
 }
 
 - (void)activeSubscription:(BOOL)bValue
 {
-    [[NSUserDefaults standardUserDefaults] setBool:bValue forKey:kVLCHasActiveSubscription];
+    VLCDefaults.shared.hasActiveSubscription = bValue;
 }
 
 @end

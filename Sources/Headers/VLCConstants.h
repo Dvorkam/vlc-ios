@@ -11,130 +11,25 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-#define kVLCSettingPasscodeOnKey @"PasscodeProtection"
-#define kVLCSettingPasscodeEnableBiometricAuth @"EnableBiometricAuth"
-#define kVLCSettingHideLibraryInFilesApp @"HideLibraryInFilesApp"
 #define kVLCThemeDidChangeNotification @"themeDidChangeNotfication"
-#define kVLCSettingAppTheme @"darkMode"
-#define kVLCSettingAppThemeBright 0
-#define kVLCSettingAppThemeDark 1
-#define kVLCSettingAppThemeSystem 2
-#define kVLCSettingAppThemeBlack @"blackTheme"
-#define kVLCOptimizeItemNamesForDisplay @"MLDecrapifyTitles"
-#define kVLCSettingAbout @"about"
-#define kVLCAutomaticallyPlayNextItem @"AutomaticallyPlayNextItem"
-#define kVLCPlaylistPlayNextItem @"PlaylistPlayNextItem"
-#define kVLCLastPlayedPlaylist @"LastPlayedPlaylist"
-#define kVLCIsCurrentlyPlayingPlaylist @"isPlaylistCurrentlyPlaying"
-#define kVLCCurrentPlaylistMediasQueue @"currentPlaylistMediasQueue"
-#define kVLCSettingEnableMediaCellTextScrolling @"EnableMediaCellTextScrolling"
-#define kVLCSettingContinueAudioInBackgroundKey @"BackgroundAudioPlayback"
-#define kVLCSettingStretchAudio @"audio-time-stretch"
-#define kVLCSettingDefaultPreampLevel @"pre-amp-level"
-#define kVLCSettingTextEncoding @"subsdec-encoding"
-#define kVLCSettingTextEncodingDefaultValue @"Windows-1252"
-#define kVLCSettingSkipLoopFilter @"avcodec-skiploopfilter"
-#define kVLCSettingSkipLoopFilterNone @(0)
-#define kVLCSettingSkipLoopFilterNonRef @(1)
 #define kVLCSettingSaveHTTPUploadServerStatus @"isHTTPServerOn"
-#define kVLCSettingSubtitlesFont @"quartztext-font"
-#define kVLCSettingSubtitlesFontDefaultValue @"HelveticaNeue"
-#define kVLCSettingSubtitlesFontSize @"quartztext-rel-fontsize"
-#define kVLCSettingSubtitlesFontSizeDefaultValue @"16"
-#define kVLCSettingSubtitlesBoldFont @"quartztext-bold"
-#define kVLCSettingSubtitlesBoldFontDefaultValue @NO
-#define kVLCSettingSubtitlesFontColor @"quartztext-color"
-#define kVLCSettingSubtitlesFontColorDefaultValue @"16777215"
 #define kVLCSettingSubtitlesFilePath @"sub-file"
 #define kVLCSubtitlesCacheFolderName @"cached-subtitles"
-#define kVLCSettingDeinterlace @"deinterlace"
-#define kVLCSettingDeinterlaceDefaultValue @(-1)
-#define kVLCSettingHardwareDecoding @"codec"
-#define kVLCSettingHardwareDecodingDefault @""
-#define kVLCSettingRotationLock @"kVLCSettingRotationLock"
-#define kVLCSettingNetworkCaching @"network-caching"
-#define kVLCSettingNetworkCachingDefaultValue @(999)
-#define kVLCSettingNetworkRTSPTCP @"rtsp-tcp"
-#define kVLCSaveDebugLogs @"kVLCSaveDebugLogs"
 #define kVLCSettingNetworkSatIPChannelList @"satip-channelist"
 #define kVLCSettingNetworkSatIPChannelListCustom @"CustomList"
 #define kVLCSettingNetworkSatIPChannelListUrl @"satip-channellist-url"
-#define kVLCSettingsDecrapifyTitles @"MLDecrapifyTitles"
-#define kVLCSettingVolumeGesture @"EnableVolumeGesture"
-#define kVLCSettingPlayPauseGesture @"EnablePlayPauseGesture"
-#define kVLCSettingBrightnessGesture @"EnableBrightnessGesture"
-#define kVLCSettingSeekGesture @"EnableSeekGesture"
-#define kVLCSettingCloseGesture @"EnableCloseGesture"
-#define kVLCSettingVideoFullscreenPlayback @"AlwaysUseFullscreenForVideo"
-#define kVLCSettingContinuePlayback @"ContinuePlayback"
-#define kVLCSettingContinueAudioPlayback @"ContinueAudioPlayback"
-#define kVLCSettingPlaybackSpeedDefaultValue @"playback-speed"
-#define kVLCSettingWiFiSharingIPv6 @"wifi-sharing-ipv6"
-#define kVLCSettingWiFiSharingIPv6DefaultValue @(NO)
-#define kVLCSettingEqualizerProfile @"EqualizerProfile"
-#define kVLCSettingEqualizerProfileDisabled @"EqualizerDisabled"
-#define kVLCSettingEqualizerProfileDefaultValue @(0)
-#define kVLCSettingPlaybackForwardBackwardEqual @"playback-forward-backward-equal"
-#define kVLCSettingPlaybackTapSwipeEqual @"playback-tap-swipe-equal"
-#define kVLCSettingPlaybackForwardSkipLength @"playback-forward-skip-length"
-#define kVLCSettingPlaybackForwardSkipLengthDefaultValue @(10)
-#define kVLCSettingPlaybackBackwardSkipLength @"playback-backward-skip-length"
-#define kVLCSettingPlaybackBackwardSkipLengthDefaultValue @(10)
-#define kVLCSettingPlaybackForwardSkipLengthSwipe @"playback-forward-skip-length-swipe"
-#define kVLCSettingPlaybackForwardSkipLengthSwipeDefaultValue @(10)
-#define kVLCSettingPlaybackBackwardSkipLengthSwipe @"playback-backward-skip-length-swipe"
-#define kVLCSettingPlaybackLongTouchSpeedUp @"LongTouchSpeedUp"
-#define kVLCSettingPlaybackBackwardSkipLengthSwipeDefaultValue @(10)
-#define kVLCSettingPlaybackLockscreenSkip @"playback-lockscreen-skip"
-#define kVLCSettingPlaybackRemoteControlSkip @"playback-remote-control-skip"
-#define kVLCSettingOpenAppForPlayback @"open-app-for-playback"
-#define kVLCSettingOpenAppForPlaybackDefaultValue @YES
-#define kVLCSettingShowThumbnails @"ShowThumbnails"
-#define kVLCSettingShowThumbnailsDefaultValue @YES
-#define kVLCSettingShowArtworks @"ShowArtworks"
-#define kVLCSettingShowArtworksDefaultValue @YES
-#define kVLCSettingsDisableGrouping @"MLDisableGrouping"
-#define kVLCkVLCSettingsDisableGroupingDefaultValue @NO
+#define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
 #define kVLCSettingCastingAudioPassthrough @"sout-chromecast-audio-passthrough"
 #define kVLCSettingCastingConversionQuality @"sout-chromecast-conversion-quality"
-#define kVLCSettingBackupMediaLibrary @"BackupMediaLibrary"
-#define kVLCSettingBackupMediaLibraryDefaultValue @NO
-#define kVLCSettingLastUsedSubtitlesSearchLanguage @"kVLCSettingLastUsedSubtitlesSearchLanguage"
-#define kVLCResetSettings @"kVLCResetSettings"
-#define kVLCSettingAlwaysPlayURLs @"kVLCSettingAlwaysPlayURLs"
-#define kVLCSettingDisableSubtitles @"kVLCSettingDisableSubtitles"
-#define kVLCSettingPlayerControlDuration @"kVLCSettingPlayerControlDuration"
-#define kVLCSettingPlayerControlDurationDefaultValue @(4)
-#define kVLCSettingPauseWhenShowingControls @"kVLCSettingPauseWhenShowingControls"
-
-#define kVLCForceSMBV1 @"smb-force-v1"
-
-#define kVLCShowRemainingTime @"show-remaining-time"
 #define kVLCRecentURLs @"recent-urls"
 #define kVLCRecentURLTitles @"recent-url-titles"
 #define kVLCPrivateWebStreaming @"private-streaming"
 #define kVLChttpScanSubtitle @"http-scan-subtitle"
 #define kVLCHTTPUploadDirectory @"Upload"
-#define kVLCAudioLibraryGridLayout @"kVLCAudioLibraryGridLayout"
-#define kVLCAudioLibraryHideFeatArtists @"kVLCAudioLibraryHideFeatArtists"
-#define kVLCAudioLibraryHideTrackNumbers @"kVLCAudioLibraryHideTrackNumbers"
-#define kVLCVideoLibraryGridLayout @"kVLCVideoLibraryGridLayout"
-
+#define kVLCSettingStretchAudio @"audio-time-stretch"
 #define kVLCLastPlayedMediaIdentifier @"LastPlayedMediaIdentifier"
-#define kVLCRestoreLastPlayedMedia @"RestoreLastPlayedMedia"
 
 #define kVLCPlayerOpenInMiniPlayer @"OpenInMiniPlayer"
-#define kVLCPlayerShouldRememberState @"PlayerShouldRememberState"
-#define kVLCPlayerShouldRememberBrightness @"PlayerShouldRememberBrightness"
-#define KVLCPlayerBrightness @"playerbrightness"
-#define kVLCPlayerIsShuffleEnabled @"PlayerIsShuffleEnabled"
-#define kVLCPlayerIsShuffleEnabledDefaultValue @NO
-#define kVLCPlayerIsRepeatEnabled @"PlayerIsRepeatEnabled"
-#define kVLCPlayerIsRepeatEnabledDefaultValue @(0)
-#define kVLCPlayerShowPlaybackSpeedShortcut @"kVLCPlayerShowPlaybackSpeedShortcut"
-
-#define kVLCCustomProfileEnabled @"kVLCCustomProfileEnabled"
-#define kVLCCustomEqualizerProfiles @"kVLCCustomEqualizerProfiles"
 
 #define kSupportedFileExtensions @"\\.(669|3g2|3gp|3gp2|3gpp|amv|asf|avi|bik|bin|crf|divx|drc|dv|evo|f4v|far|flv|gvi|gxf|hevc|iso|it|m1v|m2v|m2t|m2ts|m4v|mkv|mov|mp2|mp2v|mp4|mp4v|mpe|mpeg|mpeg1|mpeg2|mpeg4|mpg|mpv2|mtm|mts|mtv|mxf|mxg|nsv|nuv|ogg|ogm|ogv|ogx|ps|rec|rm|rmvb|rpl|s3m|thp|tod|ts|tts|txd|vlc|vob|vro|webm|wm|wmv|wtv|xesc|xm)$"
 #define kSupportedSubtitleFileExtensions @"\\.(cdg|idx|srt|sub|utf|ass|ssa|aqt|jss|psb|rt|smi|txt|smil|stl|usf|dks|pjs|mpl2|mks|vtt|ttml|dfxp)$"
@@ -170,18 +65,7 @@
 #define kVLCWifiAuthentificationFailure 1
 #define kVLCWifiAuthentificationBanned 2
 
-#define kVLCSortDefault @"SortDefault"
-#define kVLCSortDescendingDefault @"SortDescendingDefault"
-#define kVLCHasLaunchedBefore @"hasLaunchedBefore"
-#define kVLCHasNaggedThisMonth @"kVLCHasNaggedThisMonth"
-#define kVLCNumberOfLaunches @"kVLCNumberOfLaunches"
-#define kVLCHasActiveSubscription @"kVLCHasActiveSubscription"
-
-#define kVLCTabBarIndex @"TabBarIndex"
-
 #define kVLCGroupLayout @"kVLCGroupLayout"
-
-#define kVLCEqualizerSnapBands @"EqualizerSnapBands"
 
 #define kVLCDonationAnonymousCustomerID @"kVLCDonationAnonymousCustomerID"
 

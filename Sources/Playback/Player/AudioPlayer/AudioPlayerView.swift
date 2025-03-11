@@ -576,7 +576,7 @@ class AudioPlayerView: UIView, UIGestureRecognizerDelegate {
         
         secondaryControlStackView.addArrangedSubview(playbackSpeedButton)
 
-        let displaySecondaryStackView: Bool = UserDefaults.standard.bool(forKey: kVLCPlayerShowPlaybackSpeedShortcut)
+        let displaySecondaryStackView: Bool = VLCDefaults.shared.playerShowPlaybackSpeedShortcut
         secondaryControlStackView.isHidden = !displaySecondaryStackView
     }
 

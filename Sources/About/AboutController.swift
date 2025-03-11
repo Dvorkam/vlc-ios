@@ -181,9 +181,26 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
     func generateFeedbackEmailPrefill() -> String {
         let bundleShortVersionString = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let device = UIDevice.current
-        let defaults = UserDefaults.standard
         let locale = NSLocale.autoupdatingCurrent
-        let prefilledFeedback = String(format: "\n\n\n----------------------------------------\n%@\nDevice: %@\nOS: %@ - %@\nLocale: %@ (%@)\nVLC app version: %@\nlibvlc version: %@\nhardware decoding: %i\nnetwork caching level: %i\nskip loop filter: %i\nRTSP over TCP: %i\nAudio time stretching: %i",
+        let defaults = VLCDefaults.shared
+        let messageFormat = """
+            
+
+
+        ----------------------------------------
+        %@
+        Device: %@
+        OS: %@ - %@
+        Locale: %@ (%@)
+        VLC app version: %@
+        libvlc version: %@
+        hardware decoding: %@
+        network caching level: %i
+        skip loop filter: %i
+        RTSP over TCP: %i
+        Audio time stretching: %i
+        """
+        let prefilledFeedback = String(format: messageFormat,
                                        NSLocalizedString("FEEDBACK_EMAIL_BODY", comment: ""),
                                        generateDeviceIdentifier(),
                                        device.systemName,
@@ -192,11 +209,11 @@ class AboutController: UIViewController, MFMailComposeViewControllerDelegate, UI
                                        locale.regionCode!,
                                        bundleShortVersionString,
                                        VLCLibrary.shared().changeset,
-                                       defaults.integer(forKey: kVLCSettingHardwareDecoding),
-                                       defaults.integer(forKey: kVLCSettingNetworkCaching),
-                                       defaults.integer(forKey: kVLCSettingSkipLoopFilter),
-                                       defaults.integer(forKey: kVLCSettingNetworkRTSPTCP),
-                                       defaults.integer(forKey: kVLCSettingStretchAudio))
+                                       defaults.hardwareDecoding.description,
+                                       defaults.networkCaching.rawValue,
+                                       defaults.skipLoopFilter.rawValue,
+                                       defaults.networkRTSPTCP ? 1 : 0,
+                                       defaults.stretchAudio ? 1 : 0)
         return prefilledFeedback
     }
 

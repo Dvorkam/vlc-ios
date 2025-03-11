@@ -165,8 +165,7 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
 
 - (void)playbackDidStart:(NSNotification *)notification
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    BOOL enforceFullscreen = [[defaults objectForKey:kVLCSettingVideoFullscreenPlayback] boolValue];
+    BOOL enforceFullscreen = VLCDefaults.shared.videoFullscreenPlayback;
 
     VLCMedia *currentMedia = _playbackController.currentlyPlayingMedia;
     VLCMLMedia *media = [VLCMLMedia mediaForPlayingMedia:currentMedia];
@@ -484,11 +483,9 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
         }
 
         // Properly set the shuffle and repeat mode
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        if ([userDefaults boolForKey:kVLCPlayerShouldRememberState]) {
-            _playbackController.shuffleMode = [userDefaults boolForKey:kVLCPlayerIsShuffleEnabled];
-            NSInteger repeatMode = [userDefaults integerForKey:kVLCPlayerIsRepeatEnabled];
-            _playbackController.repeatMode = repeatMode;
+        if (VLCDefaults.shared.playerShouldRememberState) {
+            _playbackController.shuffleMode = VLCDefaults.shared.playerIsShuffleEnabled;
+            _playbackController.repeatMode = VLCDefaults.shared.playerIsRepeatEnabled;
         }
 
         [self addPlayqueueToMiniPlayer];
@@ -675,13 +672,13 @@ NSString *const VLCPlayerDisplayControllerHideMiniPlayer = @"VLCPlayerDisplayCon
 
 - (void)keyLeftArrow
 {
-    NSInteger seekBy = [[NSUserDefaults standardUserDefaults] integerForKey:kVLCSettingPlaybackBackwardSkipLength];
+    NSInteger seekBy = VLCDefaults.shared.playbackBackwardSkipLength;
     [_playbackController jumpBackward:(int)seekBy];
 }
 
 - (void)keyRightArrow
 {
-    NSInteger seekBy = [[NSUserDefaults standardUserDefaults] integerForKey:kVLCSettingPlaybackForwardSkipLength];
+    NSInteger seekBy = VLCDefaults.shared.playbackForwardSkipLength;
     [_playbackController jumpForward:(int)seekBy];
 }
 

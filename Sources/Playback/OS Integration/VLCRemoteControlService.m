@@ -13,6 +13,7 @@
 
 #import "VLCRemoteControlService.h"
 #import "VLCPlaybackService.h"
+#import "VLC-Swift.h"
 #import <MediaPlayer/MediaPlayer.h>
 
 @implementation VLCRemoteControlService
@@ -55,13 +56,12 @@ static inline NSArray * RemoteCommandCenterCommandsToHandle(void)
 - (void)playbackStarted:(NSNotification *)aNotification
 {
     MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     /* Since the control center and lockscreen shows only either skipForward/Backward
      * or next/previousTrack buttons but prefers skip buttons,
      * we only enable skip buttons if we have no medialist
      */
-    BOOL alwaysEnableSkip = [defaults boolForKey:kVLCSettingPlaybackLockscreenSkip];
+    BOOL alwaysEnableSkip = VLCDefaults.shared.lockscreenSkip;
     BOOL enableSkip = alwaysEnableSkip || [VLCPlaybackService sharedInstance].mediaList.count <= 1;
     commandCenter.skipForwardCommand.enabled = enableSkip;
     commandCenter.skipBackwardCommand.enabled = enableSkip;
@@ -78,9 +78,9 @@ static inline NSArray * RemoteCommandCenterCommandsToHandle(void)
     commandCenter.seekForwardCommand.enabled = NO;
     commandCenter.seekBackwardCommand.enabled = NO;
 
-    NSNumber *forwardSkip = [defaults valueForKey:kVLCSettingPlaybackForwardSkipLength];
+    NSNumber *forwardSkip = [NSNumber numberWithInteger:VLCDefaults.shared.playbackForwardSkipLength];
     commandCenter.skipForwardCommand.preferredIntervals = @[forwardSkip];
-    NSNumber *backwardSkip = [defaults valueForKey:kVLCSettingPlaybackBackwardSkipLength];
+    NSNumber *backwardSkip = [NSNumber numberWithInteger:VLCDefaults.shared.playbackBackwardSkipLength];
     commandCenter.skipBackwardCommand.preferredIntervals = @[backwardSkip];
 
     commandCenter.changePlaybackRateCommand.supportedPlaybackRates = @[@(0.5),@(0.75),@(1.0),@(1.25),@(1.5),@(1.75),@(2.0)];
@@ -122,8 +122,8 @@ static inline NSArray * RemoteCommandCenterCommandsToHandle(void)
         return MPRemoteCommandHandlerStatusSuccess;
     }
     if (event.command == cc.nextTrackCommand) {
-        if ([defaults boolForKey:kVLCSettingPlaybackRemoteControlSkip]) {
-            NSInteger interval = [defaults integerForKey:kVLCSettingPlaybackForwardSkipLength];
+        if (VLCDefaults.shared.remoteControlSkip) {
+            NSInteger interval = VLCDefaults.shared.playbackForwardSkipLength;
             [vps jumpForward:(int)interval];
             return MPRemoteCommandHandlerStatusSuccess;
         } else {
@@ -132,8 +132,8 @@ static inline NSArray * RemoteCommandCenterCommandsToHandle(void)
         }
     }
     if (event.command == cc.previousTrackCommand) {
-        if ([defaults boolForKey:kVLCSettingPlaybackRemoteControlSkip]) {
-            NSInteger interval = [defaults integerForKey:kVLCSettingPlaybackBackwardSkipLength];
+        if (VLCDefaults.shared.remoteControlSkip) {
+            NSInteger interval = VLCDefaults.shared.playbackBackwardSkipLength;
             [vps jumpBackward:(int)interval];
             return MPRemoteCommandHandlerStatusSuccess;
 

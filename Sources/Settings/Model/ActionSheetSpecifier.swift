@@ -60,20 +60,20 @@ extension ActionSheetSpecifier: ActionSheetDelegate {
             return
         }
 
-        guard preferenceKey != kVLCSettingAppTheme ||
+        guard preferenceKey != VLCDefaults.Compat.appThemeKey ||
                 (!PresentationTheme.current.isDark || indexPath.row != numberOfRows() - 1) else {
             // Disable the selection for the black background option cell in the appearance action sheet
             return
         }
 
-        guard preferenceKey != kVLCAutomaticallyPlayNextItem else {
+        guard preferenceKey != VLCDefaults.Compat.automaticallyPlayNextItemKey else {
             // Disable the selection for the automatically play next item options
             return
         }
 
         userDefaults.set(settingSpecifier?.specifier[indexPath.row].value, forKey: preferenceKey)
 
-        if preferenceKey == kVLCSettingAppTheme {
+        if preferenceKey == VLCDefaults.Compat.appThemeKey {
             PresentationTheme.themeDidUpdate()
         }
 
@@ -106,7 +106,7 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             return 0
         }
 
-        if preferenceKey == kVLCSettingAppTheme {
+        if preferenceKey == VLCDefaults.Compat.appThemeKey {
             let isThemeDark: Bool = PresentationTheme.current.isDark
             if #available(iOS 13, *) {
                 return isThemeDark ? rowCount : rowCount - 1
@@ -128,11 +128,11 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             return UICollectionViewCell()
         }
 
-        if preferenceKey == kVLCSettingAppTheme &&
+        if preferenceKey == VLCDefaults.Compat.appThemeKey &&
             PresentationTheme.current.isDark && indexPath.row == numberOfRows() - 1 {
             // Update the black background option cell
             cell.setAccessoryType(to: .toggleSwitch)
-            cell.setToggleSwitch(state: UserDefaults.standard.bool(forKey: kVLCSettingAppThemeBlack))
+            cell.setToggleSwitch(state: VLCDefaults.shared.appThemeBlack)
             cell.name.text = settingsBundle.localizedString(forKey: "SETTINGS_THEME_BLACK", value: "", table: "Root")
             let cellIdentifier = ActionSheetCellIdentifier.blackBackground
             cell.identifier = cellIdentifier
@@ -141,14 +141,14 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
             cell.delegate = self
 
             return cell
-        } else if preferenceKey == kVLCAutomaticallyPlayNextItem {
+        } else if preferenceKey == VLCDefaults.Compat.automaticallyPlayNextItemKey {
             cell.setAccessoryType(to: .toggleSwitch)
             let isFirstRow: Bool = indexPath.row == 0
 
             if isFirstRow {
-                cell.setToggleSwitch(state: userDefaults.bool(forKey: kVLCAutomaticallyPlayNextItem))
+                cell.setToggleSwitch(state: VLCDefaults.shared.automaticallyPlayNextItem)
             } else {
-                cell.setToggleSwitch(state: userDefaults.bool(forKey: kVLCPlaylistPlayNextItem))
+                cell.setToggleSwitch(state: VLCDefaults.shared.playlistPlayNextItem)
             }
 
             let cellIdentifier: ActionSheetCellIdentifier = isFirstRow ? .playNextItem : .playlistPlayNextItem
@@ -166,7 +166,7 @@ extension ActionSheetSpecifier: ActionSheetDataSource {
 
 extension ActionSheetSpecifier: ActionSheetCellDelegate {
     func actionSheetCellShouldUpdateColors() -> Bool {
-        guard preferenceKey != kVLCAutomaticallyPlayNextItem else {
+        guard preferenceKey != VLCDefaults.Compat.automaticallyPlayNextItemKey else {
             return false
         }
 

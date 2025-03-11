@@ -144,14 +144,12 @@ class MediaScrubProgressBar: UIStackView {
     }
 
     @objc private func handleAccessibilityForward() -> Bool {
-        let defaults = UserDefaults.standard
-        playbackService.jumpForward(Int32(defaults.integer(forKey: kVLCSettingPlaybackForwardSkipLength)))
+        playbackService.jumpForward(Int32(VLCDefaults.shared.playbackForwardSkipLength))
         return true
     }
 
     @objc private func handleAccessibilityBackward() -> Bool {
-        let defaults = UserDefaults.standard
-        playbackService.jumpBackward(Int32(defaults.integer(forKey: kVLCSettingPlaybackBackwardSkipLength)))
+        playbackService.jumpBackward(Int32(VLCDefaults.shared.playbackBackwardSkipLength))
         return true
     }
 
@@ -417,8 +415,7 @@ fileprivate enum RemainingTimeMode {
     case remaining
 
     static var current: RemainingTimeMode {
-        let userDefault = UserDefaults.standard
-        let currentSetting = userDefault.bool(forKey: kVLCShowRemainingTime)
+        let currentSetting = VLCDefaults.shared.showRemainingTime
 
         switch currentSetting {
             case true: return .remaining
@@ -428,8 +425,7 @@ fileprivate enum RemainingTimeMode {
 
     @discardableResult
     static func toggle() -> RemainingTimeMode {
-        let userDefault = UserDefaults.standard
-        userDefault.set(!userDefault.bool(forKey: kVLCShowRemainingTime), forKey: kVLCShowRemainingTime)
+        VLCDefaults.shared.showRemainingTime.toggle()
         return current
     }
 }

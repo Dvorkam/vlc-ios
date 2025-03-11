@@ -30,7 +30,6 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
 
     private var sortModel: SortModel
     private var secondSortModel: SortModel?
-    private let userDefaults = UserDefaults.standard
     private var isAdditionalOptionShown: Bool = false
 
     private let descendingStackView: UIStackView = {
@@ -251,8 +250,12 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
     }
 
     private func setSwitchIsOnFromUserDefaults() {
-        let key = isVideoModel ? kVLCVideoLibraryGridLayout : kVLCAudioLibraryGridLayout
-        layoutChangeSwitch.isOn = UserDefaults.standard.bool(forKey: key + modelType)
+        switch isVideoModel {
+        case true:
+            layoutChangeSwitch.isOn = VLCDefaults.shared.videoLibraryGridLayout(name: modelType)
+        case false:
+            layoutChangeSwitch.isOn = VLCDefaults.shared.audioLibraryGridLayout(name: modelType)
+        }
     }
 
     private func setupStackView() {
@@ -296,7 +299,7 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
 
         secondaryStackView.addArrangedSubview(hideFeatArtistsStackView)
 
-        hideFeatArtistsSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCAudioLibraryHideFeatArtists)
+        hideFeatArtistsSwitch.isOn = VLCDefaults.shared.audioLibraryHideFeatArtists
     }
 
     func updateHeaderForAlbums() {
@@ -306,6 +309,6 @@ class ActionSheetSortSectionHeader: ActionSheetSectionHeader {
 
         secondaryStackView.addArrangedSubview(hideTrackNumbersStackView)
 
-        hideTrackNumbersSwitch.isOn = UserDefaults.standard.bool(forKey: kVLCAudioLibraryHideTrackNumbers)
+        hideTrackNumbersSwitch.isOn = VLCDefaults.shared.audioLibraryHideTrackNumbers
     }
 }

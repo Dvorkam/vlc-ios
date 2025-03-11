@@ -38,61 +38,55 @@ class PlayerController: NSObject {
 
     var isTapSeeking: Bool = false
 
-    // MARK: - UserDefaults computed properties getters
+    // MARK: - Defaults computed properties getters
 
     var displayRemainingTime: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCShowRemainingTime)
+        return VLCDefaults.shared.showRemainingTime
     }
 
     var isVolumeGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingVolumeGesture)
+        return VLCDefaults.shared.volumeGesture
     }
 
     var isPlayPauseGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingPlayPauseGesture)
+        return VLCDefaults.shared.playPauseGesture
     }
 
     var isBrightnessGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingBrightnessGesture)
+        return VLCDefaults.shared.brightnessGesture
     }
 
     var isSwipeSeekGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingSeekGesture)
+        return VLCDefaults.shared.seekGesture
     }
 
     var isCloseGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingCloseGesture)
+        return VLCDefaults.shared.closeGesture
     }
 
     var isSpeedUpGestureEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCSettingPlaybackLongTouchSpeedUp)
+        return VLCDefaults.shared.playbackLongTouchSpeedUp
     }
 
     var isShuffleEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCPlayerIsShuffleEnabled)
+        return VLCDefaults.shared.playerIsShuffleEnabled
     }
 
     var isRepeatEnabled: VLCRepeatMode {
-        let storedValue = UserDefaults.standard.integer(forKey: kVLCPlayerIsRepeatEnabled)
-
-        return VLCRepeatMode(rawValue: storedValue) ?? .doNotRepeat
+        return VLCDefaults.shared.playerIsRepeatEnabled
     }
 
     var isRememberStateEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCPlayerShouldRememberState)
+        return VLCDefaults.shared.playerShouldRememberState
     }
 
     var isRememberBrightnessEnabled: Bool {
-        return UserDefaults.standard.bool(forKey: kVLCPlayerShouldRememberBrightness)
+        return VLCDefaults.shared.playerShouldRememberBrightness
     }
 
     @objc override init() {
         super.init()
         setupObservers()
-    }
-
-    func updateUserDefaults() {
-
     }
 
     private func setupObservers() {

@@ -38,37 +38,7 @@
 
 + (void)initialize
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-    NSDictionary *appDefaults = @{kVLCSettingContinueAudioInBackgroundKey : @(YES),
-                                  kVLCSettingStretchAudio : @(YES),
-                                  kVLCSettingDefaultPreampLevel : @(6),
-                                  kVLCSettingTextEncoding : kVLCSettingTextEncodingDefaultValue,
-                                  kVLCSettingSkipLoopFilter : kVLCSettingSkipLoopFilterNonRef,
-                                  kVLCSettingSubtitlesFont : kVLCSettingSubtitlesFontDefaultValue,
-                                  kVLCSettingSubtitlesFontColor : kVLCSettingSubtitlesFontColorDefaultValue,
-                                  kVLCSettingSubtitlesFontSize : kVLCSettingSubtitlesFontSizeDefaultValue,
-                                  kVLCSettingSubtitlesBoldFont: kVLCSettingSubtitlesBoldFontDefaultValue,
-                                  kVLCSettingDeinterlace : kVLCSettingDeinterlaceDefaultValue,
-                                  kVLCSettingHardwareDecoding : kVLCSettingHardwareDecodingDefault,
-                                  kVLCSettingNetworkCaching : kVLCSettingNetworkCachingDefaultValue,
-                                  kVLCSettingNetworkRTSPTCP : @(NO),
-                                  kVLCSettingNetworkSatIPChannelListUrl : @"",
-                                  kVLCSettingEqualizerProfileDisabled : @(YES),
-                                  kVLCSettingEqualizerProfile : kVLCSettingEqualizerProfileDefaultValue,
-                                  kVLCSettingPlaybackForwardSkipLength : kVLCSettingPlaybackForwardSkipLengthDefaultValue,
-                                  kVLCSettingPlaybackBackwardSkipLength : kVLCSettingPlaybackBackwardSkipLengthDefaultValue,
-                                  kVLCSettingPlaybackLockscreenSkip : @(NO),
-                                  kVLCSettingPlaybackRemoteControlSkip : @(NO),
-                                  kVLCSettingWiFiSharingIPv6 : kVLCSettingWiFiSharingIPv6DefaultValue,
-                                  kVLCAutomaticallyPlayNextItem : @(YES),
-                                  kVLCPlayerShouldRememberState: @(YES),
-                                  kVLCPlayerUIShouldHide : @(NO),
-                                  kVLCSettingDownloadArtwork : @(YES),
-                                  kVLCForceSMBV1 : @(YES),
-                                  kVLCSettingBackupMediaLibrary : kVLCSettingBackupMediaLibraryDefaultValue,
-                                  kVLCSettingPlaybackSpeedDefaultValue: @(1.0)};
-    [defaults registerDefaults:appDefaults];
+    [VLCDefaults.shared registerDefaults];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

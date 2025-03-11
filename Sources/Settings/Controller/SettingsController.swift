@@ -11,6 +11,7 @@
  *          Diogo Simao Marques <dogo@videolabs.io>
  *          Felix Paul Kühne <fkuehne # videolan.org>
  *          Andrew Breckenridge <asbreckenridge@me.com>
+ *          Craig Reyenga <craig.reyenga # gmail.com>          
  *
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
@@ -20,13 +21,13 @@ import UIKit
 
 extension Notification.Name {
     static let VLCDisableGroupingDidChangeNotification = Notification.Name("disableGroupingDidChangeNotfication")
+    static let VLCSettingsShouldReloadNotification = Notification.Name("settingsShouldReloadNotification")
 }
 
 class SettingsController: UITableViewController {
     private let cellReuseIdentifier = "settingsCell"
     private let sectionHeaderReuseIdentifier = "sectionHeaderReuseIdentifier"
     private let sectionFooterReuseIdentifier = "sectionFooterReuseIdentifier"
-    private let userDefaults = UserDefaults.standard
     private let notificationCenter = NotificationCenter.default
     private let actionSheet = ActionSheet()
     private let specifierManager = ActionSheetSpecifier()
@@ -95,7 +96,11 @@ class SettingsController: UITableViewController {
     private func addObservers() {
         notificationCenter.addObserver(self,
                                        selector: #selector(reloadSettingsSections),
-                                       name: UserDefaults.didChangeNotification,
+                                       name: .VLCDefaultsDidUpdate,
+                                       object: nil)
+        notificationCenter.addObserver(self,
+                                       selector: #selector(reloadSettingsSections),
+                                       name: .VLCSettingsShouldReloadNotification,
                                        object: nil)
         notificationCenter.addObserver(self,
                                        selector: #selector(themeDidChange),
@@ -256,7 +261,7 @@ class SettingsController: UITableViewController {
         actionSheet.numberOfColums = numberOfColumns
 
         present(actionSheet, animated: false) {
-            if preferenceKey != kVLCAutomaticallyPlayNextItem {
+            if preferenceKey != VLCDefaults.Compat.automaticallyPlayNextItemKey {
                 self.actionSheet.collectionView.selectItem(at: self.specifierManager.selectedIndex, animated: false, scrollPosition: .centeredVertically)
             }
         }
@@ -296,19 +301,18 @@ class SettingsController: UITableViewController {
     }
 
     private func resetOptions() {
-        // note that [NSUserDefaults resetStandardUserDefaults] will NOT correctly reset to the defaults
-        let appDomain = Bundle.main.bundleIdentifier!
-        UserDefaults().removePersistentDomain(forName: appDomain)
+        VLCDefaults.shared.reset()
     }
 }
 
 extension SettingsController {
     @objc func reloadSettingsSections() {
         settingsSections = SettingsSection
-            .sections(isLabActivated: isLabActivated,
+            .sections(mediaLibraryService: mediaLibraryService,
+                      isLabActivated: isLabActivated,
                       isBackingUp: isBackingUp,
-                      isForwardBackwardEqual: userDefaults.bool(forKey: kVLCSettingPlaybackForwardBackwardEqual),
-                      isTapSwipeEqual: userDefaults.bool(forKey: kVLCSettingPlaybackTapSwipeEqual))
+                      isForwardBackwardEqual: VLCDefaults.shared.playbackForwardBackwardEqual,
+                      isTapSwipeEqual: VLCDefaults.shared.playbackTapSwipeEqual)
     }
 
     override func numberOfSections(in _: UITableView) -> Int {
@@ -428,21 +432,6 @@ extension SettingsController: MediaLibraryHidingDelegate {
 // MARK: - SwitchOn Delegates
 
 extension SettingsController: SettingsCellDelegate {
-    func settingsCellDidChangeSwitchState(cell _: SettingsCell, preferenceKey: String, isOn: Bool) {
-        switch preferenceKey {
-        case kVLCSettingPasscodeOnKey:
-            passcodeLockSwitchOn(state: isOn)
-        case kVLCSettingHideLibraryInFilesApp:
-            medialibraryHidingLockSwitchOn(state: isOn)
-        case kVLCSettingBackupMediaLibrary:
-            mediaLibraryBackupActivateSwitchOn(state: isOn)
-        case kVLCSettingsDisableGrouping:
-            medialibraryDisableGroupingSwitchOn(state: isOn)
-        default:
-            break
-        }
-    }
-
     func settingsCellInfoButtonPressed(cell: SettingsCell, preferenceKey: String) {
         guard let settingSpecifier = getSettingsSpecifier(for: preferenceKey) else {
             return
@@ -466,56 +455,16 @@ extension SettingsController: SettingsCellDelegate {
     }
 }
 
-extension SettingsController {
-    func passcodeLockSwitchOn(state: Bool) {
-        if state {
-            KeychainCoordinator.passcodeService.setSecret { success in
-                // If the user cancels setting the password, the toggle should revert to the unset state.
-                // This ensures the UI reflects the correct state.
-                UserDefaults.standard.set(success, forKey: kVLCSettingPasscodeOnKey)
-                self.reloadSettingsSections() // To show/hide biometric row
-            }
-        } else {
-            // When disabled any existing passcode should be removed.
-            // If user previously set a passcode and then disable and enable it
-            // the new passcode view will be showed, but if user terminates the app
-            // passcode will remain open even if the user doesn't set the new passcode.
-            // So, this may cause the app being locked.
-            try? KeychainCoordinator.passcodeService.removeSecret()
-
-            reloadSettingsSections()
-        }
-    }
-}
-
-extension SettingsController {
-    func medialibraryHidingLockSwitchOn(state: Bool) {
-        mediaLibraryService.hideMediaLibrary(state)
-    }
-}
-
-extension SettingsController {
-    func mediaLibraryBackupActivateSwitchOn(state: Bool) {
-        mediaLibraryService.excludeFromDeviceBackup(state)
-    }
-}
-
-extension SettingsController {
-    func medialibraryDisableGroupingSwitchOn(state _: Bool) {
-        notificationCenter.post(name: .VLCDisableGroupingDidChangeNotification, object: self)
-    }
-}
-
 extension SettingsController: ActionSheetSpecifierDelegate {
     func actionSheetSpecifierHandleToggleSwitch(for cell: ActionSheetCell, state: Bool) {
         switch cell.identifier {
         case .blackBackground:
-            userDefaults.setValue(state, forKey: kVLCSettingAppThemeBlack)
+            VLCDefaults.shared.appThemeBlack = state
             PresentationTheme.themeDidUpdate()
         case .playNextItem:
-            userDefaults.setValue(state, forKey: kVLCAutomaticallyPlayNextItem)
+            VLCDefaults.shared.automaticallyPlayNextItem = state
         case .playlistPlayNextItem:
-            userDefaults.setValue(state, forKey: kVLCPlaylistPlayNextItem)
+            VLCDefaults.shared.playlistPlayNextItem = state
         default:
             break
         }

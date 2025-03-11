@@ -58,8 +58,8 @@ extension VLCMLMedia {
     @objc func thumbnailImage() -> UIImage? {
         var image = VLCThumbnailsCache.thumbnail(for: thumbnail())
         if image == nil
-            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowThumbnails) && subtype() != .albumTrack)
-            || (!UserDefaults.standard.bool(forKey: kVLCSettingShowArtworks) && subtype() == .albumTrack) {
+            || (!VLCDefaults.shared.showThumbnails && subtype() != .albumTrack)
+            || (!VLCDefaults.shared.showArtworks && subtype() == .albumTrack) {
             let isDarktheme = PresentationTheme.current.isDark
             if subtype() == .albumTrack {
                 image = isDarktheme ? UIImage(named: "song-placeholder-dark") : UIImage(named: "song-placeholder-white")
@@ -78,7 +78,7 @@ extension VLCMLMedia {
     }
 
     func title() -> String {
-        if UserDefaults.standard.bool(forKey: kVLCOptimizeItemNamesForDisplay) == true
+        if VLCDefaults.shared.optimizeTitles
             && ((subtype() == .albumTrack && title.isSupportedAudioMediaFormat())
                 || (subtype() != .albumTrack && title.isSupportedMediaFormat())) {
             return (title as NSString).deletingPathExtension

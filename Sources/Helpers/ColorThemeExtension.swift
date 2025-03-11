@@ -17,7 +17,7 @@ extension PresentationTheme {
                 // there was a userInterfaceStyle change.
                 return
             }
-            guard UserDefaults.standard.integer(forKey: kVLCSettingAppTheme) == kVLCSettingAppThemeSystem else {
+            guard VLCDefaults.shared.appTheme == .system else {
                 // Theme is specificly set, do not follow systeme theme.
                 return
             }

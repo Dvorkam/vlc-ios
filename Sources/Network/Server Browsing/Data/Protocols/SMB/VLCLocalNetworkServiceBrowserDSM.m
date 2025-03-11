@@ -12,6 +12,7 @@
 
 #import "VLCLocalNetworkServiceBrowserDSM.h"
 #import "VLCNetworkServerLoginInformation.h"
+#import "VLC-Swift.h"
 
 @interface VLCLocalNetworkServiceDSM ()
 + (void)registerLoginInformation;
@@ -110,8 +111,8 @@ static NSString *const VLCLocalNetworkServiceDSMWorkgroupIdentifier = @"VLCLocal
         @"smb-pwd" : password ?: @"",
         @"smb-domain" : workgroup?: @"WORKGROUP",
     }.mutableCopy;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kVLCForceSMBV1]) {
-        mediaOptions[kVLCForceSMBV1] = [NSNull null];
+    if (VLCDefaults.shared.forceSMBV1) {
+        mediaOptions[@"smb-force-v1"] = [NSNull null];
     }
 	[media addOptions:mediaOptions];
 	return [[self alloc] initWithMedia:media options:mediaOptions];
