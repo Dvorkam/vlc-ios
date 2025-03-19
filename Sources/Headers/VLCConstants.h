@@ -185,6 +185,8 @@
 
 #define kVLCDonationAnonymousCustomerID @"kVLCDonationAnonymousCustomerID"
 
+#define kVLCSettingEnableKidsMode @"kVLCSettingEnableKidsMode"
+
 /* LEGACY KEYS, DO NOT USE IN NEW CODE */
 #define kVLCFTPServer @"ftp-server"
 #define kVLCFTPLogin @"ftp-login"

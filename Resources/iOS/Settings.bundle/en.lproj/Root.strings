@@ -171,3 +171,6 @@
 
 "SETTINGS_RESET" = "Reset the settings";
 "SETTINGS_RESET_TITLE" = "Reset";
+
+"SETTINGS_KIDSMODE_TOGGLE" = "Kids mode";
+"SETTINGS_KIDSMODE_SUBTITLE" = "Restrict some actions";

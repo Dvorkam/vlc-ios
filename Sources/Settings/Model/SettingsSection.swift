@@ -175,6 +175,13 @@ enum MainOptions {
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_DARKTHEME", preferenceKey: k, hasInfo: false))
     }
+    
+    static var kidsMode: SettingsItem {
+        .init(title: "SETTINGS_KIDSMODE_TOGGLE",
+              subtitle: "SETTINGS_KIDSMODE_SUBTITLE",
+              action: .toggle(SettingsItem.Toggle(preferenceKey: kVLCSettingEnableKidsMode)),
+              isTitleEmphasized: false)
+    }
 
     static func section() -> SettingsSection? {
         var items = [privacy]
@@ -182,6 +189,7 @@ enum MainOptions {
         // visionOS uses a standard system appearance and doesn't have light/dark mode.
         items.append(appearance)
         #endif
+        items.append(kidsMode)
         return .init(title: nil, items: items)
     }
 }
