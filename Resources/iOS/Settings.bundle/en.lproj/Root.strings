@@ -172,5 +172,5 @@
 "SETTINGS_RESET" = "Reset the settings";
 "SETTINGS_RESET_TITLE" = "Reset";
 
-"SETTINGS_KIDSMODE_TOGGLE" = "Kids mode";
-"SETTINGS_KIDSMODE_SUBTITLE" = "Restrict some actions";
+"SETTINGS_PARENTAL_CONTROL_TOGGLE" = "Parental control";
+"SETTINGS_PARENTAL_CONTROL_SUBTITLE" = "When activated, files cannot be deleted or playlists modified without entering the pin";
