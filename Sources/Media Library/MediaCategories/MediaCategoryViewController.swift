@@ -89,7 +89,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         var header: ActionSheetSortSectionHeader
         var isVideoModel: Bool = false
         var collectionModelName: String = ""
-        var secondSortModel: SortModel? = nil
 
         if let model = model as? CollectionModel {
             if model.mediaCollection is VLCMLMediaGroup || model.mediaCollection is VideoModel {
@@ -102,13 +101,11 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         } else if let model = model as? VideoModel {
             isVideoModel = true
             collectionModelName = secondModel.name
-            secondSortModel = model.sortModel
         } else {
             collectionModelName = model.name
         }
 
         header = ActionSheetSortSectionHeader(model: model.sortModel,
-                                              secondModel: secondSortModel,
                                               isVideoModel: isVideoModel,
                                               currentModelType: collectionModelName)
 
@@ -237,7 +234,6 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         self.mediaLibraryService = mediaLibraryService
 
         let videoModel = VideoModel(medialibrary: mediaLibraryService)
-        videoModel.secondName = model.name
 
         if model is MediaGroupViewModel {
             self.model = userDefaults.bool(forKey: kVLCSettingsDisableGrouping) ? videoModel : model
