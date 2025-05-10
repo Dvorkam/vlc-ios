@@ -28,7 +28,6 @@ protocol MediaLibraryBaseModel {
     var indicatorName: String { get }
     var cellType: BaseCollectionViewCell.Type { get }
 
-    func anyAppend(_ item: VLCMLObject)
     func anyDelete(_ items: [VLCMLObject])
     func sort(by criteria: VLCMLSortingCriteria, desc: Bool)
 
@@ -46,8 +45,6 @@ protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
 
     var medialibrary: MediaLibraryService { get }
 
-    var observable: Observable<MediaLibraryBaseModelObserver> { get }
-
     var indicatorName: String { get }
 
     func append(_ item: MLType)
@@ -58,13 +55,6 @@ protocol MLBaseModel: AnyObject, MediaLibraryBaseModel {
 extension MLBaseModel {
     var anyfiles: [VLCMLObject] {
         return files
-    }
-
-    func anyAppend(_ item: VLCMLObject) {
-        guard let item = item as? MLType else {
-            preconditionFailure("MLBaseModel: Wrong underlying ML type.")
-        }
-        append(item)
     }
 
     func anyDelete(_ items: [VLCMLObject]) {
