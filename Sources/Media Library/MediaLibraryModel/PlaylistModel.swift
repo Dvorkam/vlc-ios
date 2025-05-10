@@ -81,34 +81,6 @@ class PlaylistModel: MLBaseModel {
             $0.mediaLibraryBaseModelReloadView()
         }
     }
-
-    // Creates a VLCMLPlaylist appending it and updates linked view
-    func create(name: String) {
-        guard let playlist = medialibrary.createPlaylist(with: name) else {
-            assertionFailure("PlaylistModel: create: Failed to create a playlist.")
-            return
-        }
-        append(playlist)
-        observable.notifyObservers {
-            $0.mediaLibraryBaseModelReloadView()
-        }
-    }
-}
-
-// MARK: - Sort
-extension PlaylistModel {
-    func sort(by criteria: VLCMLSortingCriteria, desc: Bool) {
-        defer {
-            fileArrayLock.unlock()
-        }
-        fileArrayLock.lock()
-        files = medialibrary.playlists(sortingCriteria: criteria, desc: desc)
-        sortModel.currentSort = criteria
-        sortModel.desc = desc
-        observable.notifyObservers {
-            $0.mediaLibraryBaseModelReloadView()
-        }
-    }
 }
 
 // MARK: - Search
