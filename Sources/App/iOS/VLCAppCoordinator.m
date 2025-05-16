@@ -23,7 +23,7 @@
     VLCRendererDiscovererManager *_rendererDiscovererManager;
     VLCFavoriteService *_favoriteService;
     VLCHTTPUploaderController *_httpUploaderController;
-    UITabBarController *_tabBarController;
+    VLCBottomTabBarController *_tabBarController;
     TabBarCoordinator *_tabCoordinator;
     VLCPlayerDisplayController *_playerDisplayController;
     VLCRemoteControlService *_remoteControlService;
@@ -128,7 +128,7 @@
     return _externalWindow;
 }
 
-- (void)setTabBarController:(UITabBarController *)tabBarController
+- (void)setTabBarController:(VLCBottomTabBarController *)tabBarController
 {
     _tabBarController = tabBarController;
     _tabCoordinator = [[TabBarCoordinator alloc] initWithTabBarController:_tabBarController mediaLibraryService:self.mediaLibraryService];
@@ -137,10 +137,19 @@
     [_tabBarController.view addSubview:_playerDisplayController.view];
     _playerDisplayController.view.layoutMargins = UIEdgeInsetsMake(0, 0, tabBarController.tabBar.frame.size.height, 0);
     _playerDisplayController.realBottomAnchor = tabBarController.tabBar.topAnchor;
+
+    if (@available(iOS 18.0, *)) {
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+            // Adjust the margins and the constraint to the previous tab bar appearance on iPadOS
+            _playerDisplayController.view.layoutMargins = UIEdgeInsetsMake(0, 0, tabBarController.bottomBar.frame.size.height, 0);
+            _playerDisplayController.realBottomAnchor = tabBarController.bottomBar.topAnchor;
+        }
+    }
+
     [_playerDisplayController didMoveToParentViewController:tabBarController];
 }
 
-- (UITabBarController *)tabBarController
+- (VLCBottomTabBarController*)tabBarController
 {
     return _tabBarController;
 }
