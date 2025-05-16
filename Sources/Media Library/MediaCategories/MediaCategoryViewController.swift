@@ -196,11 +196,14 @@ class MediaCategoryViewController: UICollectionViewController, UISearchBarDelega
         button.backgroundColor = PresentationTheme.current.colors.orangeUI
         button.tintColor = PresentationTheme.current.colors.background
         button.setImage(UIImage(named: "iconPlay")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.layer.cornerRadius = 30
-        button.addTarget(
-            self, action: #selector(self.continueWatchingButtonPressed),
-            for: .touchUpInside
-        )
+        button.layer.cornerRadius = 30.0
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOffset = CGSize(width: 0.0, height: 5.0)
+        button.layer.masksToBounds = false
+        button.layer.shadowRadius = 6.0
+        button.layer.shadowOpacity = 0.5
+        button.addTarget(self, action: #selector(continueWatchingButtonPressed), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
@@ -2013,8 +2016,8 @@ extension MediaCategoryViewController {
         guard let keyWindow = UIApplication.shared.delegate?.window else { return }
         keyWindow?.addSubview(continueWatchingButton)
 
-        self.setContinueWatchingButtonConstraints()
-        self.handleContinueWatchingButtonVisibility()
+        setContinueWatchingButtonConstraints()
+        handleContinueWatchingButtonVisibility()
     }
 
     @objc private func continueWatchingButtonPressed() {
@@ -2052,13 +2055,14 @@ extension MediaCategoryViewController {
             layoutGuide = keywindow!.safeAreaLayoutGuide
         }
 
-        continueWatchingButton.translatesAutoresizingMaskIntoConstraints = false
-
-        guard let tabBarHeight = self.tabBarController?.tabBar.frame.height else { return }
-        continueWatchingBottomConstraint = continueWatchingButton.bottomAnchor.constraint(
-            equalTo: layoutGuide.bottomAnchor,
-            constant: -tabBarHeight + 10
-        )
+        var tabBarHeight: CGFloat = 0.0
+        if let tabBarController = tabBarController as? BottomTabBarController,
+           let tabBarHeightConstraint = tabBarController.tabBarHeightConstraint {
+            tabBarHeight = tabBarHeightConstraint.constant
+        } else if let tabBarController = tabBarController {
+            tabBarHeight = tabBarController.tabBar.frame.size.height
+        }
+        continueWatchingBottomConstraint = continueWatchingButton.bottomAnchor.constraint(equalTo: layoutGuide.bottomAnchor, constant: -tabBarHeight)
 
         NSLayoutConstraint.activate([
             continueWatchingButton.trailingAnchor.constraint(equalTo: layoutGuide.trailingAnchor, constant: -15),
@@ -2071,8 +2075,15 @@ extension MediaCategoryViewController {
     //Helper functions for handling constraints when orientation state is changed
     private func updateContinueWatchingConstraints() {
         DispatchQueue.main.async {
-            guard let tabBarHeight = self.tabBarController?.tabBar.frame.height else { return }
-            self.continueWatchingBottomConstraint?.constant = -tabBarHeight + 10
+            var tabBarHeight: CGFloat = 0.0
+            if let tabBarController = self.tabBarController as? BottomTabBarController,
+               let tabBarHeightConstraint = tabBarController.tabBarHeightConstraint {
+                tabBarHeight = tabBarHeightConstraint.constant
+            } else if let tabBarController = self.tabBarController {
+                tabBarHeight = tabBarController.tabBar.frame.size.height
+            }
+
+            self.continueWatchingBottomConstraint?.constant = -tabBarHeight
             self.continueWatchingButton.layoutIfNeeded()
         }
     }
