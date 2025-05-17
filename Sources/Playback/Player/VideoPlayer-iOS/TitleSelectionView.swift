@@ -128,7 +128,6 @@ class TitleSelectionView: UIView {
         audioTableView.translatesAutoresizingMaskIntoConstraints = false
         audioTableView.contentInsetAdjustmentBehavior = .never
         audioTableView.sectionIndexBackgroundColor = .clear
-        audioTableView.bounces = false
         return audioTableView
     }()
 
@@ -139,7 +138,6 @@ class TitleSelectionView: UIView {
         subtitleTableView.translatesAutoresizingMaskIntoConstraints = false
         subtitleTableView.contentInsetAdjustmentBehavior = .never
         subtitleTableView.sectionIndexBackgroundColor = .clear
-        subtitleTableView.bounces = false
         return subtitleTableView
     }()
 
@@ -220,14 +218,14 @@ private extension TitleSelectionView {
         audioTableView.register(TitleSelectionTableViewCell.self,
                                 forCellReuseIdentifier: TitleSelectionTableViewCell.identifier)
         audioTableView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        audioTableView.scrollIndicatorInsets.top = TitleSelectionTableViewCell.size
+        audioTableView.verticalScrollIndicatorInsets.top = TitleSelectionTableViewCell.size
 
         subtitleTableView.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: subtitleTableView.frame.size.width, height: 1))
         subtitleTableView.delegate = self
         subtitleTableView.register(TitleSelectionTableViewCell.self,
                                    forCellReuseIdentifier: TitleSelectionTableViewCell.identifier)
         subtitleTableView.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        subtitleTableView.scrollIndicatorInsets.top = TitleSelectionTableViewCell.size
+        subtitleTableView.verticalScrollIndicatorInsets.top = TitleSelectionTableViewCell.size
     }
 
     private func setupConstraints() {
@@ -359,36 +357,72 @@ extension TitleSelectionView: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        // Create a custom view instead of using UITableViewHeaderFooterView for better control
-        let containerView = UIView()
-        containerView.backgroundColor = UIColor.black.withAlphaComponent(0.95)
+        let headerView: TitleSelectionTableViewHeaderView = TitleSelectionTableViewHeaderView(
+            title: tableView == audioTableView ? NSLocalizedString("AUDIO", comment: "").capitalized : 
+            NSLocalizedString("SUBTITLES", comment: "").capitalized
+        )
         
-        let titleLabel = UILabel()
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        titleLabel.textColor = .white
-        titleLabel.text = tableView == audioTableView ? 
-        NSLocalizedString("AUDIO", comment: "").capitalized :
-        NSLocalizedString("SUBTITLES", comment: "").capitalized
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(titleLabel)
-        
-        // Add a bottom separator to make the header more distinct
+        return headerView
+    }
+}
+
+// MARK: - TitleSelectionTableViewHeaderView
+fileprivate final class TitleSelectionTableViewHeaderView: UIView {
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    private lazy var separator: UIView = {
         let separator = UIView()
         separator.backgroundColor = UIColor.white.withAlphaComponent(0.3)
         separator.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(separator)
+        return separator
+    }()
+
+    private lazy var containerView: UIView = {
+        let containerView = UIView()
+        containerView.backgroundColor = UIColor.black.withAlphaComponent(0.95)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        return containerView
+    }()
+
+    init(title: String) {
+        super.init(frame: .zero)
+        titleLabel.text = title
         
+        addSubview(containerView)
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(separator)
+
+        setupConstraints()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func configure(title: String) {
+        titleLabel.text = title
+    }
+
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerView.topAnchor.constraint(equalTo: topAnchor),
+            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+
             titleLabel.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor, constant: 5),
             titleLabel.centerYAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.centerYAnchor),
-            
+
             separator.leadingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.leadingAnchor),
             separator.trailingAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.trailingAnchor),
             separator.bottomAnchor.constraint(equalTo: containerView.safeAreaLayoutGuide.bottomAnchor),
             separator.heightAnchor.constraint(equalToConstant: 0.5)
         ])
-        
-        return containerView
     }
 }
