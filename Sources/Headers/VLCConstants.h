@@ -106,6 +106,7 @@
 #define kVLCSettingPlayerControlDuration @"kVLCSettingPlayerControlDuration"
 #define kVLCSettingPlayerControlDurationDefaultValue @(4)
 #define kVLCSettingPauseWhenShowingControls @"kVLCSettingPauseWhenShowingControls"
+#define kVLCSettingEnableScrollToCurrentlyPlayingMedia @"kVLCSettingEnableScrollToCurrentlyPlayingMedia"
 
 #define kVLCForceSMBV1 @"smb-force-v1"
 
@@ -191,3 +192,5 @@
 #define kVLCFTPPassword @"ftp-pass"
 #define kVLCPLEXServer @"plex-server"
 #define kVLCPLEXPort @"plex-port"
+
+#define kVLCCurrentPlayingModel @"CurrentPlayingModel"

@@ -261,6 +261,12 @@ enum GenericOptions {
                 preferenceKey: kVLCRestoreLastPlayedMedia)
     }
 
+    static var enableScrollToCurrentlyPlayingMedia: SettingsItem {
+        .toggle(title: "SETTINGS_ENABLE_SCROLL_TO_CURRENTLY_PLAYING_MEDIA",
+                subtitle: nil,
+                preferenceKey: kVLCSettingEnableScrollToCurrentlyPlayingMedia)
+    }
+
     static func section() -> SettingsSection? {
         .init(title: "SETTINGS_GENERIC_TITLE", items: [
             defaultPlaybackSpeed,
@@ -271,6 +277,7 @@ enum GenericOptions {
             enableTextScrollingInMediaList,
             rememberPlayerState,
             restoreLastPlayedMedia,
+            enableScrollToCurrentlyPlayingMedia
         ])
     }
 }
