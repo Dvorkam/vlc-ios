@@ -14,7 +14,8 @@
 · Add supports for passcodes with four and six digits
 · Cloud services: allow downloads of entire folders and to favorite them
 · Major accessbility improvements for the playback interface
-· Last played item in a playlist is now indicate
+· Last played item in a playlist is now indicated
+· Add more sorting options for playlists and improve appearance
 · Improve brightness restoration and handling
 · Add Multipath TCP (MPTCP) support
 · New support for the IMM4, 708, AGM, VP4 codecs
@@ -28,9 +29,13 @@
 · Add options to skip forward/back instead of go to next/previous track
     - on lockscreen and when using external controls (like headphones and car controls)
 · Integrate with the pCloud service
+· Fix PLEX integration
+· Remove S/PDIF option on tvOS as it was discontinued in tvOS 11
 
 Known issues:
 · Thumbnailing content is broken
+· Picture-in-Picture featured is offered on devices where it is actually unsupported
+· Google Drive integration fails to login
 
 ## iOS [3.6.4]
 · Fix another edge-case of silent playback recovery
