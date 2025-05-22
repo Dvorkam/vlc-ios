@@ -177,6 +177,12 @@ enum MainOptions {
                      subtitle: Localizer.getSubtitle(for: k),
                      action: .showActionSheet(title: "SETTINGS_DARKTHEME", preferenceKey: k, hasInfo: false))
     }
+    
+    static var parentalControl: SettingsItem {
+        .toggle(title: "SETTINGS_PARENTAL_CONTROL_TOGGLE",
+                subtitle: "SETTINGS_PARENTAL_CONTROL_SUBTITLE",
+                preferenceKey: kVLCSettingParentalControl)
+    }
 
     static var blackTheme: SettingsItem {
         .toggle(title: "SETTINGS_THEME_BLACK",
@@ -192,6 +198,7 @@ enum MainOptions {
         items.append(appearance)
         items.append(blackTheme)
         #endif
+        items.append(parentalControl)
         return .init(title: nil, items: items)
     }
 }

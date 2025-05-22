@@ -8,6 +8,8 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
+import LocalAuthentication
+
 enum completionState {
     case inProgress
     case success
@@ -204,9 +206,21 @@ extension EditActions {
         let deleteButton = VLCAlertButton(title: NSLocalizedString("BUTTON_DELETE", comment: ""),
                                           style: .destructive,
                                           action: { [unowned self] action in
-            self.model.anyDelete(self.objects)
-            self.objects.removeAll()
-            self.completion?(.success)
+            if UserDefaults.standard.bool(forKey: kVLCSettingParentalControl) {
+                self.authenticateUser { success in
+                    if success {
+                        self.model.anyDelete(self.objects)
+                        self.objects.removeAll()
+                        self.completion?(.success)
+                    } else {
+                        self.completion?(.fail)
+                    }
+                }
+            } else {
+                self.model.anyDelete(self.objects)
+                self.objects.removeAll()
+                self.completion?(.success)
+            }
         })
 
         VLCAlertViewController.alertViewManager(title: title,
@@ -349,6 +363,17 @@ private extension EditActions {
         }
         return fileURLs
     }
+    
+    private func authenticateUser(completion: @escaping (Bool) -> Void) {
+        let coordinator = KeychainCoordinator.passcodeService
+        coordinator.validateSecret(
+            allowBiometricAuthentication: false, // no faceid for now
+            isCancellable: true
+        ) { success in
+            completion(success)
+        }
+    }
+
 
     // MARK: Media Groups
 
