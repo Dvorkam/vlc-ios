@@ -20,7 +20,6 @@ protocol EditToolbarDelegate: AnyObject {
 }
 
 class EditToolbar: UIView {
-    static let height: CGFloat = 60
     weak var delegate: EditToolbarDelegate?
 
     private var stackView: UIStackView = {

@@ -24,7 +24,6 @@ enum PasscodeAction {
 
 class PasscodeLockController: UIViewController {
     // - MARK: Properties
-    private let userDefaults = UserDefaults.standard
     private let notificationCenter = NotificationCenter.default
 
     let action: PasscodeAction

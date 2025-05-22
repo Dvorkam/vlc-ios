@@ -139,8 +139,6 @@ class MediaLibraryService: NSObject {
     private static let didForceRescan: String = "MediaLibraryDidForceRescan"
     private var triedToRecoverFromInitializationErrorOnce = false
 
-    private var didFinishDiscovery = false
-
     private var desiredThumbnailWidth = UInt(320)
     private var desiredThumbnailHeight = UInt(200)
 
@@ -677,23 +675,6 @@ extension MediaLibraryService {
         observable.notifyObservers {
             $0.medialibrary?(self, didDeleteMediaGroupsWithIds: mediaGroupsIds)
         }
-    }
-}
-
-// MARK: - VLCMediaLibraryDelegate - Discovery
-
-extension MediaLibraryService {
-    func medialibrary(_ medialibrary: VLCMediaLibrary, didStartDiscovery entryPoint: String) {
-    }
-
-    func medialibrary(_ medialibrary: VLCMediaLibrary, didCompleteDiscovery entryPoint: String) {
-        didFinishDiscovery = true
-    }
-
-    func medialibrary(_ medialibrary: VLCMediaLibrary, didProgressDiscovery entryPoint: String) {
-    }
-
-    func medialibrary(_ medialibrary: VLCMediaLibrary, didUpdateParsingStatsWithPercent percent: UInt32) {
     }
 }
 

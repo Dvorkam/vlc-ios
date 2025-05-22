@@ -27,8 +27,6 @@ class VideoModel: MediaModel {
 
     var name: String = "ALL_VIDEOS"
 
-    var secondName: String = ""
-
     var indicatorName: String = NSLocalizedString("ALL_VIDEOS", comment: "")
 
     required init(medialibrary: MediaLibraryService) {

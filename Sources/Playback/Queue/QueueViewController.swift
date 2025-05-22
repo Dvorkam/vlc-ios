@@ -50,15 +50,11 @@ class QueueViewController: UIViewController {
     private var scrolledCellIndex: IndexPath = IndexPath()
     private var grabbedCellIndex: IndexPath?
 
-    private let cellHeight: CGFloat = 56
-
     private let sidePadding: CGFloat = 10
     private let topPadding: CGFloat = 8
     private let bottomPadding: CGFloat = 8
 
     private let darkOverlayAlpha: CGFloat = 0.6
-
-    private var originY: CGFloat = 0
 
     private var playbackService: PlaybackService {
         get {
@@ -300,7 +296,7 @@ class QueueViewController: UIViewController {
     }
 
     func dragDidBegin(_ sender: UIPanGestureRecognizer) {
-        originY = view.frame.origin.y
+        // nothing to do
     }
 
     func dragStateDidChange(_ sender: UIPanGestureRecognizer) {

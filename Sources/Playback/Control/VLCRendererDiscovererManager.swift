@@ -48,13 +48,6 @@ class VLCRendererDiscovererManager: NSObject {
         return discoverers.flatMap { $0.renderers }
     }
 
-    fileprivate func isDuplicateDiscoverer(with description: VLCRendererDiscovererDescription) -> Bool {
-        for discoverer in discoverers where discoverer.name == description.name {
-            return true
-        }
-        return false
-    }
-
     @objc func start() {
         // Gather potential renderer discoverers
         guard let tmpDiscoverersDescription: [VLCRendererDiscovererDescription] = VLCRendererDiscoverer.list() else {
