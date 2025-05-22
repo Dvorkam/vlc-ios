@@ -1905,6 +1905,7 @@
 			children = (
 				448BA8472D83115D008CCDFF /* PreferenceSetting.swift */,
 				419A2C651F37A4B70069D224 /* VLCStringsForLocalization.m */,
+				8DD6516E208C89BC0052EE68 /* VLCAccessibilityIdentifier.swift */,
 				4152F1611FEF19BD00F1908B /* KeychainCoordinator.swift */,
 				7D0C209A28C89F5400CCFFEF /* Network */,
 				7D8986D7278B0C30005396AA /* Thumbnail Cache */,
@@ -3325,7 +3326,6 @@
 		CAC0AFE720CF8A6900EDB035 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				8DD6516E208C89BC0052EE68 /* VLCAccessibilityIdentifier.swift */,
 				CAF76D9320709C9500E2AD7B /* XCUIElement+Helpers.swift */,
 				CAD925802075613100F88496 /* SnapshotHelper.swift */,
 				CAA0B0F620726A0E00B9274E /* TestHelper.swift */,
@@ -3519,7 +3519,7 @@
 				CLASSPREFIX = VLC;
 				DefaultBuildSystemTypeForWorkspace = Original;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = VideoLAN;
 				TargetAttributes = {
 					4133CADB22CCB0620047A4EC = {
@@ -3638,10 +3638,10 @@
 			targets = (
 				7D94FCDA16DE7D1000F2623B /* VLC-iOS */,
 				7D13293C1BA1F10100BE647E /* VLC-tvOS */,
-				41B0BC851F73ED7D0063BA26 /* VLC-iOSUITests */,
-				41533C90211338D500EC3ABA /* VLC-iOSTests */,
-				4133CADB22CCB0620047A4EC /* VLC-iOS-Screenshots */,
 				7D50C5D52BBD20DF00B9F1A0 /* VLC-visionOS */,
+				41B0BC851F73ED7D0063BA26 /* VLC-iOSUITests */,
+				4133CADB22CCB0620047A4EC /* VLC-iOS-Screenshots */,
+				41533C90211338D500EC3ABA /* VLC-iOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -5235,7 +5235,6 @@
 		41B0BC8D1F73ED7D0063BA26 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_ENABLE_MODULES = YES;
@@ -5288,7 +5287,6 @@
 		41B0BC8E1F73ED7D0063BA26 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_ENABLE_MODULES = YES;
@@ -5343,7 +5341,6 @@
 		41B0BC8F1F73ED7D0063BA26 /* Distribution */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_ENABLE_MODULES = YES;
