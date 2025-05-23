@@ -1,4 +1,4 @@
-name: Build IPA (Checkpointed)
+name: Build IPA
 
 on:
   workflow_dispatch:
@@ -7,24 +7,8 @@ on:
       - build-action
 
 jobs:
-  setup:
-    runs-on: macos-13
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache CocoaPods Specs
-        uses: actions/cache@v4
-        with:
-          path: ~/Library/Caches/CocoaPods
-          key: ${{ runner.os }}-pods-specs-${{ hashFiles('Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-specs-
-
-      # No need to install pods here anymore, shift it to build
-
   build:
     runs-on: macos-13
-    needs: setup
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +20,7 @@ jobs:
             ~/Library/Caches/CocoaPods
           key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
 
-      - name: Install CocoaPods
+      - name: Install CocoaPods and Pod Dependencies
         run: |
           sudo gem install cocoapods
           pod install
@@ -44,6 +28,9 @@ jobs:
       - name: Ensure Pods scripts are executable
         run: |
           find Pods/Target\ Support\ Files -name "*.sh" -exec chmod +x {} \;
+      - name: Validate MarqueeLabel Exists
+        run: |
+          test -d "Pods/MarqueeLabel" || (echo "MarqueeLabel not found" && exit 1)
 
       - name: Build with Xcode
         run: |
