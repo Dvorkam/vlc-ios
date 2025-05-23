@@ -12,20 +12,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache CocoaPods
+      - name: Cache CocoaPods Specs
         uses: actions/cache@v4
         with:
-          path: |
-            Pods
-            ~/Library/Caches/CocoaPods
-          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+          path: ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-pods-specs-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-specs-
 
       - name: Install CocoaPods
+        id: install_pods
         run: |
           sudo gem install cocoapods
-          pod install
+          if [ ! -d "Pods" ]; then
+            echo "No Pods directory found, installing..."
+            pod install
+            echo "fresh_install=true" >> $GITHUB_OUTPUT
+          else
+            echo "Pods directory exists, skipping install."
+            echo "fresh_install=false" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Upload Pods Artifact
+      - name: Upload Pods Artifact (only if freshly installed)
+        if: steps.install_pods.outputs.fresh_install == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: pods
@@ -43,17 +52,21 @@ jobs:
           name: pods
           path: Pods
 
-      - name: Build app archive
+      - name: Ensure Pods scripts are executable
+        run: |
+          find Pods/Target\ Support\ Files -name "*.sh" -exec chmod +x {} \;
+        
+      - name: Build with Xcode
         run: |
           xcodebuild -workspace VLC.xcworkspace \
-           -scheme VLC-iOS \
-           -configuration Release \
-           -sdk iphoneos \
-           -archivePath $PWD/build/VLC.xcarchive \
-           CODE_SIGN_IDENTITY="" \
-           CODE_SIGNING_REQUIRED=NO \
-           CODE_SIGNING_ALLOWED=NO \
-           archive
+                       -scheme VLC-iOS \
+                       -configuration Release \
+                       -sdk iphoneos \
+                       -archivePath $PWD/build/VLC.xcarchive \
+                       CODE_SIGN_IDENTITY="" \
+                       CODE_SIGNING_REQUIRED=NO \
+                       CODE_SIGNING_ALLOWED=NO \
+                       archive
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4
