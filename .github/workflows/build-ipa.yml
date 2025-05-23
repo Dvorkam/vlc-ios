@@ -31,22 +31,22 @@ jobs:
         run: |
           find Pods/Target\ Support\ Files -name "*.sh" -exec chmod +x {} \;
 
-          - name: Build with Xcode
-          run: |
-            xcodebuild -workspace VLC.xcworkspace \
-                       -scheme VLC-iOS \
-                       -configuration Release \
-                       -sdk iphoneos \
-                       -archivePath $PWD/build/VLC.xcarchive \
-                       CODE_SIGN_IDENTITY="" \
-                       CODE_SIGNING_REQUIRED=NO \
-                       CODE_SIGNING_ALLOWED=NO \
-                       SWIFT_ENABLE_BATCH_MODE=NO \
-                       CLANG_ENABLE_MODULES=YES \
-                       DEFINES_MODULE=YES \
-                       OTHER_CFLAGS="-Wno-error=non-modular-include-in-framework-module" \
-                       SWIFT_COMPILATION_MODE=wholemodule \
-                       archive
+      - name: Build with Xcode
+        run: |
+          xcodebuild -workspace VLC.xcworkspace \
+                     -scheme VLC-iOS \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     -archivePath $PWD/build/VLC.xcarchive \
+                     CODE_SIGN_IDENTITY="" \
+                     CODE_SIGNING_REQUIRED=NO \
+                     CODE_SIGNING_ALLOWED=NO \
+                     SWIFT_ENABLE_BATCH_MODE=NO \
+                     CLANG_ENABLE_MODULES=YES \
+                     DEFINES_MODULE=YES \
+                     OTHER_CFLAGS="-Wno-error=non-modular-include-in-framework-module" \
+                     SWIFT_COMPILATION_MODE=wholemodule \
+                     archive
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4
