@@ -26,7 +26,7 @@ target 'VLC-iOS' do
   pod 'MarqueeLabel', :git => 'https://code.videolan.org/fkuehne/MarqueeLabel.git', :commit => 'e289fa32'
   pod 'ObjectiveDropboxOfficial'
   pod 'PCloudSDKSwift'
-  pod 'box-ios-sdk-v2', :git => 'https://github.com/fkuehne/box-ios-sdk-v2.git', :commit => '08161e74'
+  pod 'box-ios-sdk-v2', :git => 'https://github.com/fkuehne/box-ios-sdk-v2.git', :commit => '08161e74', :modular_headers => true
 
   pod 'SwiftLint', '~> 0.50.3', :configurations => ['Debug']
 
