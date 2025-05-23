@@ -46,11 +46,14 @@ jobs:
       - name: Build app archive
         run: |
           xcodebuild -workspace VLC.xcworkspace \
-                     -scheme VLC-iOS \
-                     -configuration Release \
-                     -sdk iphoneos \
-                     -archivePath $PWD/build/VLC.xcarchive \
-                     archive
+           -scheme VLC-iOS \
+           -configuration Release \
+           -sdk iphoneos \
+           -archivePath $PWD/build/VLC.xcarchive \
+           CODE_SIGN_IDENTITY="" \
+           CODE_SIGNING_REQUIRED=NO \
+           CODE_SIGNING_ALLOWED=NO \
+           archive
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4
