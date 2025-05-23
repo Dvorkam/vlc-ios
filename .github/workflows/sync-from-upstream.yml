@@ -1,9 +1,13 @@
+# Workflow to sync code from VideoLAN GitLab upstream repository
 name: Sync from GitLab Upstream
 
 on:
   schedule:
     - cron: '30 2 * * *'  # Daily at 02:30 UTC
   workflow_dispatch:      # Allows manual trigger
+  push:
+    branches:
+      - actions
 
 jobs:
   sync:
