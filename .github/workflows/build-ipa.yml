@@ -20,25 +20,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-specs-
 
-      - name: Install CocoaPods
-        id: install_pods
-        run: |
-          sudo gem install cocoapods
-          if [ ! -d "Pods" ]; then
-            echo "No Pods directory found, installing..."
-            pod install
-            echo "fresh_install=true" >> $GITHUB_OUTPUT
-          else
-            echo "Pods directory exists, skipping install."
-            echo "fresh_install=false" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Upload Pods Artifact (only if freshly installed)
-        if: steps.install_pods.outputs.fresh_install == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: pods
-          path: Pods
+      # No need to install pods here anymore, shift it to build
 
   build:
     runs-on: macos-13
@@ -46,27 +28,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Pods
-        uses: actions/download-artifact@v4
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
         with:
-          name: pods
-          path: Pods
+          path: |
+            Pods
+            ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod install
 
       - name: Ensure Pods scripts are executable
         run: |
           find Pods/Target\ Support\ Files -name "*.sh" -exec chmod +x {} \;
-        
+
       - name: Build with Xcode
         run: |
           xcodebuild -workspace VLC.xcworkspace \
-                       -scheme VLC-iOS \
-                       -configuration Release \
-                       -sdk iphoneos \
-                       -archivePath $PWD/build/VLC.xcarchive \
-                       CODE_SIGN_IDENTITY="" \
-                       CODE_SIGNING_REQUIRED=NO \
-                       CODE_SIGNING_ALLOWED=NO \
-                       archive
+                     -scheme VLC-iOS \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     -archivePath $PWD/build/VLC.xcarchive \
+                     CODE_SIGN_IDENTITY="" \
+                     CODE_SIGNING_REQUIRED=NO \
+                     CODE_SIGNING_ALLOWED=NO \
+                     OTHER_CFLAGS="-Wno-error=non-modular-include-in-framework-module" \
+                     archive
 
       - name: Upload Archive
         uses: actions/upload-artifact@v4
