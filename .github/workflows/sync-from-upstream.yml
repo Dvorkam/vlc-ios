@@ -28,7 +28,7 @@ jobs:
 
       - name: Rebase onto upstream/master
         run: |
-          git checkout main
+          git checkout master
           git rebase upstream/master
 
       - name: Push changes to GitHub
