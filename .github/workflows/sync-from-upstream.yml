@@ -1,4 +1,4 @@
-# Workflow to sync code from VideoLAN GitLab upstream repository
+# Workflow to periodically sync code from VideoLAN GitLab upstream repository
 name: Sync from GitLab Upstream
 
 on:
