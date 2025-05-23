@@ -16,7 +16,7 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '15.0'
+          xcode-version: '15.0.1'
 
       - name: Cache CocoaPods
         id: pod-cache
@@ -35,18 +35,11 @@ jobs:
           pod repo update
           rm -rf Pods Podfile.lock
           pod install --verbose
-
-      - name: Pre-build setup
+          
+      - name: Set Xcode Build Settings
         run: |
-          cd Pods/MarqueeLabel
-          mkdir -p "Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules"
-          touch "Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules/module.modulemap"
-          echo 'framework module MarqueeLabel {' > "Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules/module.modulemap"
-          echo '  umbrella header "MarqueeLabel.h"' >> "Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules/module.modulemap"
-          echo '  export *' >> "Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules/module.modulemap"
-          echo '  module * { export * }' >> "Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules/module.modulemap"
-          echo '}' >> "Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules/module.modulemap"
-
+          defaults write com.apple.dt.XCBuild EnableSwiftBuildSystemIntegration 1
+          
       - name: Build Archive
         run: |
           xcodebuild -workspace VLC.xcworkspace \
@@ -59,9 +52,11 @@ jobs:
                      CODE_SIGNING_ALLOWED=NO \
                      CLANG_ENABLE_MODULES=YES \
                      DEFINES_MODULE=YES \
-                     MODULEMAP_FILE="$(pwd)/Pods/MarqueeLabel/Framework/MarqueeLabel.framework/Modules/module.modulemap" \
+                     SWIFT_OPTIMIZATION_LEVEL="-Onone" \
+                     SWIFT_COMPILATION_MODE=wholemodule \
+                     SWIFT_TREAT_WARNINGS_AS_ERRORS=NO \
                      OTHER_CFLAGS="-Wno-error=non-modular-include-in-framework-module" \
-                     SWIFT_ENABLE_BATCH_MODE=NO \
+                     SWIFT_VERSION=5.0 \
                      archive
 
       - name: Upload Archive
