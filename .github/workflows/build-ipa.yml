@@ -23,12 +23,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
 
-      - name: Inject use_frameworks! into Podfile
+      - name: Use modified podfile
         run: |
-          if ! grep -q "use_frameworks!" Podfile; then
-            echo "Injecting use_frameworks!"
-            sed -i '' '1s;^;use_frameworks!\n\n;' Podfile
-          fi
+          run: cp Podfile_modified Podfile
 
       - name: Show Podfile (for debugging)
         run: cat Podfile
