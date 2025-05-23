@@ -1,4 +1,4 @@
-name: Build IPA
+name: Build IPA (Checkpointed)
 
 on:
   workflow_dispatch:
@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: macos-13
+
     steps:
       - uses: actions/checkout@v4
 
@@ -19,8 +20,20 @@ jobs:
             Pods
             ~/Library/Caches/CocoaPods
           key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
 
-      - name: Install CocoaPods and Pod Dependencies
+      - name: Inject use_frameworks! into Podfile
+        run: |
+          if ! grep -q "use_frameworks!" Podfile; then
+            echo "Injecting use_frameworks!"
+            sed -i '' '1s;^;use_frameworks!\n\n;' Podfile
+          fi
+
+      - name: Show Podfile (for debugging)
+        run: cat Podfile
+
+      - name: Install CocoaPods
         run: |
           sudo gem install cocoapods
           pod install
@@ -28,9 +41,6 @@ jobs:
       - name: Ensure Pods scripts are executable
         run: |
           find Pods/Target\ Support\ Files -name "*.sh" -exec chmod +x {} \;
-      - name: Validate MarqueeLabel Exists
-        run: |
-          test -d "Pods/MarqueeLabel" || (echo "MarqueeLabel not found" && exit 1)
 
       - name: Build with Xcode
         run: |
@@ -54,6 +64,7 @@ jobs:
   export:
     runs-on: macos-13
     needs: build
+
     steps:
       - uses: actions/checkout@v4
 
