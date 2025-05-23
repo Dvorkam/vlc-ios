@@ -1,3 +1,6 @@
+# Local settings
+.env
+
 # Xcode
 *.mode*
 *.pbxuser
