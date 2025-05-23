@@ -1,0 +1,83 @@
+name: Build IPA (Checkpointed)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - build-action
+
+jobs:
+  setup:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: |
+            Pods
+            ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod install
+
+      - name: Upload Pods Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pods
+          path: Pods
+
+  build:
+    runs-on: macos-13
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Pods
+        uses: actions/download-artifact@v3
+        with:
+          name: pods
+          path: Pods
+
+      - name: Build app archive
+        run: |
+          xcodebuild -workspace VLC.xcworkspace \
+                     -scheme VLC-iOS \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     -archivePath $PWD/build/VLC.xcarchive \
+                     archive
+
+      - name: Upload Archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: vlc-archive
+          path: build/VLC.xcarchive
+
+  export:
+    runs-on: macos-13
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Archive
+        uses: actions/download-artifact@v3
+        with:
+          name: vlc-archive
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+                     -archivePath $PWD/build/VLC.xcarchive \
+                     -exportOptionsPlist $PWD/ExportOptions.plist \
+                     -exportPath $PWD/ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: vlc-ios-ipa
+          path: ipa/*.ipa
