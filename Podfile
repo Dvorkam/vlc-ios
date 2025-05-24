@@ -1,4 +1,3 @@
-
 source 'https://cdn.cocoapods.org'
 install! 'cocoapods', :deterministic_uuids => false
 inhibit_all_warnings!
@@ -64,56 +63,54 @@ target 'VLC-visionOS' do
 end
 
 post_install do |installer_representation|
-  installer_representation.pods_project.targets.each do |target|
-     installer_representation.pods_project.build_configurations.each do |config|
-       config.build_settings['SKIP_INSTALL'] = 'YES'
-       # It's generally better to let CocoaPods and individual podspecs handle ARCHS,
-       # SUPPORTED_PLATFORMS, and TARGETED_DEVICE_FAMILY.
-       # Overriding them globally here can cause issues with module generation for specific platforms.
-       # If your build requires these, ensure they are absolutely necessary and correctly scoped.
-       # For now, these are commented out or removed as they are prime suspects for the module issue.
-       # config.build_settings['ARCHS'] = 'arm64 x86_64' # Consider removing or making conditional
-       config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
-       # config.build_settings['SUPPORTED_PLATFORMS'] = 'iphoneos iphonesimulator appletvos appletvsimulator xros xrsimulator' # Highly suspect, commented out
-       # config.build_settings['TARGETED_DEVICE_FAMILY'] = '1,2,3,7' # Highly suspect, commented out
+  installer_representation.pods_project.targets.each do |pod_target| # This 'pod_target' is a PBXNativeTarget
+     # This loop iterates over build configurations of the Pods PROJECT (Debug, Release)
+     # Settings here are inherited by all pod targets unless overridden.
+     installer_representation.pods_project.build_configurations.each do |proj_config|
+       proj_config.build_settings['SKIP_INSTALL'] = 'YES'
+       proj_config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+       # Keep these commented out unless absolutely necessary and well-understood,
+       # as they were prime suspects for the original module not found issue.
+       # proj_config.build_settings['ARCHS'] = 'arm64 x86_64'
+       # proj_config.build_settings['SUPPORTED_PLATFORMS'] = 'iphoneos iphonesimulator appletvos appletvsimulator xros xrsimulator'
+       # proj_config.build_settings['TARGETED_DEVICE_FAMILY'] = '1,2,3,7'
      end
 
-    target.build_configurations.each do |config|
-        # Setting deployment targets per pod target can be useful,
-        # but ensure they align with what each pod supports.
-        # CocoaPods often infers this correctly from your main target's platform.
-        current_platform_name = config.platform_name.to_s # Ensure it's a string for comparison
-        if current_platform_name.start_with?('iphoneos') || current_platform_name.start_with?('iphonesimulator')
-            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
-        elsif current_platform_name.start_with?('appletvos') || current_platform_name.start_with?('appletvsimulator')
-            config.build_settings['TVOS_DEPLOYMENT_TARGET'] = '12.0'
-        elsif current_platform_name.start_with?('xros') || current_platform_name.start_with?('xrsimulator')
-            # This would be for visionOS pods if not handled by the main target's platform setting
-            config.build_settings['XROS_DEPLOYMENT_TARGET'] = '1.0' # Example, adjust if needed
+    # Get the platform name from the pod_target itself (e.g., :ios, :tvos, :visionos)
+    # This 'pod_target' is the individual pod target (e.g., Alamofire, MarqueeLabel-iOS)
+    actual_pod_target_platform_name = pod_target.platform_name.to_s # Converts symbol :ios to string "ios"
+
+    # This loop iterates over each build configuration (e.g., Debug, Release) of the current pod_target
+    pod_target.build_configurations.each do |target_config| # 'target_config' is an XCBuildConfiguration
+        # Set deployment targets based on the pod_target's platform
+        if actual_pod_target_platform_name == 'ios'
+            target_config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+        elsif actual_pod_target_platform_name == 'tvos'
+            target_config.build_settings['TVOS_DEPLOYMENT_TARGET'] = '12.0'
+        elsif actual_pod_target_platform_name == 'visionos' # 'xros' is often used internally by Xcode for visionOS
+            target_config.build_settings['XROS_DEPLOYMENT_TARGET'] = '1.0'
         end
 
-        # If you still need to force ARCHS for pod targets, do it conditionally:
-        # if current_platform_name.include?("simulator")
-        #   config.build_settings['ARCHS'] = 'arm64 x86_64'
-        # else # Device builds (iphoneos, appletvos, xros)
-        #   config.build_settings['ARCHS'] = 'arm64'
-        # end
-        # However, it's often best to let Xcode derive this from the active architecture being built.
-        # The global ARCHS setting from the Pods project level (commented out above) was more problematic.
-
         # The sqlite fix
-        xcconfig_path_obj = config.base_configuration_reference
+        xcconfig_path_obj = target_config.base_configuration_reference
         if xcconfig_path_obj # Ensure base_configuration_reference is not nil
             xcconfig_path = xcconfig_path_obj.real_path
             begin
-                xcconfig = File.read(xcconfig_path)
-                new_xcconfig = xcconfig.sub('-l"sqlite3"', '')
-                File.open(xcconfig_path, "w") { |file| file << new_xcconfig }
+                if File.exist?(xcconfig_path) # Check if file actually exists
+                    xcconfig_content = File.read(xcconfig_path)
+                    # Only rewrite if changed to avoid unnecessary modifications
+                    if xcconfig_content.include?('-l"sqlite3"')
+                        new_xcconfig_content = xcconfig_content.sub('-l"sqlite3"', '')
+                        File.open(xcconfig_path, "w") { |file| file << new_xcconfig_content }
+                    end
+                # else
+                #   puts "INFO: xcconfig file not found at #{xcconfig_path} for target #{pod_target.name}, config #{target_config.name} (skipping sqlite fix)"
+                end
             rescue Errno::ENOENT
-                # Pods that don't have a base configuration (e.g. resource bundles)
-                # won't have an xcconfig path, so we can ignore this error.
-                # Or print a warning if you want to be notified:
-                # puts "Warning: Could not find xcconfig at #{xcconfig_path} for target #{target.name}"
+                # This rescue might be redundant if File.exist? is used, but kept for safety.
+                # puts "WARNING: Could not access xcconfig at #{xcconfig_path} (ENOENT)"
+            # rescue => e # Catch other potential errors
+                # puts "WARNING: Error processing xcconfig for #{pod_target.name} (#{target_config.name}): #{e.message}"
             end
         end
     end
