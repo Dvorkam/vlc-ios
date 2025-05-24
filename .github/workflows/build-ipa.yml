@@ -9,10 +9,11 @@ on:
 jobs:
   build:
     runs-on: macos-13
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Clean DerivedData, Module Cache, Pods
+      - name: Install CocoaPods & deintegrate
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
           rm -rf ~/Library/Developer/Xcode/ModuleCache.noindex
@@ -20,14 +21,31 @@ jobs:
           rm -rf ~/Library/Caches/CocoaPods
           brew install cocoapods-deintegrate || true
 
-      - name: Install CocoaPods
+      - name: Cache CocoaPods
+        id: pod-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            Pods
+            ~/Library/Caches/CocoaPods
+          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Clean CocoaPods cache if restore failed
+        if: steps.pod-cache.outputs.cache-hit != 'true'
+        run: |
+          rm -rf Pods
+          rm -rf ~/Library/Caches/CocoaPods
+
+      - name: Install Pods (clean)
         run: |
           sudo gem install cocoapods
           pod deintegrate
           pod cache clean --all
           pod install --repo-update
 
-      - name: Fix Permissions on Pod Scripts
+      - name: Ensure Pod scripts are executable
         run: |
           find Pods/Target\ Support\ Files -name "*.sh" -exec chmod +x {} \;
 
@@ -41,11 +59,7 @@ jobs:
                      CODE_SIGN_IDENTITY="" \
                      CODE_SIGNING_REQUIRED=NO \
                      CODE_SIGNING_ALLOWED=NO \
-                     SWIFT_ENABLE_BATCH_MODE=NO \
-                     CLANG_ENABLE_MODULES=YES \
-                     DEFINES_MODULE=YES \
                      OTHER_CFLAGS="-Wno-error=non-modular-include-in-framework-module" \
-                     SWIFT_COMPILATION_MODE=wholemodule \
                      archive
 
       - name: Upload Archive
