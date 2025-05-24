@@ -20,6 +20,7 @@ jobs:
           rm -rf Pods
           rm -rf ~/Library/Caches/CocoaPods
           brew install cocoapods-deintegrate || true
+          pod deintegrate || true
 
       - name: Cache CocoaPods
         id: pod-cache
@@ -41,9 +42,7 @@ jobs:
       - name: Install Pods (clean)
         run: |
           sudo gem install cocoapods
-          pod deintegrate
-          pod cache clean --all
-          pod install --repo-update
+          pod install --repo-update --verbose
 
       - name: Ensure Pod scripts are executable
         run: |
